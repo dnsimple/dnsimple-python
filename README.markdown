@@ -9,8 +9,8 @@ This is a client for the DNSimple REST API. It allows you to fetch existing doma
 
 Create a file called .dnsimple in the current dir with the following data:
 
-username: email@domain.com
-password: yourpassword
+	username: email@domain.com
+	password: yourpassword
 
 Then import the module:
 
@@ -29,7 +29,7 @@ Just run:
 
 Just run:
 
-	test = dnsimple.register('google.com','16')
+	test = dnsimple.register('yourdomain.com','16')
 	
 ### License
 
