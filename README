@@ -1,0 +1,24 @@
+This is a client for the DNSimple REST API.
+
+Quick demonstration:
+
+Create a file called .dnsimple in the current dir with the following data:
+
+username: email@domain.com
+password: yourpassword
+
+Then import the module:
+_______________________
+
+	from dnsimple import DNSimple
+	dns = DNSimple(username,password) 
+
+Check out your domains:
+________________________
+	domains = dns.getdomains()
+	for domain in domains:
+	    print domain['domain']['name']
+
+Register a new domain
+_____________________
+	test = dnsimple.register('google.com','16')
