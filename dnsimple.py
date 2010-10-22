@@ -89,19 +89,20 @@ class DNSimple(object):
     def register(self,domainname,registrant_id=None):
         '''Register a domain name with DNSimple and the appropriate domain registry. '''
         if not registrant_id:
-            # Get the registrant ID from the existing domains
+            # Get the registrant ID from the first domain in the acount
             try:
-                registrant_id = str(self.getdomains()[0]['domain']['registrant_id'])
+                registrant_id = self.getdomains()[0]['domain']['registrant_id']
             except:
                 print 'Could not find registrant_id! Please specify manually.'
                 exit
-        postdata = 'domain[name]='+domainname+'&domain[registrant_id]='+registrant_id
+        postdata = 'domain[name]='+domainname+'&domain[registrant_id]='+str(registrant_id)
         return self.__resthelper('/domain_registrations.json', postdata)
+
 
     def transfer(self,domainname,registrant_id):
         '''Transfer a domain name from another domain registrar into DNSimple. '''
         postdata = 'domain[name]='+domainname+'&domain[registrant_id]='+registrant_id
-        return self.__resthelper('/domain_transfers.json', postdata)    
+        return self.__resthelper('/domain_transfers.json', postdata)        
 
     def adddomains(self, domainname):
         '''Create a single domain in DNSimple in your account.'''
