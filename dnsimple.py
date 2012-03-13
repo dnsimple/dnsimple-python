@@ -40,13 +40,15 @@ class DNSimple(object):
         encodedstring = base64.encodestring(username+':'+password)[:-1]
         return "Basic %s" % encodedstring
 
-    def __resthelper(self,url,postdata=None):    
+    def __resthelper(self,url,postdata=None,useput=False):    
         '''Does GET requests and (if postdata specified) POST requests.
         For POSTs we do NOT encode our data, as DNSimple's REST API expects square brackets
         which are normally encoded according to RFC 1738. urllib.urlencode encodes square brackets 
         which the API doesn't like.'''
         url = self.__endpoint+url
         request = Request(url, postdata, {"Authorization": self.__authstring, "User-Agent": self.__useragent })
+        if useput:
+            request.get_method = lambda: 'PUT'
         result = self.__requesthelper(request)
         if result:
             return json.loads(result)        
@@ -81,6 +83,18 @@ class DNSimple(object):
     def getdomain(self,domain):
         '''Get the details for a specific domain in your account. .'''
         return self.__resthelper('/domains/'+domain+'.json')
+
+    def getrecords(self,domain):
+        '''Get the DNS records for a specfic domain in your account. .'''
+        return self.__resthelper('/domains/'+domain+'/records.json')
+    
+    def getrecorddetail(self,domain,record):
+        '''Get the details for a particular record id. .'''
+        return self.__resthelper('/domain/'+domain+'/records/'+str(record))
+    
+    def updaterecord(self,domain,record,content):
+        '''Update a record to reflect new data. .'''
+        return self.__resthelper('/domains/'+domain+'/records/'+str(record),content,True)
 
     def getdomain(self,domain):
         '''Get the details for a specific domain in your account. .'''
