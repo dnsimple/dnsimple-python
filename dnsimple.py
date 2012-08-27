@@ -20,7 +20,13 @@ newhttpcodes = {
 for code in newhttpcodes:
     BaseHTTPRequestHandler.responses[code] = newhttpcodes[code]
 
+try:
+    # Use stdlib's json if available (2.6+)
+    import json
+except ImportError:
+    # Otherwise require extra simplejson library
 import simplejson as json
+
 import logging
 
 class DNSimple(object):
