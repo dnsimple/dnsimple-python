@@ -4,6 +4,8 @@ Client for DNSimple REST API
 https://dnsimple.com/documentation/api
 """
 
+__version__ = '0.1.0'
+
 
 import base64
 from urllib2 import Request, urlopen, URLError
