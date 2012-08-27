@@ -30,21 +30,52 @@ import simplejson as json
 import logging
 
 class DNSimple(object):
-    def __init__(self):
+
+    def __init__(self,
+            username=None, password=None,  # HTTP Basic Auth
+            email=None, api_token=None):   # API Token Auth
+        """
+        Create authenticated API client.
+
+        Provide `email` and `api_token` to use X-DNSimple-Token auth.
+        Provide `username` and `password` to use HTTP Basic auth.
+
+        If neither username/password nor api_token credentials are provided,
+        the username/password will be read from the .dnsimple file.
+
+        If both username/password and email/api_token credentials are provided,
+        the API authentication credentials are preferred.
+        """
+        self.__endpoint = 'https://dnsimple.com'
+        self.__useragent = 'DNSimple Python API v20120827'
+        self.__email, self.__api_token = email, api_token
+        if email is None and api_token is None:
+            if username is None and password is None:
         try:
             passwordfile = open('.dnsimple').read()
-            username = re.findall(r'username:.*', passwordfile)[0].split(':')[1].strip()
-            password = re.findall(r'password:.*', passwordfile)[0].split(':')[1].strip()
-        except: 
-            logging.warn('Could not open .dnsimple file - see README.markdown')    
-            exit()        
-        self.__endpoint = 'https://dnsimple.com'
-        self.__authstring = self.__getauthstring(self.__endpoint,username,password)
-        self.__useragent = 'DNSimple Python API v20101015'
+                    username = re.findall(r'username:.*',
+                        passwordfile)[0].split(':')[1].strip()
+                    password = re.findall(r'password:.*',
+                        passwordfile)[0].split(':')[1].strip()
+                except Exception, ex:
+                    raise DNSimpleException(
+                            'Could not open .dnsimple file: %s' % ex)
+            self.__authstring = self.__getauthstring(
+                self.__endpoint, username, password)
 
     def __getauthstring(self,__endpoint,username,password):
         encodedstring = base64.encodestring(username+':'+password)[:-1]
         return "Basic %s" % encodedstring
+
+    def __getauthheader(self):
+        """
+        Return a HTTP Basic or X-DNSimple-Token authentication header dict.
+        """
+        if self.__api_token:
+            return {'X-DNSimple-Token': '%s:%s'
+                    % (self.__email, self.__api_token)}
+        else:
+            return {'Authorization': self.__authstring}
 
     def __resthelper(self,url,postdata=None,useput=False):    
         '''Does GET requests and (if postdata specified) POST requests.
@@ -52,7 +83,12 @@ class DNSimple(object):
         which are normally encoded according to RFC 1738. urllib.urlencode encodes square brackets 
         which the API doesn't like.'''
         url = self.__endpoint+url
-        request = Request(url, postdata, {"Authorization": self.__authstring, "User-Agent": self.__useragent })
+        headers = self.__getauthheader()
+        headers.update({
+            "User-Agent": self.__useragent,
+            "Accept": "application/json",  # Accept required per doco
+            })
+        request = Request(url, postdata, headers)
         if useput:
             request.get_method = lambda: 'PUT'
         result = self.__requesthelper(request)
