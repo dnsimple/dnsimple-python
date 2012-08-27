@@ -3,11 +3,12 @@
 import os
 from setuptools import setup, find_packages
 
+from dnsimple import dnsimple
+
 setup(
     name='dnsimple-python',
-    version=__import__('dnsimple').__version__,
-    description=u' '.join(
-        __import__('dnsimple').__doc__.splitlines()).strip(),
+    version=dnsimple.__version__,
+    description=u' '.join(dnsimple.__doc__.splitlines()).strip(),
     long_description=os.path.join(
         os.path.abspath(os.path.dirname(__file__)), 'README.markdown'),
     packages=find_packages(),
