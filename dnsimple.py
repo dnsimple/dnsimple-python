@@ -27,7 +27,10 @@ except ImportError:
     # Otherwise require extra simplejson library
 import simplejson as json
 
-import logging
+
+class DNSimpleException(Exception):
+    pass
+
 
 class DNSimple(object):
 
@@ -99,7 +102,7 @@ class DNSimple(object):
 
     def __deletehelper(self,url):    
         '''Does DELETE requests.'''
-        raise Exception('Not implemented yet')
+        raise NotImplemented()
                   
     def __requesthelper(self,request):
         '''Does requests and maps HTTP responses into delicious Python juice'''
@@ -108,13 +111,13 @@ class DNSimple(object):
         except URLError, e:
             # Check returned URLError for issues and report 'em
             if hasattr(e, 'reason'):
-                print 'We failed to reach a server.'
-                print 'Reason: ', e.reason
-                return
+                raise DNSimpleException(
+                    'Failed to reach a server: %s'
+                    % e.reason)
             elif hasattr(e, 'code'):
-                print 'Error code: ', e.code
-                print '\n'.join(BaseHTTPRequestHandler.responses[e.code])
-                return
+                raise DNSimpleException(
+                    'Error code %s: %s'
+                    % (e.code, BaseHTTPRequestHandler.responses[e.code]))
         else:
             return handle.read()    
         
@@ -148,9 +151,9 @@ class DNSimple(object):
             # Get the registrant ID from the first domain in the acount
             try:
                 registrant_id = self.getdomains()[0]['domain']['registrant_id']
-            except:
-                print 'Could not find registrant_id! Please specify manually.'
-                exit
+            except Exception, ex:
+                raise DNSimpleException(
+                    'Could not find registrant_id! Please specify manually.')
         postdata = 'domain[name]='+domainname+'&domain[registrant_id]='+str(registrant_id)
         return self.__resthelper('/domain_registrations.json', postdata)
 
