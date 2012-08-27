@@ -3,30 +3,46 @@ Python DNSimple
 
 ## Introduction
 
-This is a client for the DNSimple REST API. It currently allows you to fetch existing domain info, as well as bulk-register new domains. More features are on the way.
+This is a client for the DNSimple REST API. It currently allows you to fetch
+existing domain info, as well as register new domains and manage domain
+records.
 
 ### Getting started
 
-You'll need the simplejson module installed.
+You'll need the `json` module that is included with python version 2.6 and
+later, or the `simplejson` module if you are using an earlier version.
 
-Create a file called .dnsimple in the current dir with the following data:
-
-	username: email@domain.com
-	password: yourpassword
-
-Then import the module:
+Import the module:
 
 	from dnsimple import DNSimple
 
-And create a DNSimple object:	
-	
-	dns = DNSimple() 
+You can provide your DNSimple credentials in one of two ways:
+
+1. Provide username/password or email/api\_token credentials programmatically:
+
+        # Use username/password authentication: HTTP Basic
+        dns = DNSimple(username=YOUR_USERNAME, password=YOUR_PASSWORD)
+
+        # Use email/api_token credentials
+        dns = DNSimple(email=YOUR_EMAIL_ADDRESS, api_token=YOUR_API_TOKEN)
+
+2. Store you username/password credentials in a file called `.dnsimple` in the
+   current directory with the following data:
+
+        username: email@domain.com
+        password: yourpassword
+
+    You then need not provide any credentials when constructing `DNSimple`:
+
+      dns = DNSimple()
+
+## Domain Operations
 
 ### Check out your existing domains:
 
 Just run:
 
-	domains = dns.getdomains()
+	domains = dns.domains()
 
 Results appear as a Python dict:
 
@@ -51,25 +67,52 @@ Results appear as a Python dict:
 	            'updated_at': '2010-10-15T16:30:16Z',
 	            'user_id': 99}}]
 
+### Get details for a specific domain
 
-### Check out a specific domain
+	dns.domain('mikemaccana.com')
 
-	dns.getdomain('mikemaccana.com')
+Results are the same as `domains()` above, but only show the domain specified.
 
-Results are the same as getdomains() above, but only show the domain specified.
+### Check whether a domain is available
+
+    dns.check('google.com')
+
+    # Hmm, looks like I'm too late to get that one...
+    {u'currency': u'USD',
+     u'currency_symbol': u'$',
+     u'minimum_number_of_years': 1,
+     u'name': u'google.com',
+     u'price': u'14.00',
+     u'status': u'unavailable'}
 
 ### Register a new domain
 
-Just run:
-
 	dns.register('newdomain.com')
 
-This will register 'newdomain.com', automatically picking the registrant\_id from your first domain. To specify a particularly registrant\_id, just run:
+This will register 'newdomain.com', automatically picking the registrant\_id
+from your first domain. To specify a particularly `registrant\_id`, just run:
 
-	dns.register('newdomain.com',99)
+	dns.register('newdomain.com', 99)
 
-Responses will be in a dictionary describing the newly created domain, same as the getdomain() above.
-	
+Responses will be in a dictionary describing the newly created domain, same as
+the `domain()` call above.
+
+### Delete a domain
+
+Careful with this one!
+
+    dns.delete('domain-to-die.com')
+
+## Record operations
+
+All operations on domain records are now supported:
+
+* List records: `records(id_or_domainname)`
+* Get record details: `record(id_or_domainname, record_id)`
+* Add record: `add_record(id_or_domainname, data)`
+* Update record: `update_record(id_or_domainname, record_id, data)`
+* Delete record: `delete_record(id_or_domainname, record_id)`
+
 ### License
 
-Licensed under the [MIT license](http://www.opensource.org/licenses/mit-license.php)	
+Licensed under the [MIT license](http://www.opensource.org/licenses/mit-license.php)
