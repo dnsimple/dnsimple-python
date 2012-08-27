@@ -80,7 +80,7 @@ class DNSimple(object):
         else:
             return {'Authorization': self.__authstring}
 
-    def __resthelper(self, url, postdata=None, useput=False):
+    def __resthelper(self, url, postdata=None, method=None):
         """
         Does GET requests and (if postdata specified) POST requests.
 
@@ -95,17 +95,13 @@ class DNSimple(object):
             "Accept": "application/json",  # Accept required per doco
             })
         request = Request(url, postdata, headers)
-        if useput:
-            request.get_method = lambda: 'PUT'
+        if method is not None:
+            request.get_method = lambda: method
         result = self.__requesthelper(request)
         if result:
             return json.loads(result)
         else:
             return None
-
-    def __deletehelper(self, url):
-        """Does DELETE requests."""
-        raise NotImplemented()
 
     def __requesthelper(self, request):
         """Does requests and maps HTTP responses into delicious Python juice"""
@@ -124,27 +120,48 @@ class DNSimple(object):
         else:
             return handle.read()
 
-    def getdomains(self):
+    def _prepare_data_dict(self, data, keyname):
+        """
+        Return formatted string from given data dict with key names suitable
+        for use in API calls.
+
+        If data provided is a string, it is returned unchanged assuming it
+        is already of the correct format.
+
+        Basically just converts key/value pairs {'a': 'v1', 'b': 'v2'} to
+        have the 'KEYNAME[X]' key name formatting, for example Record API
+        data would end up as {'record[a]': 'v1', 'record[b]': 'v2'}
+        """
+        if isinstance(data, basestring):
+            return data
+        prepared_data = {}
+        for key, value in data.items():
+            if not key.startswith('%s[' % keyname):
+                key = '%s[%s]' % (keyname, key)
+            prepared_data[key] = str(value)
+        return '&'.join(['='.join(i) for i in prepared_data.items()])
+
+    # DOMAINS
+
+    def domains(self):
         """Get a list of all domains in your account."""
         return self.__resthelper('/domains')
+    getdomains = domains  # Alias for backwards-compatibility
 
-    def getdomain(self, domain):
+    def domain(self, id_or_domainname):
         """Get the details for a specific domain in your account. ."""
-        return self.__resthelper('/domains/' + domain)
+        return self.__resthelper('/domains/' + id_or_domainname)
+    getdomain = domain  # Alias for backwards-compatibility
 
-    def getrecords(self, domain):
-        """Get the DNS records for a specfic domain in your account. ."""
-        return self.__resthelper('/domains/' + domain + '/records')
+    def add_domain(self, domainname):
+        """Create a single domain in DNSimple in your account."""
+        postdata = 'domain[name]=' + domainname
+        return self.__resthelper('/domains', postdata)
+    adddomain = add_domain  # Alias for backwards-compatibility
 
-    def getrecorddetail(self, domain, record):
-        """Get the details for a particular record id. ."""
-        return self.__resthelper(
-            '/domain/' + domain + '/records/' + str(record))
-
-    def updaterecord(self, domain, record, content):
-        """Update a record to reflect new data. ."""
-        return self.__resthelper(
-            '/domains/' + domain + '/records/' + str(record), content, True)
+    def check(self, domainname):
+        """ Check if domain is available for registration """
+        return self.__resthelper('/domains/' + domainname + '/check')
 
     def register(self, domainname, registrant_id=None):
         """
@@ -171,14 +188,64 @@ class DNSimple(object):
                     + '&domain[registrant_id]=' + registrant_id)
         return self.__resthelper('/domain_transfers', postdata)
 
-    def adddomains(self, domainname):
-        """Create a single domain in DNSimple in your account."""
-        postdata = 'domain[name]=' + domainname
-        return self.__resthelper('/domains', postdata)
-
-    def delete(self, domain):
+    def delete(self, id_or_domainname):
         """
         Delete the given domain from your account. You may use either the
         domain ID or the domain name.
         """
-        return self.__deletehelper('/domains/' + domain)
+        return self.__resthelper('/domains/' + id_or_domainname,
+            method='DELETE')
+
+    # RECORDS
+
+    def records(self, id_or_domainname):
+        """ Get the list of records for the specific domain """
+        return self.__resthelper('/domains/' + id_or_domainname + '/records')
+    getrecords = records  # Alias for backwards-compatibility
+
+    def record(self, id_or_domainname, record_id):
+        """ Get details about a specific record """
+        return self.__resthelper(
+            '/domains/' + id_or_domainname + '/records/' + str(record_id))
+    getrecorddetail = record  # Alias for backwards-compatibility
+
+    def add_record(self, id_or_domainname, data):
+        """
+        Create a record for the given domain.
+
+        `data` parameter is a dictionary that must contain:
+        - 'record_type' : E.g. 'MX', 'CNAME' etc
+        - 'name' : E.g. domain prefix for CNAME
+        - 'content'
+
+        `data` may also contain:
+        - 'ttl'
+        - 'prio'
+        """
+        data = self._prepare_data_dict(data, 'record')
+        print data
+        return self.__resthelper(
+            '/domains/' + id_or_domainname + '/records',
+            data, method='POST')
+
+    def update_record(self, id_or_domainname, record_id, data):
+        """
+        Update the given record for the given domain.
+
+        `data` parameter is a dictionary that may contain:
+        - 'name'
+        - 'content'
+        - 'ttl'
+        - 'prio'
+        """
+        data = self._prepare_data_dict(data, 'record')
+        return self.__resthelper(
+            '/domains/' + id_or_domainname + '/records/' + str(record_id),
+            data, method='PUT')
+    updaterecord = update_record  # Alias for backwards-compatibility
+
+    def delete_record(self, id_or_domainname, record_id):
+        """ Delete the record with the given ID for the given domain """
+        return self.__resthelper(
+            '/domains/' + id_or_domainname + '/records/' + str(record_id),
+            method='DELETE')
