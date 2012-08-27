@@ -123,15 +123,15 @@ class DNSimple(object):
         
     def getdomains(self):
         '''Get a list of all domains in your account.'''
-        return self.__resthelper('/domains.json')
+        return self.__resthelper('/domains')
 
     def getdomain(self,domain):
         '''Get the details for a specific domain in your account. .'''
-        return self.__resthelper('/domains/'+domain+'.json')
+        return self.__resthelper('/domains/'+domain)
 
     def getrecords(self,domain):
         '''Get the DNS records for a specfic domain in your account. .'''
-        return self.__resthelper('/domains/'+domain+'/records.json')
+        return self.__resthelper('/domains/'+domain+'/records')
     
     def getrecorddetail(self,domain,record):
         '''Get the details for a particular record id. .'''
@@ -140,10 +140,6 @@ class DNSimple(object):
     def updaterecord(self,domain,record,content):
         '''Update a record to reflect new data. .'''
         return self.__resthelper('/domains/'+domain+'/records/'+str(record),content,True)
-
-    def getdomain(self,domain):
-        '''Get the details for a specific domain in your account. .'''
-        return self.__resthelper('/domains/'+domain+'.json')
 
     def register(self,domainname,registrant_id=None):
         '''Register a domain name with DNSimple and the appropriate domain registry. '''
@@ -155,20 +151,20 @@ class DNSimple(object):
                 raise DNSimpleException(
                     'Could not find registrant_id! Please specify manually.')
         postdata = 'domain[name]='+domainname+'&domain[registrant_id]='+str(registrant_id)
-        return self.__resthelper('/domain_registrations.json', postdata)
+        return self.__resthelper('/domain_registrations', postdata)
 
 
     def transfer(self,domainname,registrant_id):
         '''Transfer a domain name from another domain registrar into DNSimple. '''
         postdata = 'domain[name]='+domainname+'&domain[registrant_id]='+registrant_id
-        return self.__resthelper('/domain_transfers.json', postdata)        
+        return self.__resthelper('/domain_transfers', postdata)        
 
     def adddomains(self, domainname):
         '''Create a single domain in DNSimple in your account.'''
         postdata = 'domain[name]='+domainname
-        return self.__resthelper('/domains.json', postdata)          
+        return self.__resthelper('/domains', postdata)          
 
     def delete(self,domain):
         '''Delete the given domain from your account. You may use either the domain ID or the domain name.'''
-        return self.__deletehelper('/domains/'+domain+'.json')
+        return self.__deletehelper('/domains/'+domain+'')
                
