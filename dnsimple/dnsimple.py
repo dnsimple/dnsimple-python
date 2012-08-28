@@ -225,7 +225,6 @@ class DNSimple(object):
         - 'prio'
         """
         data = self._prepare_data_dict(data, 'record')
-        print data
         return self.__resthelper(
             '/domains/' + id_or_domainname + '/records',
             data, method='POST')
