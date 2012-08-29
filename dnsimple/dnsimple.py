@@ -110,6 +110,14 @@ class DNSimple(object):
         try:
             handle = urlopen(request)
         except URLError, e:
+            # Don't treat errors as fatal (by raising exception) if it is
+            # possible to return JSON-parseable data from the response instead.
+            try:
+                error_str = e.read()
+                json.loads(error_str)  # Exception unless valid JSON
+                return error_str
+            except:
+                pass
             # Check returned URLError for issues and report 'em
             if hasattr(e, 'reason'):
                 raise DNSimpleException(
