@@ -38,7 +38,8 @@ class DNSimple(object):
 
     def __init__(self,
             username=None, password=None,  # HTTP Basic Auth
-            email=None, api_token=None):   # API Token Auth
+            email=None, api_token=None,  # API Token Auth
+            sandbox=False):  # Use the testing sandbox.
         """
         Create authenticated API client.
 
@@ -51,7 +52,11 @@ class DNSimple(object):
         If both username/password and email/api_token credentials are provided,
         the API authentication credentials are preferred.
         """
-        self.__endpoint = 'https://dnsimple.com'
+        if sandbox:
+            self.__endpoint = 'https://test.dnsimple.com'
+        else:
+            self.__endpoint = 'https://dnsimple.com'
+
         self.__useragent = 'DNSimple Python API v20120827'
         self.__email, self.__api_token = email, api_token
         if email is None and api_token is None:
