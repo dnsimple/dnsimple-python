@@ -255,3 +255,38 @@ class DNSimple(object):
         return self.__resthelper(
             '/domains/' + id_or_domainname + '/records/' + str(record_id),
             method='DELETE')
+
+    ## CONTACTS
+
+    def contacts(self):
+        """Get a list of all domain contacts in your account."""
+        return self.__resthelper('/contacts')
+
+    def contact(self, id):
+        """Get a domain contact."""
+        return self.__resthelper('/contacts/' + id)
+
+    def add_contact(self, data):
+        """
+        Create a contact that can be used as a domain registrant.
+
+        `data` is a dictionary that must contain:
+        - `first_name`
+        - `last_name`
+        - `address1`
+        - `city`
+        - `state_province`
+        - `postal_code`
+        - `country`
+        - `email_address`
+        - `phone`
+
+        The `data` dictionary may also contain:
+        - `organization_name`
+        - `job_title` is required when `organization_name` is present
+        - `phone_ext`
+        - `fax`
+        - `label`
+        """
+        data = self._prepare_data_dict(data, 'contact')
+        return self.__resthelper('/contacts', data, method='POST')
