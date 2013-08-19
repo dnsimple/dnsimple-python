@@ -87,7 +87,7 @@ class DNSimple(object):
         else:
             return {'Authorization': self.__authstring}
 
-    def __resthelper(self, url, postdata=None, method=None):
+    def __resthelper(self, url, postdata=None, method=None, http_codes=()):
         """
         Does GET requests and (if postdata specified) POST requests.
 
@@ -104,17 +104,22 @@ class DNSimple(object):
         request = Request(url, postdata, headers)
         if method is not None:
             request.get_method = lambda: method
-        result = self.__requesthelper(request)
+        result = self.__requesthelper(request, http_codes)
         if result:
             return json.loads(result)
         else:
             return None
 
-    def __requesthelper(self, request):
+    def __requesthelper(self, request, http_codes):
         """Does requests and maps HTTP responses into delicious Python juice"""
         try:
             handle = urlopen(request)
         except URLError, e:
+            # For expected non-200 HTTP responses, return the page.
+            if hasattr(e, 'code') and hasattr(e, 'read'):
+                if e.code in http_codes:
+                    return e.read()
+
             # Check returned URLError for issues and report 'em
             if hasattr(e, 'reason'):
                 raise DNSimpleException(
@@ -168,7 +173,8 @@ class DNSimple(object):
 
     def check(self, domainname):
         """ Check if domain is available for registration """
-        return self.__resthelper('/domains/' + domainname + '/check')
+        return self.__resthelper('/domains/' + domainname + '/check',
+                                 http_codes=(404,))
 
     def register(self, domainname, registrant_id=None):
         """
