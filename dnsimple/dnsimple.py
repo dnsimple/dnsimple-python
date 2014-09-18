@@ -1,16 +1,18 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Client for DNSimple REST API
 https://dnsimple.com/documentation/api
 """
+import configparser
 
 __version__ = '0.1.0'
 
-
-import base64
-from urllib2 import Request, urlopen, URLError
 import re
-from BaseHTTPServer import BaseHTTPRequestHandler
+import json
+import base64
+from http.server import BaseHTTPRequestHandler
+from urllib.request import Request, urlopen, URLError
+
 # Update Pythons list of error codes with some that are missing
 newhttpcodes = {
     422: ('Unprocessable Entity', 'HTTP_UNPROCESSABLE_ENTITY'),
@@ -22,24 +24,16 @@ newhttpcodes = {
 for code in newhttpcodes:
     BaseHTTPRequestHandler.responses[code] = newhttpcodes[code]
 
-try:
-    # Use stdlib's json if available (2.6+)
-    import json
-except ImportError:
-    # Otherwise require extra simplejson library
-    import simplejson as json
-
 
 class DNSimpleException(Exception):
     pass
 
 
 class DNSimple(object):
-
     def __init__(self,
-            username=None, password=None,  # HTTP Basic Auth
-            email=None, api_token=None,  # API Token Auth
-            sandbox=False):  # Use the testing sandbox.
+                 username=None, password=None,  # HTTP Basic Auth
+                 email=None, api_token=None,  # API Token Auth
+                 sandbox=False):  # Use the testing sandbox.
         """
         Create authenticated API client.
 
@@ -53,28 +47,29 @@ class DNSimple(object):
         the API authentication credentials are preferred.
         """
         if sandbox:
-            self.__endpoint = 'https://test.dnsimple.com'
+            self.__endpoint = 'https://sandbox.dnsimple.com'
         else:
             self.__endpoint = 'https://dnsimple.com'
 
-        self.__useragent = 'DNSimple Python API v20120827'
+        self.__useragent = 'DNSimple Python API v20140917'
+
+        if email is None and api_token is None and username is None and password is None:
+            config = configparser.ConfigParser()
+            config.read('.dnsimple')
+            username = config['DNSimple'].get('username', None)
+            password = config['DNSimple'].get('password', None)
+            email = config['DNSimple'].get('email', None)
+            api_token = config['DNSimple'].get('api_token', None)
+
         self.__email, self.__api_token = email, api_token
+
         if email is None and api_token is None:
             if username is None and password is None:
-                try:
-                    passwordfile = open('.dnsimple').read()
-                    username = re.findall(r'username:.*',
-                        passwordfile)[0].split(':')[1].strip()
-                    password = re.findall(r'password:.*',
-                        passwordfile)[0].split(':')[1].strip()
-                except Exception, ex:
-                    raise DNSimpleException(
-                            'Could not open .dnsimple file: %s' % ex)
-            self.__authstring = self.__getauthstring(
-                self.__endpoint, username, password)
+                raise DNSimpleException('No authentication details provided.')
+            self.__authstring = self.__getauthstring(self.__endpoint, username, password)
 
     def __getauthstring(self, __endpoint, username, password):
-        encodedstring = base64.encodestring(username + ':' + password)[:-1]
+        encodedstring = base64.encodebytes(username + ':' + password)[:-1]
         return "Basic %s" % encodedstring
 
     def __getauthheader(self):
@@ -83,7 +78,7 @@ class DNSimple(object):
         """
         if self.__api_token:
             return {'X-DNSimple-Token': '%s:%s'
-                    % (self.__email, self.__api_token)}
+                                        % (self.__email, self.__api_token)}
         else:
             return {'Authorization': self.__authstring}
 
@@ -100,7 +95,7 @@ class DNSimple(object):
         headers.update({
             "User-Agent": self.__useragent,
             "Accept": "application/json",  # Accept required per doco
-            })
+        })
         request = Request(url, postdata, headers)
         if method is not None:
             request.get_method = lambda: method
@@ -114,7 +109,7 @@ class DNSimple(object):
         """Does requests and maps HTTP responses into delicious Python juice"""
         try:
             handle = urlopen(request)
-        except URLError, e:
+        except URLError as e:
             # For expected non-200 HTTP responses, return the page.
             if hasattr(e, 'code') and hasattr(e, 'read'):
                 if e.code in http_codes:
@@ -130,7 +125,7 @@ class DNSimple(object):
                     'Error code %s: %s'
                     % (e.code, BaseHTTPRequestHandler.responses[e.code]))
         else:
-            return handle.read()
+            return handle.read().decode()
 
     def _prepare_data_dict(self, data, keyname):
         """
@@ -144,7 +139,7 @@ class DNSimple(object):
         have the 'KEYNAME[X]' key name formatting, for example Record API
         data would end up as {'record[a]': 'v1', 'record[b]': 'v2'}
         """
-        if isinstance(data, basestring):
+        if isinstance(data, str):
             return data
         prepared_data = {}
         for key, value in data.items():
@@ -158,17 +153,20 @@ class DNSimple(object):
     def domains(self):
         """Get a list of all domains in your account."""
         return self.__resthelper('/domains')
+
     getdomains = domains  # Alias for backwards-compatibility
 
     def domain(self, id_or_domainname):
         """Get the details for a specific domain in your account. ."""
         return self.__resthelper('/domains/' + id_or_domainname)
+
     getdomain = domain  # Alias for backwards-compatibility
 
     def add_domain(self, domainname):
         """Create a single domain in DNSimple in your account."""
         postdata = 'domain[name]=' + domainname
         return self.__resthelper('/domains', postdata)
+
     adddomain = add_domain  # Alias for backwards-compatibility
 
     def check(self, domainname):
@@ -185,7 +183,7 @@ class DNSimple(object):
             # Get the registrant ID from the first domain in the acount
             try:
                 registrant_id = self.getdomains()[0]['domain']['registrant_id']
-            except Exception, ex:
+            except Exception as ex:
                 raise DNSimpleException(
                     'Could not find registrant_id! Please specify manually: %s'
                     % ex)
@@ -207,19 +205,21 @@ class DNSimple(object):
         domain ID or the domain name.
         """
         return self.__resthelper('/domains/' + id_or_domainname,
-            method='DELETE')
+                                 method='DELETE')
 
     # RECORDS
 
     def records(self, id_or_domainname):
         """ Get the list of records for the specific domain """
         return self.__resthelper('/domains/' + id_or_domainname + '/records')
+
     getrecords = records  # Alias for backwards-compatibility
 
     def record(self, id_or_domainname, record_id):
         """ Get details about a specific record """
         return self.__resthelper(
             '/domains/' + id_or_domainname + '/records/' + str(record_id))
+
     getrecorddetail = record  # Alias for backwards-compatibility
 
     def add_record(self, id_or_domainname, data):
@@ -254,6 +254,7 @@ class DNSimple(object):
         return self.__resthelper(
             '/domains/' + id_or_domainname + '/records/' + str(record_id),
             data, method='PUT')
+
     updaterecord = update_record  # Alias for backwards-compatibility
 
     def delete_record(self, id_or_domainname, record_id):
@@ -262,7 +263,7 @@ class DNSimple(object):
             '/domains/' + id_or_domainname + '/records/' + str(record_id),
             method='DELETE')
 
-    ## CONTACTS
+    # # CONTACTS
 
     def contacts(self):
         """Get a list of all domain contacts in your account."""
