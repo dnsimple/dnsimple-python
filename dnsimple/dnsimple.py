@@ -4,7 +4,7 @@ Client for DNSimple REST API
 https://dnsimple.com/documentation/api
 """
 
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 
 import base64
 import configparser
