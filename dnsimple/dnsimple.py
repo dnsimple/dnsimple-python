@@ -42,10 +42,13 @@ class DNSimple(object):
         if email is None and api_token is None and username is None and password is None:
             config = configparser.ConfigParser()
             config.read('.dnsimple')
-            username = config['DNSimple'].get('username', None)
-            password = config['DNSimple'].get('password', None)
-            email = config['DNSimple'].get('email', None)
-            api_token = config['DNSimple'].get('api_token', None)
+            try:
+                username = config['DNSimple'].get('username', None)
+                password = config['DNSimple'].get('password', None)
+                email = config['DNSimple'].get('email', None)
+                api_token = config['DNSimple'].get('api_token', None)
+            except KeyError:
+                raise DNSimpleException('No authentication details provided.')
 
         self.__email, self.__api_token = email, api_token
 
