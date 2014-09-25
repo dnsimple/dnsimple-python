@@ -27,7 +27,7 @@ class DNSimple(object):
         Provide `username` and `password` to use HTTP Basic auth.
 
         If neither username/password nor api_token credentials are provided,
-        the username/password will be read from the .dnsimple file.
+        they will be read from the .dnsimple file.
 
         If both username/password and email/api_token credentials are provided,
         the API authentication credentials are preferred.
@@ -94,7 +94,7 @@ class DNSimple(object):
 
     @staticmethod
     def __request_helper(request):
-        """Handles firing off requests and exception raising"""
+        """Handles firing off requests and exception raising."""
         try:
             session = Session()
             handle = session.send(request)
