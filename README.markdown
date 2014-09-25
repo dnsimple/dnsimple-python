@@ -101,7 +101,7 @@ Results are the same as `domains()` above, but only show the domain specified.
 	dns.register('newdomain.com')
 
 This will register 'newdomain.com', automatically picking the registrant\_id
-from your first domain. To specify a particularly `registrant\_id`, just run:
+from your first domain. To specify a particularly `registrant_id`, just run:
 
 	dns.register('newdomain.com', 99)
 

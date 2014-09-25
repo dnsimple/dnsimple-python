@@ -4,7 +4,7 @@ import unittest
 from dnsimple import DNSimple, DNSimpleException
 
 
-class RecordsTestCase(unittest.TestCase):
+class DomainsTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
