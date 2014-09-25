@@ -113,7 +113,7 @@ class DNSimple(object):
         response = handle.json()
 
         if 400 <= handle.status_code:
-            raise DNSimpleException(response['message'])
+            raise DNSimpleException(response)
 
         return response
 
@@ -162,7 +162,7 @@ class DNSimple(object):
             'name': domain_name,
             'registrant_id': registrant_id
         }
-        return self.__rest_helper('/domain_registrations', data=data, method='GET')
+        return self.__rest_helper('/domain_registrations', data=data, method='POST')
 
     def transfer(self, domain_name, registrant_id):
         """
