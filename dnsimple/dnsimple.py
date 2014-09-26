@@ -22,15 +22,6 @@ except ImportError:
     import configparser
 from requests import Request, Session, ConnectionError, HTTPError
 
-# To handle discrepancies between python 2 and 3 bytes.
-import sys
-if sys.version < '3':
-    def b(x):
-        return x
-else:
-    def b(x):
-        return x.encode()
-
 
 class DNSimpleException(Exception):
     pass
@@ -85,7 +76,7 @@ class DNSimple(object):
 
     @staticmethod
     def __get_auth_string(username, password):
-        encoded_string = encodebytes(b(username + ':' + password))[:-1].decode()
+        encoded_string = encodebytes((username + ':' + password).encode())[:-1].decode()
         return "Basic {encoded_string}".format(encoded_string=encoded_string)
 
     def __get_auth_header(self):
