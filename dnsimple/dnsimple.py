@@ -1,26 +1,10 @@
 #!/usr/bin/env python
 """
 Client for DNSimple REST API
-https://dnsimple.com/documentation/api
+http://developer.dnsimple.com/overview/
 """
 
-__version__ = '0.1.0'
-
-
-import base64
-from urllib2 import Request, urlopen, URLError
-import re
-from BaseHTTPServer import BaseHTTPRequestHandler
-# Update Pythons list of error codes with some that are missing
-newhttpcodes = {
-    422: ('Unprocessable Entity', 'HTTP_UNPROCESSABLE_ENTITY'),
-    423: ('Locked', 'HTTP_LOCKED'),
-    424: ('Failed Dependency', 'HTTP_FAILED_DEPENDENCY'),
-    425: ('No code', 'HTTP_NO_CODE'),
-    426: ('Upgrade Required', 'HTTP_UPGRADE_REQUIRED'),
-}
-for code in newhttpcodes:
-    BaseHTTPRequestHandler.responses[code] = newhttpcodes[code]
+__version__ = '0.3.3'
 
 try:
     # Use stdlib's json if available (2.6+)
@@ -28,6 +12,11 @@ try:
 except ImportError:
     # Otherwise require extra simplejson library
     import simplejson as json
+try:
+    import ConfigParser as configparser
+except ImportError:
+    import configparser
+from requests import Request, Session, ConnectionError, HTTPError
 
 
 class DNSimpleException(Exception):
@@ -35,11 +24,10 @@ class DNSimpleException(Exception):
 
 
 class DNSimple(object):
-
     def __init__(self,
-            username=None, password=None,  # HTTP Basic Auth
-            email=None, api_token=None,  # API Token Auth
-            sandbox=False):  # Use the testing sandbox.
+                 username=None, password=None,  # HTTP Basic Auth
+                 email=None, api_token=None,  # API Token Auth
+                 sandbox=False):  # Use the testing sandbox.
         """
         Create authenticated API client.
 
@@ -47,182 +35,177 @@ class DNSimple(object):
         Provide `username` and `password` to use HTTP Basic auth.
 
         If neither username/password nor api_token credentials are provided,
-        the username/password will be read from the .dnsimple file.
+        they will be read from the .dnsimple file.
 
         If both username/password and email/api_token credentials are provided,
         the API authentication credentials are preferred.
         """
         if sandbox:
-            self.__endpoint = 'https://test.dnsimple.com'
+            self.__endpoint = 'https://api.sandbox.dnsimple.com/v1'
         else:
-            self.__endpoint = 'https://dnsimple.com'
+            self.__endpoint = 'https://api.dnsimple.com/v1'
 
-        self.__useragent = 'DNSimple Python API v20120827'
+        self.__user_agent = 'DNSimple Python API {version}'.format(version=__version__)
+
+        if email is None and api_token is None and username is None and password is None:
+            config = configparser.ConfigParser(defaults={
+                'username': None,
+                'password': None,
+                'email': None,
+                'api_token': None
+            })
+            config.read('.dnsimple')
+            try:
+                username = config.get('DNSimple', 'username')
+                password = config.get('DNSimple', 'password')
+                email = config.get('DNSimple', 'email')
+                api_token = config.get('DNSimple', 'api_token')
+            except configparser.NoSectionError:
+                pass
+
         self.__email, self.__api_token = email, api_token
+
         if email is None and api_token is None:
             if username is None and password is None:
-                try:
-                    passwordfile = open('.dnsimple').read()
-                    username = re.findall(r'username:.*',
-                        passwordfile)[0].split(':')[1].strip()
-                    password = re.findall(r'password:.*',
-                        passwordfile)[0].split(':')[1].strip()
-                except Exception, ex:
-                    raise DNSimpleException(
-                            'Could not open .dnsimple file: %s' % ex)
-            self.__authstring = self.__getauthstring(
-                self.__endpoint, username, password)
+                raise DNSimpleException('No authentication details provided.')
+            self.__auth_string = self.__get_auth_string(username, password)
 
-    def __getauthstring(self, __endpoint, username, password):
-        encodedstring = base64.encodestring(username + ':' + password)[:-1]
-        return "Basic %s" % encodedstring
+    @staticmethod
+    def __get_auth_string(username, password):
+        return 'Basic {username}:{password}'.format(username=username, password=password)
 
-    def __getauthheader(self):
+    def __get_auth_header(self):
         """
         Return a HTTP Basic or X-DNSimple-Token authentication header dict.
         """
         if self.__api_token:
-            return {'X-DNSimple-Token': '%s:%s'
-                    % (self.__email, self.__api_token)}
+            return {'X-DNSimple-Token': '{email}:{api_token}'.format(email=self.__email, api_token=self.__api_token)}
         else:
-            return {'Authorization': self.__authstring}
+            return {'Authorization': self.__auth_string}
 
-    def __resthelper(self, url, postdata=None, method=None, http_codes=()):
+    def __rest_helper(self, url, data=None, params=None, method='GET'):
         """
-        Does GET requests and (if postdata specified) POST requests.
+        Handles requests to the DNSimple API, defaults to GET requests if none
+        provided.
+        """
 
-        For POSTs we do NOT encode our data, as DNSimple's REST API expects
-        square brackets which are normally encoded according to RFC 1738.
-        urllib.urlencode encodes square brackets which the API doesn't like.
-        """
         url = self.__endpoint + url
-        headers = self.__getauthheader()
+        headers = self.__get_auth_header()
         headers.update({
-            "User-Agent": self.__useragent,
-            "Accept": "application/json",  # Accept required per doco
-            })
-        request = Request(url, postdata, headers)
-        if method is not None:
-            request.get_method = lambda: method
-        result = self.__requesthelper(request, http_codes)
-        if result:
-            return json.loads(result)
-        else:
-            return None
+            'User-Agent': self.__user_agent,
+            'Accept': 'application/json',  # Accept required as per documentation
+            'Content-Type': 'application/json'
+        })
+        request = Request(method=method, url=url, headers=headers, data=json.dumps(data), params=params)
 
-    def __requesthelper(self, request, http_codes):
-        """Does requests and maps HTTP responses into delicious Python juice"""
+        prepared_request = request.prepare()
+
+        result = self.__request_helper(prepared_request)
+
+        return result
+
+    @staticmethod
+    def __request_helper(request):
+        """Handles firing off requests and exception raising."""
         try:
-            handle = urlopen(request)
-        except URLError, e:
-            # For expected non-200 HTTP responses, return the page.
-            if hasattr(e, 'code') and hasattr(e, 'read'):
-                if e.code in http_codes:
-                    return e.read()
+            session = Session()
+            handle = session.send(request)
 
-            # Check returned URLError for issues and report 'em
-            if hasattr(e, 'reason'):
-                raise DNSimpleException(
-                    'Failed to reach a server: %s'
-                    % e.reason)
-            elif hasattr(e, 'code'):
-                raise DNSimpleException(
-                    'Error code %s: %s'
-                    % (e.code, BaseHTTPRequestHandler.responses[e.code]))
-        else:
-            return handle.read()
+        except ConnectionError:
+            raise DNSimpleException('Failed to reach a server.')
 
-    def _prepare_data_dict(self, data, keyname):
-        """
-        Return formatted string from given data dict with key names suitable
-        for use in API calls.
+        except HTTPError:
+            raise DNSimpleException('Invalid response.')
 
-        If data provided is a string, it is returned unchanged assuming it
-        is already of the correct format.
+        response = handle.json()
 
-        Basically just converts key/value pairs {'a': 'v1', 'b': 'v2'} to
-        have the 'KEYNAME[X]' key name formatting, for example Record API
-        data would end up as {'record[a]': 'v1', 'record[b]': 'v2'}
-        """
-        if isinstance(data, basestring):
-            return data
-        prepared_data = {}
-        for key, value in data.items():
-            if not key.startswith('%s[' % keyname):
-                key = '%s[%s]' % (keyname, key)
-            prepared_data[key] = str(value)
-        return '&'.join(['='.join(i) for i in prepared_data.items()])
+        if 400 <= handle.status_code:
+            raise DNSimpleException(response)
+
+        return response
 
     # DOMAINS
 
     def domains(self):
         """Get a list of all domains in your account."""
-        return self.__resthelper('/domains')
+        return self.__rest_helper('/domains', method='GET')
+
     getdomains = domains  # Alias for backwards-compatibility
 
-    def domain(self, id_or_domainname):
+    def domain(self, id_or_domain_name):
         """Get the details for a specific domain in your account. ."""
-        return self.__resthelper('/domains/' + id_or_domainname)
+        return self.__rest_helper('/domains/{name}'.format(name=id_or_domain_name), method='GET')
+
     getdomain = domain  # Alias for backwards-compatibility
 
-    def add_domain(self, domainname):
+    def add_domain(self, domain_name):
         """Create a single domain in DNSimple in your account."""
-        postdata = 'domain[name]=' + domainname
-        return self.__resthelper('/domains', postdata)
+        data = {
+            'domain': {
+                'name': domain_name
+            }
+        }
+        return self.__rest_helper('/domains', data, method='POST')
+
     adddomain = add_domain  # Alias for backwards-compatibility
 
-    def check(self, domainname):
+    def check(self, domain_name):
         """ Check if domain is available for registration """
-        return self.__resthelper('/domains/' + domainname + '/check',
-                                 http_codes=(404,))
+        return self.__rest_helper('/domains/{name}/check'.format(name=domain_name), method='GET')
 
-    def register(self, domainname, registrant_id=None):
+    def register(self, domain_name, registrant_id=None):
         """
         Register a domain name with DNSimple and the appropriate
         domain registry.
         """
         if not registrant_id:
-            # Get the registrant ID from the first domain in the acount
+            # Get the registrant ID from the first domain in the account
             try:
                 registrant_id = self.getdomains()[0]['domain']['registrant_id']
-            except Exception, ex:
-                raise DNSimpleException(
-                    'Could not find registrant_id! Please specify manually: %s'
-                    % ex)
-        postdata = ('domain[name]=' + domainname
-                    + '&domain[registrant_id]=' + str(registrant_id))
-        return self.__resthelper('/domain_registrations', postdata)
+            except Exception:
+                raise DNSimpleException('Could not find registrant_id! Please specify manually.')
 
-    def transfer(self, domainname, registrant_id):
+        data = {
+            'name': domain_name,
+            'registrant_id': registrant_id
+        }
+        return self.__rest_helper('/domain_registrations', data=data, method='POST')
+
+    def transfer(self, domain_name, registrant_id):
         """
         Transfer a domain name from another domain registrar into DNSimple.
         """
-        postdata = ('domain[name]=' + domainname
-                    + '&domain[registrant_id]=' + registrant_id)
-        return self.__resthelper('/domain_transfers', postdata)
+        data = {
+            'domain': {
+                'name': domain_name,
+                'registrant_id': registrant_id
+            }
+        }
+        return self.__rest_helper('/domain_transfers', data=data, method='POST')
 
-    def delete(self, id_or_domainname):
+    def delete(self, id_or_domain_name):
         """
         Delete the given domain from your account. You may use either the
         domain ID or the domain name.
         """
-        return self.__resthelper('/domains/' + id_or_domainname,
-            method='DELETE')
+        return self.__rest_helper('/domains/{name}'.format(name=id_or_domain_name), method='DELETE')
 
     # RECORDS
 
-    def records(self, id_or_domainname):
+    def records(self, id_or_domain_name):
         """ Get the list of records for the specific domain """
-        return self.__resthelper('/domains/' + id_or_domainname + '/records')
+        return self.__rest_helper('/domains/{name}/records'.format(name=id_or_domain_name), method='GET')
+
     getrecords = records  # Alias for backwards-compatibility
 
-    def record(self, id_or_domainname, record_id):
+    def record(self, id_or_domain_name, record_id):
         """ Get details about a specific record """
-        return self.__resthelper(
-            '/domains/' + id_or_domainname + '/records/' + str(record_id))
+        return self.__rest_helper(
+            '/domains/{name}/records/{id}'.format(name=id_or_domain_name, id=record_id), method='GET')
+
     getrecorddetail = record  # Alias for backwards-compatibility
 
-    def add_record(self, id_or_domainname, data):
+    def add_record(self, id_or_domain_name, data):
         """
         Create a record for the given domain.
 
@@ -235,12 +218,13 @@ class DNSimple(object):
         - 'ttl'
         - 'prio'
         """
-        data = self._prepare_data_dict(data, 'record')
-        return self.__resthelper(
-            '/domains/' + id_or_domainname + '/records',
-            data, method='POST')
+        data = {
+            'record': data
+        }
+        return self.__rest_helper('/domains/{domain}/records'
+                                  .format(domain=id_or_domain_name), data=data, method='POST')
 
-    def update_record(self, id_or_domainname, record_id, data):
+    def update_record(self, id_or_domain_name, record_id, data):
         """
         Update the given record for the given domain.
 
@@ -250,27 +234,28 @@ class DNSimple(object):
         - 'ttl'
         - 'prio'
         """
-        data = self._prepare_data_dict(data, 'record')
-        return self.__resthelper(
-            '/domains/' + id_or_domainname + '/records/' + str(record_id),
-            data, method='PUT')
+        data = {
+            'record': data
+        }
+        return self.__rest_helper('/domains/{domain}/records/{record}'
+                                  .format(doman=id_or_domain_name, record=record_id), data=data, method='PUT')
+
     updaterecord = update_record  # Alias for backwards-compatibility
 
-    def delete_record(self, id_or_domainname, record_id):
+    def delete_record(self, id_or_domain_name, record_id):
         """ Delete the record with the given ID for the given domain """
-        return self.__resthelper(
-            '/domains/' + id_or_domainname + '/records/' + str(record_id),
-            method='DELETE')
+        return self.__rest_helper('/domains/{domain}/records/{record}'
+                                  .format(domain=id_or_domain_name, record=record_id), method='DELETE')
 
-    ## CONTACTS
+    # # CONTACTS
 
     def contacts(self):
         """Get a list of all domain contacts in your account."""
-        return self.__resthelper('/contacts')
+        return self.__rest_helper('/contacts', method='GET')
 
-    def contact(self, id):
+    def contact(self, contact_id):
         """Get a domain contact."""
-        return self.__resthelper('/contacts/' + id)
+        return self.__rest_helper('/contacts/{contact}'.format(contact=contact_id), method='GET')
 
     def add_contact(self, data):
         """
@@ -294,5 +279,7 @@ class DNSimple(object):
         - `fax`
         - `label`
         """
-        data = self._prepare_data_dict(data, 'contact')
-        return self.__resthelper('/contacts', data, method='POST')
+        data = {
+            'contact': data
+        }
+        return self.__rest_helper('/contacts', data=data, method='POST')
