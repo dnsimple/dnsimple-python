@@ -4,7 +4,7 @@ Client for DNSimple REST API
 http://developer.dnsimple.com/overview/
 """
 
-__version__ = '0.3.2'
+__version__ = '0.3.3'
 
 try:
     # Use stdlib's json if available (2.6+)
@@ -12,10 +12,6 @@ try:
 except ImportError:
     # Otherwise require extra simplejson library
     import simplejson as json
-try:
-    from base64 import encodestring as encodebytes
-except ImportError:
-    from base64 import encodebytes
 try:
     import ConfigParser as configparser
 except ImportError:
@@ -49,7 +45,7 @@ class DNSimple(object):
         else:
             self.__endpoint = 'https://api.dnsimple.com/v1'
 
-        self.__user_agent = 'DNSimple Python API'
+        self.__user_agent = 'DNSimple Python API {version}'.format(version=__version__)
 
         if email is None and api_token is None and username is None and password is None:
             config = configparser.ConfigParser(defaults={
@@ -76,16 +72,14 @@ class DNSimple(object):
 
     @staticmethod
     def __get_auth_string(username, password):
-        encoded_string = encodebytes(username + ':' + password)[:-1]
-        return "Basic %s" % encoded_string
+        return 'Basic {username}:{password}'.format(username=username, password=password)
 
     def __get_auth_header(self):
         """
         Return a HTTP Basic or X-DNSimple-Token authentication header dict.
         """
         if self.__api_token:
-            return {'X-DNSimple-Token': '%s:%s'
-                                        % (self.__email, self.__api_token)}
+            return {'X-DNSimple-Token': '{email}:{api_token}'.format(email=self.__email, api_token=self.__api_token)}
         else:
             return {'Authorization': self.__auth_string}
 
@@ -140,7 +134,7 @@ class DNSimple(object):
 
     def domain(self, id_or_domain_name):
         """Get the details for a specific domain in your account. ."""
-        return self.__rest_helper('/domains/' + str(id_or_domain_name), method='GET')
+        return self.__rest_helper('/domains/{name}'.format(name=id_or_domain_name), method='GET')
 
     getdomain = domain  # Alias for backwards-compatibility
 
@@ -157,7 +151,7 @@ class DNSimple(object):
 
     def check(self, domain_name):
         """ Check if domain is available for registration """
-        return self.__rest_helper('/domains/' + domain_name + '/check', method='GET')
+        return self.__rest_helper('/domains/{name}/check'.format(name=domain_name), method='GET')
 
     def register(self, domain_name, registrant_id=None):
         """
@@ -194,20 +188,20 @@ class DNSimple(object):
         Delete the given domain from your account. You may use either the
         domain ID or the domain name.
         """
-        return self.__rest_helper('/domains/' + str(id_or_domain_name), method='DELETE')
+        return self.__rest_helper('/domains/{name}'.format(name=id_or_domain_name), method='DELETE')
 
     # RECORDS
 
     def records(self, id_or_domain_name):
         """ Get the list of records for the specific domain """
-        return self.__rest_helper('/domains/' + str(id_or_domain_name) + '/records', method='GET')
+        return self.__rest_helper('/domains/{name}/records'.format(name=id_or_domain_name), method='GET')
 
     getrecords = records  # Alias for backwards-compatibility
 
     def record(self, id_or_domain_name, record_id):
         """ Get details about a specific record """
         return self.__rest_helper(
-            '/domains/' + str(id_or_domain_name) + '/records/' + str(record_id), method='GET')
+            '/domains/{name}/records/{id}'.format(name=id_or_domain_name, id=record_id), method='GET')
 
     getrecorddetail = record  # Alias for backwards-compatibility
 
@@ -227,7 +221,8 @@ class DNSimple(object):
         data = {
             'record': data
         }
-        return self.__rest_helper('/domains/' + str(id_or_domain_name) + '/records', data=data, method='POST')
+        return self.__rest_helper('/domains/{domain}/records'
+                                  .format(domain=id_or_domain_name), data=data, method='POST')
 
     def update_record(self, id_or_domain_name, record_id, data):
         """
@@ -242,14 +237,15 @@ class DNSimple(object):
         data = {
             'record': data
         }
-        return self.__rest_helper('/domains/' + str(id_or_domain_name) + '/records/' + str(record_id), data=data,
-                                  method='PUT')
+        return self.__rest_helper('/domains/{domain}/records/{record}'
+                                  .format(doman=id_or_domain_name, record=record_id), data=data, method='PUT')
 
     updaterecord = update_record  # Alias for backwards-compatibility
 
     def delete_record(self, id_or_domain_name, record_id):
         """ Delete the record with the given ID for the given domain """
-        return self.__rest_helper('/domains/' + str(id_or_domain_name) + '/records/' + str(record_id), method='DELETE')
+        return self.__rest_helper('/domains/{domain}/records/{record}'
+                                  .format(domain=id_or_domain_name, record=record_id), method='DELETE')
 
     # # CONTACTS
 
@@ -259,7 +255,7 @@ class DNSimple(object):
 
     def contact(self, contact_id):
         """Get a domain contact."""
-        return self.__rest_helper('/contacts/' + contact_id, method='GET')
+        return self.__rest_helper('/contacts/{contact}'.format(contact=contact_id), method='GET')
 
     def add_contact(self, data):
         """
