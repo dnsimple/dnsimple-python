@@ -59,10 +59,13 @@ class DNSimple(object):
                 'api_token': None
             })
             config.read('.dnsimple')
-            username = config.get('DNSimple', 'username')
-            password = config.get('DNSimple', 'password')
-            email = config.get('DNSimple', 'email')
-            api_token = config.get('DNSimple', 'api_token')
+            try:
+                username = config.get('DNSimple', 'username')
+                password = config.get('DNSimple', 'password')
+                email = config.get('DNSimple', 'email')
+                api_token = config.get('DNSimple', 'api_token')
+            except configparser.NoSectionError:
+                pass
 
         self.__email, self.__api_token = email, api_token
 
