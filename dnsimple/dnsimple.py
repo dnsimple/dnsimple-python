@@ -4,7 +4,7 @@ Client for DNSimple REST API
 http://developer.dnsimple.com/overview/
 """
 
-__version__ = '0.3.3'
+__version__ = '0.3.5'
 
 try:
     # Use stdlib's json if available (2.6+)
@@ -13,10 +13,23 @@ except ImportError:
     # Otherwise require extra simplejson library
     import simplejson as json
 try:
+    from base64 import encodebytes
+except ImportError:
+    from base64 import encodestring as encodebytes
+try:
     import ConfigParser as configparser
 except ImportError:
     import configparser
 from requests import Request, Session, ConnectionError, HTTPError
+
+# To handle discrepancies between python 2 and 3 bytes.
+import sys
+if sys.version < '3':
+    def b(x):
+        return x
+else:
+    def b(x):
+        return x.encode()
 
 
 class DNSimpleException(Exception):
@@ -72,7 +85,8 @@ class DNSimple(object):
 
     @staticmethod
     def __get_auth_string(username, password):
-        return 'Basic {username}:{password}'.format(username=username, password=password)
+        encoded_string = encodebytes(b(username + ':' + password))[:-1].decode()
+        return "Basic {encoded_string}".format(encoded_string=encoded_string)
 
     def __get_auth_header(self):
         """
