@@ -7,7 +7,10 @@ https://dnsimple.com/documentation/api
 __version__ = '0.3.0'
 
 import json
-import base64
+try:
+    from base64 import encodestring as encodebytes
+except ImportError:
+    from base64 import encodebytes
 try:
     import ConfigParser as configparser
 except ImportError:
@@ -44,15 +47,17 @@ class DNSimple(object):
         self.__user_agent = 'DNSimple Python API'
 
         if email is None and api_token is None and username is None and password is None:
-            config = configparser.ConfigParser()
+            config = configparser.ConfigParser(defaults={
+                'username': None,
+                'password': None,
+                'email': None,
+                'api_token': None
+            })
             config.read('.dnsimple')
-            try:
-                username = config['DNSimple'].get('username', None)
-                password = config['DNSimple'].get('password', None)
-                email = config['DNSimple'].get('email', None)
-                api_token = config['DNSimple'].get('api_token', None)
-            except KeyError:
-                raise DNSimpleException('No authentication details provided.')
+            username = config.get('DNSimple', 'username')
+            password = config.get('DNSimple', 'password')
+            email = config.get('DNSimple', 'email')
+            api_token = config.get('DNSimple', 'api_token')
 
         self.__email, self.__api_token = email, api_token
 
@@ -63,7 +68,7 @@ class DNSimple(object):
 
     @staticmethod
     def __get_auth_string(username, password):
-        encoded_string = base64.encodebytes(username + ':' + password)[:-1]
+        encoded_string = encodebytes(username + ':' + password)[:-1]
         return "Basic %s" % encoded_string
 
     def __get_auth_header(self):
