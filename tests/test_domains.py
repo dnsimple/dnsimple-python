@@ -24,8 +24,8 @@ class DomainsTestCase(unittest.TestCase):
         domain_to_delete_by_name = cls.dns.add_domain('deletebyname.test')
         cls.domain_to_delete_name = domain_to_delete_by_name['domain']['name']
 
-        cls.failure_domain_id = '0'
-        cls.failure_domain_name = 'i.dont.own.this.domain'
+        cls.failure_id = '0'
+        cls.failure_name = 'i.dont.own.this.domain'
 
     def test_check_record(self):
         self.assertTrue('status' in self.dns.check(self.success_domain_name))
@@ -42,7 +42,7 @@ class DomainsTestCase(unittest.TestCase):
         self.assertTrue('domain' in domain)
 
     def test_get_domain_by_name_failure(self):
-        self.assertRaises(DNSimpleException, self.dns.domain, self.failure_domain_name)
+        self.assertRaises(DNSimpleException, self.dns.domain, self.failure_name)
 
     def test_add_domain(self):
         self.assertTrue('domain' in self.dns.add_domain('add.test'))
@@ -57,10 +57,10 @@ class DomainsTestCase(unittest.TestCase):
         self.assertFalse(self.dns.delete(self.domain_to_delete_id))
 
     def test_delete_domain_by_name_failure(self):
-        self.assertRaises(DNSimpleException, self.dns.delete, self.failure_domain_name)
+        self.assertRaises(DNSimpleException, self.dns.delete, self.failure_name)
 
     def test_delete_domain_by_id_failure(self):
-        self.assertRaises(DNSimpleException, self.dns.delete, self.failure_domain_id)
+        self.assertRaises(DNSimpleException, self.dns.delete, self.failure_id)
 
 if __name__ == '__main__':
     unittest.main()

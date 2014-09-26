@@ -194,7 +194,7 @@ class DNSimple(object):
     def record(self, id_or_domain_name, record_id):
         """ Get details about a specific record """
         return self.__rest_helper(
-            '/domains/' + id_or_domain_name + '/records/' + str(record_id), method='GET')
+            '/domains/' + str(id_or_domain_name) + '/records/' + str(record_id), method='GET')
 
     getrecorddetail = record  # Alias for backwards-compatibility
 
@@ -214,7 +214,7 @@ class DNSimple(object):
         data = {
             'record': data
         }
-        return self.__rest_helper( '/domains/' + str(id_or_domain_name) + '/records', data=data, method='POST')
+        return self.__rest_helper('/domains/' + str(id_or_domain_name) + '/records', data=data, method='POST')
 
     def update_record(self, id_or_domain_name, record_id, data):
         """
