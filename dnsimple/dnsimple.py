@@ -1,12 +1,17 @@
 #!/usr/bin/env python
 """
 Client for DNSimple REST API
-https://dnsimple.com/documentation/api
+http://developer.dnsimple.com/overview/
 """
 
-__version__ = '0.3.0'
+__version__ = '0.3.2'
 
-import json
+try:
+    # Use stdlib's json if available (2.6+)
+    import json
+except ImportError:
+    # Otherwise require extra simplejson library
+    import simplejson as json
 try:
     from base64 import encodestring as encodebytes
 except ImportError:
