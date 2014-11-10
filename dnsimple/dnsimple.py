@@ -252,7 +252,7 @@ class DNSimple(object):
             'record': data
         }
         return self.__rest_helper('/domains/{domain}/records/{record}'
-                                  .format(doman=id_or_domain_name, record=record_id), data=data, method='PUT')
+                                  .format(domain=id_or_domain_name, record=record_id), data=data, method='PUT')
 
     updaterecord = update_record  # Alias for backwards-compatibility
 
