@@ -4,7 +4,7 @@ Client for DNSimple REST API
 http://developer.dnsimple.com/overview/
 """
 
-__version__ = '0.3.5'
+__version__ = '0.3.6'
 
 try:
     # Use stdlib's json if available (2.6+)
@@ -20,7 +20,10 @@ try:
     import ConfigParser as configparser
 except ImportError:
     import configparser
-from requests import Request, Session, ConnectionError, HTTPError
+try:
+    from requests import Request, Session, ConnectionError, HTTPError
+except ImportError:
+    pass  # Issues with setup.py needed to import module but the `request` dependency hasn't been installed yet.
 
 
 class DNSimpleException(Exception):
