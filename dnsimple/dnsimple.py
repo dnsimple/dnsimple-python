@@ -6,6 +6,8 @@ http://developer.dnsimple.com/overview/
 
 __version__ = '0.3.5'
 
+import os.path
+
 try:
     # Use stdlib's json if available (2.6+)
     import json
@@ -67,7 +69,11 @@ class DNSimple(object):
                 'email': None,
                 'api_token': None
             })
-            config.read('.dnsimple')
+            for cfg in ['.dnsimple', os.path.expanduser('~/.dnsimple')]:
+                if os.path.exists(cfg):
+                    config.read(cfg)
+                    print "read {0}".format(cfg)
+                    break
             try:
                 username = config.get('DNSimple', 'username')
                 password = config.get('DNSimple', 'password')
