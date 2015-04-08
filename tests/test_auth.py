@@ -14,6 +14,13 @@ class AuthTestCase(unittest.TestCase):
         dns = DNSimple(email='chris.morgan@youngshand.com', api_token='L0lkPizHnqVrsIyViLpB', sandbox=True)
         self.assertTrue(type(dns.domains()) is list)
 
+    def test_domain_token_auth(self):
+        dns = DNSimple(api_token='DOMAIN_TOKEN', single_domain=True, sandbox=True)
+        with self.assertRaises(DNSimpleException):
+            self.assertTrue(type(dns.domains()) is list)
+        # FIXME: Needs proper credentials
+        self.assertTrue(type(dns.records('DOMAIN')) is list)
+
     def test_config_auth(self):
         dns = DNSimple(sandbox=True)
         self.assertTrue(type(dns.domains()) is list)
