@@ -42,6 +42,7 @@ class DNSimple(object):
     def __init__(self,
                  username=None, password=None,  # HTTP Basic Auth
                  email=None, api_token=None,  # API Token Auth
+                 domain_token=None,  # API Domain Token Auth
                  sandbox=False):  # Use the testing sandbox.
         """
         Create authenticated API client.
@@ -49,8 +50,11 @@ class DNSimple(object):
         Provide `email` and `api_token` to use X-DNSimple-Token auth.
         Provide `username` and `password` to use HTTP Basic auth.
 
-        If neither username/password nor api_token credentials are provided,
-        they will be read from the .dnsimple file.
+        If neither username/password nor domain/api_token credentials are
+        provided, they will be read from the .dnsimple file.
+
+        If both a domain_token and api_token are provided, the api_token
+        credentials are preferred.
 
         If both username/password and email/api_token credentials are provided,
         the API authentication credentials are preferred.
@@ -62,12 +66,13 @@ class DNSimple(object):
 
         self.__user_agent = 'DNSimple Python API {version}'.format(version=__version__)
 
-        if email is None and api_token is None and username is None and password is None:
+        if email is None and api_token is None and domain_token is None and username is None and password is None:
             config = configparser.ConfigParser(defaults={
                 'username': None,
                 'password': None,
                 'email': None,
-                'api_token': None
+                'api_token': None,
+                'domain_token': None
             })
             for cfg in ['.dnsimple', os.path.expanduser('~/.dnsimple')]:
                 if os.path.exists(cfg):
@@ -79,10 +84,11 @@ class DNSimple(object):
                 password = config.get('DNSimple', 'password')
                 email = config.get('DNSimple', 'email')
                 api_token = config.get('DNSimple', 'api_token')
+                domain_token = config.get('DNSimple', 'domain_token')
             except configparser.NoSectionError:
                 pass
 
-        self.__email, self.__api_token = email, api_token
+        self.__email, self.__api_token, self.__domain_token = email, api_token, domain_token
 
         if email is None and api_token is None:
             if username is None and password is None:
@@ -100,6 +106,8 @@ class DNSimple(object):
         """
         if self.__api_token:
             return {'X-DNSimple-Token': '{email}:{api_token}'.format(email=self.__email, api_token=self.__api_token)}
+        elif self.__domain_token:
+            return {'X-DNSimple-Domain-Token': '{domain_token}'.format(domain_token=self.__domain_token)}
         else:
             return {'Authorization': self.__auth_string}
 
