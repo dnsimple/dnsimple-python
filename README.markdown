@@ -43,6 +43,12 @@ You can provide your DNSimple credentials in one of two ways:
         email: email@domain.com
         api_token: yourapitoken
 
+    Or (assuming `$DNSIMPLE_EMAIL` and `$DNSIMPLE_TOKEN` are environment variables):
+
+        [DNSimple]
+        email: %(DNSIMPLE_EMAIL)s
+        api_token: %(DNSIMPLE_TOKEN)s
+
     You then need not provide any credentials when constructing `DNSimple`:
 
         dns = DNSimple()

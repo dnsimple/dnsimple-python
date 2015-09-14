@@ -67,13 +67,15 @@ class DNSimple(object):
         self.__user_agent = 'DNSimple Python API {version}'.format(version=__version__)
 
         if email is None and api_token is None and domain_token is None and username is None and password is None:
-            config = configparser.ConfigParser(defaults={
+            defaults = dict(os.environ)            
+            defaults.update({
                 'username': None,
                 'password': None,
                 'email': None,
                 'api_token': None,
                 'domain_token': None
             })
+            config = configparser.ConfigParser(defaults=defaults)
             for cfg in ['.dnsimple', os.path.expanduser('~/.dnsimple')]:
                 if os.path.exists(cfg):
                     config.read(cfg)
