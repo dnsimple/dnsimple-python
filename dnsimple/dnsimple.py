@@ -7,6 +7,7 @@ http://developer.dnsimple.com/overview/
 __version__ = '0.3.6'
 
 import os.path
+import time
 
 try:
     # Use stdlib's json if available (2.6+)
@@ -307,3 +308,37 @@ class DNSimple(object):
             'contact': data
         }
         return self.__rest_helper('/contacts', data=data, method='POST')
+
+
+    # # SSL CERTIFICATES
+
+    def certificates(self, id_or_domain_name):
+        """Get a list of all certificates for the specific domain """
+        return self.__rest_helper('/domains/{name}/certificates'.format(name=id_or_domain_name), method='GET')
+
+    getcertificates = certificates  # Alias for backwards-compatibility
+
+    def certificate(self, id_or_domain_name, id_or_certificate_name, valid_certificate=True):
+        """ Get a specific certificate for a specific domain """
+        certificate_id = None
+        if id_or_certificate_name.isdigit():
+            certificate_id = id_or_certificate_name
+        else:
+            try:
+                certificates = self.certificates(id_or_domain_name)
+                for cert in certificates:
+                    if cert['certificate']['name'] == id_or_certificate_name:
+                        if valid_certificate and cert['certificate']['expires_on'] >= time.strftime("%Y-%m-%d"):
+                            certificate_id = cert['certificate']['id']
+                        elif not valid_certificate and cert['certificate']['expires_on'] < time.strftime("%Y-%m-%d"):
+                            certificate_id = cert['certificate']['id']
+
+                if certificate_id is None:
+                    raise Exception
+
+            except Exception:
+                raise DNSimpleException('Could not find certificate_id! Please specify manually.')
+
+        return self.__rest_helper('/domains/{name}/certificates/{id}'.format(name=id_or_domain_name, id=certificate_id), method='GET')
+
+    getcertificate = certificate  # Alias for backwards-compatibility
