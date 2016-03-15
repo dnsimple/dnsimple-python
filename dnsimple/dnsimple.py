@@ -316,29 +316,27 @@ class DNSimple(object):
         """Get a list of all certificates for the specific domain """
         return self.__rest_helper('/domains/{name}/certificates'.format(name=id_or_domain_name), method='GET')
 
-    getcertificates = certificates  # Alias for backwards-compatibility
-
-    def certificate(self, id_or_domain_name, id_or_certificate_name, valid_certificate=True):
+    def certificate(self, id_or_domain_name, id_or_certificate_name):
         """ Get a specific certificate for a specific domain """
-        certificate_id = None
+        certificate_id = []
         if id_or_certificate_name.isdigit():
-            certificate_id = id_or_certificate_name
+            certificate_id[0] = id_or_certificate_name
         else:
-            try:
-                certificates = self.certificates(id_or_domain_name)
+            certificates = self.certificates(id_or_domain_name)
+            # Check if a valid certificate exists
+            for cert in certificates:
+                if cert['certificate']['name'] == id_or_certificate_name and cert['certificate']['expires_on'] >= time.strftime("%Y-%m-%d"):
+                    certificate_id.append(cert['certificate']['id'])
+
+            # If none were found, check expired certificates
+            if len(certificate_id) == 0:
                 for cert in certificates:
-                    if cert['certificate']['name'] == id_or_certificate_name:
-                        if valid_certificate and cert['certificate']['expires_on'] >= time.strftime("%Y-%m-%d"):
-                            certificate_id = cert['certificate']['id']
-                        elif not valid_certificate and cert['certificate']['expires_on'] < time.strftime("%Y-%m-%d"):
-                            certificate_id = cert['certificate']['id']
+                   if cert['certificate']['name'] == id_or_certificate_name:
+                       certificate_id.append(cert['certificate']['id'])
 
-                if certificate_id is None:
-                    raise Exception
+            if len(certificate_id) == 0:
+                raise DNSimpleException("Could not find a certificate id for '%s'. Please specify it manually." % id_or_certificate_name)
+            elif len(certificate_id) > 1:
+                raise DNSimpleException("Multiple certificate ids were found for '%s'. Please specify certificate id manually." % id_or_certificate_name)
 
-            except Exception:
-                raise DNSimpleException('Could not find certificate_id! Please specify manually.')
-
-        return self.__rest_helper('/domains/{name}/certificates/{id}'.format(name=id_or_domain_name, id=certificate_id), method='GET')
-
-    getcertificate = certificate  # Alias for backwards-compatibility
+        return self.__rest_helper('/domains/{name}/certificates/{id}'.format(name=id_or_domain_name, id=certificate_id[0]), method='GET')
