@@ -130,6 +130,15 @@ All operations on domain records are now supported:
 * Update record: `update_record(id_or_domainname, record_id, data)`
 * Delete record: `delete_record(id_or_domainname, record_id)`
 
-### License
+## Running Tests
+
+Before running tests, you'll need to ensure your environment is set up correctly:
+
+1. If you don't already have a DNSimple sandbox account, [create one](https://sandbox.dnsimple.com/signup) and make sure to have your email address, password, and API token handy.
+1. Ensure you have the `virtualenv` package installed (`pip install virtualenv --upgrade`) since tests are run from this isolated environment
+1. Copy the file `tests/.env.example` to `tests/.env` and supply your sandbox credentials
+1. From the project root, run `make test` -- this will set up your local environment with `virutalenv`, install all necessary dependencies, and run all the tests.
+
+## License
 
 Licensed under the [MIT license](http://www.opensource.org/licenses/mit-license.php)

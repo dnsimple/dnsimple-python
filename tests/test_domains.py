@@ -1,66 +1,97 @@
-__author__ = 'Chris Morgan'
+import pytest
 
-import unittest
 from dnsimple import DNSimple, DNSimpleException
 
+from .fixtures import client
 
-class DomainsTestCase(unittest.TestCase):
+class TestDomains(object):
 
-    @classmethod
-    def setUpClass(cls):
-        cls.dns = DNSimple(sandbox=True)
-        domains = cls.dns.domains()
+    def test_check_domain(self, client):
+        # Ensure invalid domain names cause errors
+        with pytest.raises(DNSimpleException) as exception:
+            client.check('add.test')
 
-        for domain in domains:
-            cls.dns.delete(domain['domain']['name'])
+        assert "The domain name `add.test' is invalid." in str(exception.value)
 
-        new_domain = cls.dns.add_domain('test.test')
-        cls.success_domain_id = new_domain['domain']['id']
-        cls.success_domain_name = new_domain['domain']['name']
+        # Check a domain name that is not available
+        status = client.check('google.com')
 
-        domain_to_delete_by_id = cls.dns.add_domain('deletebyid.test')
-        cls.domain_to_delete_id = domain_to_delete_by_id['domain']['id']
+        assert not status['available']
+        assert status['status'] == 'unavailable'
 
-        domain_to_delete_by_name = cls.dns.add_domain('deletebyname.test')
-        cls.domain_to_delete_name = domain_to_delete_by_name['domain']['name']
+        # Raises exception, but 404 status is 'available' per API documentation:
+        #
+        #   https://developer.dnsimple.com/v1/registrar/#check
+        #
+        #  > If the domain is available then this will return a 404 which indicates
+        #  > that the name is available. If it is not available then the response
+        #  > will be a 200.
+        #
+        with pytest.raises(DNSimpleException) as exception:
+            client.check('dnsimple-python-available-domain.com')
 
-        cls.failure_id = '0'
-        cls.failure_name = 'i.dont.own.this.domain'
+        assert "'available': True" in str(exception.value)
 
-    def test_check_record(self):
-        self.assertTrue('status' in self.dns.check(self.success_domain_name))
+    def test_add_domain_with_invalid_attributes(self, client):
+        with pytest.raises(DNSimpleException) as exception:
+            client.add_domain('bog')
 
-    def test_get_records(self):
-        self.assertTrue(type(self.dns.domains()) is list)
+        assert 'Validation failed' in str(exception.value)
 
-    def test_get_domain_by_id(self):
-        domain = self.dns.domain(self.success_domain_id)
-        self.assertTrue('domain' in domain)
+    def test_listing_domains(self, client):
+        assert client.domains() == []
 
-    def test_get_domain_by_name(self):
-        domain = self.dns.domain(self.success_domain_name)
-        self.assertTrue('domain' in domain)
+        client.add_domain('add.test')
 
-    def test_get_domain_by_name_failure(self):
-        self.assertRaises(DNSimpleException, self.dns.domain, self.failure_name)
+        assert [d['domain']['name'] for d in client.domains()] == ['add.test']
 
-    def test_add_domain(self):
-        self.assertTrue('domain' in self.dns.add_domain('add.test'))
+    def test_get_domain(self, client):
+        # Find by name
+        domain = client.domain('add.test')
 
-    def test_add_domain_failure(self):
-        self.assertRaises(DNSimpleException, self.dns.add_domain, self.success_domain_name)
+        assert domain['domain']['name'] == 'add.test'
 
-    def test_delete_domain_by_name(self):
-        self.assertFalse(self.dns.delete(self.domain_to_delete_name))
+        id = domain['domain']['id']
 
-    def test_delete_domain_by_id(self):
-        self.assertFalse(self.dns.delete(self.domain_to_delete_id))
+        # Find by ID
+        domain = client.domain(id)
 
-    def test_delete_domain_by_name_failure(self):
-        self.assertRaises(DNSimpleException, self.dns.delete, self.failure_name)
+        assert domain['domain']['name'] == 'add.test'
 
-    def test_delete_domain_by_id_failure(self):
-        self.assertRaises(DNSimpleException, self.dns.delete, self.failure_id)
+        # Ensure finding missing domain fails
+        with pytest.raises(DNSimpleException) as exception:
+            client.domain('missing.com')
 
-if __name__ == '__main__':
-    unittest.main()
+        assert "Domain `missing.com` not found" in str(exception.value)
+
+    def test_delete_domains(self, client):
+        domain = client.add_domain('another.test')
+        assert isinstance(domain, dict)
+
+        domain_count = len(client.domains())
+
+        # Test deleting by name
+        response = client.delete('add.test')
+
+        assert isinstance(response, dict)
+        assert len(response) == 0
+        assert len(client.domains()) == (domain_count - 1)
+
+        # Test deleting by ID
+        response = client.delete(domain['domain']['id'])
+
+        assert isinstance(response, dict)
+        assert len(response) == 0
+        assert len(client.domains()) == (domain_count - 2)
+
+        # Ensure deleting non-existent domain by name fails
+        with pytest.raises(DNSimpleException) as exception:
+            client.delete('unknown.domain')
+
+        assert "Domain `unknown.domain` not found" in str(exception.value)
+
+        # Ensure deleting non-existent domain by ID fails
+        with pytest.raises(DNSimpleException) as exception:
+            client.delete(9999)
+
+        assert "Domain `9999` not found" in str(exception.value)
