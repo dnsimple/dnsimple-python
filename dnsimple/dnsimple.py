@@ -86,7 +86,7 @@ class DNSimple(object):
 
         self.__email, self.__api_token, self.__domain_token = email, api_token, domain_token
 
-        if email is None and api_token is None:
+        if email is None and api_token is None and domain_token is None:
             if username is None and password is None:
                 raise DNSimpleException('No authentication details provided.')
             self.__auth_string = self.__get_auth_string(username, password)

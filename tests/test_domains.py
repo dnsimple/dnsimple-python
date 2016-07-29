@@ -1,8 +1,8 @@
 import pytest
 
-from dnsimple import DNSimple, DNSimpleException
+from .fixtures import *
 
-from .fixtures import client
+from dnsimple import DNSimple, DNSimpleException
 
 class TestDomains(object):
 
@@ -46,17 +46,20 @@ class TestDomains(object):
         assert [d['domain']['name'] for d in client.domains()] == ['add.test']
 
     def test_get_domain(self, client):
+        domain_name = 'add.test'
+
         # Find by name
-        domain = client.domain('add.test')
+        domain = client.domain(domain_name)
+        id     = domain['domain']['id']
 
-        assert domain['domain']['name'] == 'add.test'
+        token_only_client = token_client(domain)
 
-        id = domain['domain']['id']
+        assert domain['domain']['name'] == domain_name
+        assert token_only_client.domain(domain_name)['domain']['name'] == domain_name
 
         # Find by ID
-        domain = client.domain(id)
-
-        assert domain['domain']['name'] == 'add.test'
+        assert client.domain(id)['domain']['name'] == domain_name
+        assert token_only_client.domain(id)['domain']['name'] == domain_name
 
         # Ensure finding missing domain fails
         with pytest.raises(DNSimpleException) as exception:
