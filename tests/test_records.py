@@ -1,73 +1,112 @@
-__author__ = 'Chris Morgan'
+import pytest
 
-import unittest
 from dnsimple import DNSimple, DNSimpleException
+from .fixtures import client
 
+@pytest.fixture
+def domain_name():
+    return 'dnsimple-add.test'
 
-class RecordsTestCase(unittest.TestCase):
+@pytest.fixture
+def domain(client, domain_name):
+    try:
+        domain = client.domain(domain_name)
+    except:
+        domain = client.add_domain('dnsimple-add.test')
 
-    @classmethod
-    def setUpClass(cls):
-        cls.dns = DNSimple(sandbox=True)
-        domains = cls.dns.domains()
+    return domain
 
-        for domain in domains:
-            cls.dns.delete(domain['domain']['name'])
+class TestRecords(object):
 
-        new_domain = cls.dns.add_domain('test.test')
-        cls.success_domain_id = new_domain['domain']['id']
-        cls.success_domain_name = new_domain['domain']['name']
+    def record_count(self, client, domain):
+        return len(client.records(domain['domain']['id']))
 
-        new_record_data = {
+    def find_record(self, client, domain, record_name):
+        record  = None
+        matches = [r for r in client.records(domain['domain']['id']) if r['record']['name'] == record_name]
+
+        if len(matches) == 1:
+            record = matches[0]
+
+        return record
+
+    def test_list_records(self, client, domain):
+        # These are the default records created when a domain is created
+        default_record_types = ['NS', 'NS', 'NS', 'NS', 'SOA']
+
+        # Listing by domain name
+        records = client.records(domain['domain']['name'])
+        assert [r['record']['record_type'] for r in records] == default_record_types
+
+        # Listing by domain ID
+        records = client.records(domain['domain']['id'])
+        assert [r['record']['record_type'] for r in records] == default_record_types
+
+    def test_adding_records(self, client, domain):
+        start_record_count = self.record_count(client, domain)
+
+        # Add an A record
+        record = client.add_record(domain['domain']['name'], {
+            'record_type': 'A',
+            'name':        '',
+            'content':     '192.168.1.2'
+        })
+
+        assert isinstance(record, dict)
+
+        assert record['record']['name']    == ''
+        assert record['record']['content'] == '192.168.1.2'
+
+        # Add a CNAME record
+        record = client.add_record(domain['domain']['id'], {
             'record_type': 'CNAME',
-            'name': 'test',
-            'content': 'test.test'
-        }
-        new_record = cls.dns.add_record(new_domain['domain']['id'], new_record_data)
-        cls.success_record_id = new_record['record']['id']
-        cls.success_record_name = new_record['record']['name']
+            'name':        'www',
+            'content':     domain['domain']['name']
+        })
 
-        record_to_delete_data = {
-            'record_type': 'CNAME',
-            'name': 'deletebyid',
-            'content': 'test.test'
-        }
+        assert isinstance(record, dict)
 
-        record_to_delete = cls.dns.add_record(cls.success_domain_id, record_to_delete_data)
-        cls.record_to_delete_id = record_to_delete['record']['id']
+        assert record['record']['name']    == 'www'
+        assert record['record']['content'] == domain['domain']['name']
 
-        cls.failure_id = '0'
-        cls.failure_name = 'i.dont.own.this.domain'
+        # Test adding without parameters causes an error
+        with pytest.raises(DNSimpleException) as exception:
+            client.add_record(domain['domain']['name'], {})
 
-    def test_get_records_by(self):
-        self.assertTrue(type(self.dns.records(self.success_domain_id)) is list)
+        assert 'Required parameter missing: record' in str(exception.value)
 
-    def test_get_record(self):
-        domain = self.dns.record(self.success_domain_id, self.success_record_id)
-        self.assertTrue('record' in domain)
+        assert self.record_count(client, domain) == (start_record_count + 2)
 
-    def test_add_record(self):
-        data = {
-            'record_type': 'CNAME',
-            'name': 'testaddrecord',
-            'content': 'test.test'
-        }
-        self.assertTrue('record' in self.dns.add_record(self.success_domain_id, data))
+    def test_find_record(self, client, domain):
+        www = self.find_record(client, domain, 'www')
 
-    def test_add_record_failure(self):
-        data = {
-            'record_type': 'CNAME',
-            'name': 'test',
-            'content': 'test.test'
-        }
-        self.assertRaises(DNSimpleException, self.dns.add_record, self.success_domain_id, data)
+        # Test finding by record ID
+        assert www
+        assert client.record(domain['domain']['id'], www['record']['id']) == www
 
-    def test_delete_record(self):
-        self.assertFalse(self.dns.delete_record(self.success_domain_id, self.record_to_delete_id))
+        # Test that finding a non-existent record fails
+        with pytest.raises(DNSimpleException) as exception:
+            client.record(domain['domain']['id'], 999999)
 
-    def test_delete_record_failure(self):
-        self.assertRaises(DNSimpleException, self.dns.delete_record, self.success_domain_id, self.failure_id)
+        assert 'Record `999999` not found' in str(exception.value)
 
+    def test_deleting_records(self, client, domain):
+        start_record_count = self.record_count(client, domain)
 
-if __name__ == '__main__':
-    unittest.main()
+        www = self.find_record(client, domain, 'www')
+
+        # Ensure deleting by record ID works
+        result = client.delete_record(domain['domain']['id'], www['record']['id'])
+
+        assert isinstance(result, dict)
+        assert len(result) == 0
+
+        # Ensure we can't find by name, and the list is 1 fewer
+        assert not self.find_record(client, domain, 'www')
+        assert self.record_count(client, domain) == (start_record_count - 1)
+
+        # Ensure deleting a non-existent record fails
+        with pytest.raises(DNSimpleException) as exception:
+            client.delete_record(domain['domain']['id'], 999999)
+
+        assert 'Record `999999` not found' in str(exception.value)
