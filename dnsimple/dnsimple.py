@@ -4,7 +4,7 @@ Client for DNSimple REST API
 http://developer.dnsimple.com/overview/
 """
 
-__version__ = '0.3.6'
+__version__ = '0.3.7'
 
 import os.path
 

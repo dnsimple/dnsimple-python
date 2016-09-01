@@ -142,3 +142,7 @@ Before running tests, you'll need to ensure your environment is set up correctly
 ## License
 
 Licensed under the [MIT license](http://www.opensource.org/licenses/mit-license.php)
+
+## Authors
+
+* Original Author [Mike MacCana](https://github.com/mikemaccana/)

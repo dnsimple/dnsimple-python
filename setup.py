@@ -16,7 +16,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
-    url='https://github.com/mikemaccana/dnsimple-python/',
+    url='https://github.com/onlyhavecans/dnsimple-python/',
     classifiers=[
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
