@@ -3,7 +3,7 @@ import os
 
 from dnsimple import DNSimple
 
-@pytest.fixture(autouse = True)
+@pytest.fixture
 def client():
     return DNSimple(
         email     = os.getenv('DNSIMPLE_EMAIL'),
@@ -11,3 +11,6 @@ def client():
         sandbox   = True
     )
 
+@pytest.fixture
+def token_client(domain):
+    return DNSimple(domain_token = domain['domain']['token'], sandbox = True)

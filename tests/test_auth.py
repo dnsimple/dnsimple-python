@@ -1,6 +1,7 @@
 import pytest
-
 import os
+
+from .fixtures import *
 
 from dnsimple import DNSimple, DNSimpleException
 
@@ -67,9 +68,20 @@ class TestAuth(object):
 
         client.domains()
 
-    @pytest.mark.skip (reason = "Domain tokens require intervention in the web app")
-    def test_domain_token_auth(self):
-        dns = DNSimple(domain_token='DOMAIN_TOKEN', sandbox=True)
-        with self.assertRaises(DNSimpleException):
-            self.assertTrue(type(dns.domains()) is list)
-        self.assertTrue(type(dns.records('DOMAIN')) is list)
+    def test_domain_token_auth(self, client):
+        domain_name = 'dnsimple-domain-token.test'
+
+        domain = client.add_domain(domain_name)
+        assert domain
+
+        token_client = DNSimple(domain_token = domain['domain']['token'], sandbox = True)
+
+        with pytest.raises(DNSimpleException) as exception:
+            token_client.domains()
+
+        assert 'Authentication failed' in str(exception.value)
+        assert token_client.domain(domain_name)['domain']['name'] == domain_name
+
+        client.delete(domain_name)
+
+        assert len(client.domains()) == 0
