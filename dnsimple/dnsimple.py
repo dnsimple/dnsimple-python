@@ -73,7 +73,6 @@ class DNSimple(object):
             for cfg in ['.dnsimple', os.path.expanduser('~/.dnsimple')]:
                 if os.path.exists(cfg):
                     config.read(cfg)
-                    print("read {0}".format(cfg))
                     break
             try:
                 username = config.get('DNSimple', 'username')
