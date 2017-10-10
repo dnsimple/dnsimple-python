@@ -1,12 +1,19 @@
 import pytest
+import random
 
 from .fixtures import *
 
 from dnsimple import DNSimple, DNSimpleException
 
+_domain_name = None
+
 @pytest.fixture
 def domain_name():
-    return 'dnsimple-add.test'
+    global _domain_name
+    if _domain_name is None:
+        # Add some random because someone can already register this domain
+        _domain_name = 'dnsimple-add-{}.test'.format(random.randint(10000, 99999))
+    return _domain_name
 
 @pytest.fixture
 def domain(client, domain_name):
@@ -33,21 +40,21 @@ class TestRecords(object):
 
     def test_list_records(self, domain, client, token_client):
         # These are the default records created when a domain is created
-        default_record_types = ['NS', 'NS', 'NS', 'NS', 'SOA']
+        default_record_types = ['SOA', 'NS', 'NS', 'NS', 'NS']
 
         # Listing by domain name
         records = client.records(domain['domain']['name'])
-        assert [r['record']['record_type'] for r in records] == default_record_types
+        assert [r['record']['type'] for r in records] == default_record_types
 
         records = token_client.records(domain['domain']['name'])
-        assert [r['record']['record_type'] for r in records] == default_record_types
+        assert [r['record']['type'] for r in records] == default_record_types
 
         # Listing by domain ID
         records = client.records(domain['domain']['id'])
-        assert [r['record']['record_type'] for r in records] == default_record_types
+        assert [r['record']['type'] for r in records] == default_record_types
 
         records = token_client.records(domain['domain']['id'])
-        assert [r['record']['record_type'] for r in records] == default_record_types
+        assert [r['record']['type'] for r in records] == default_record_types
 
     def test_adding_records(self, domain, client, token_client):
         start_record_count = self.record_count(client, domain)
@@ -96,7 +103,7 @@ class TestRecords(object):
         with pytest.raises(DNSimpleException) as exception:
             client.add_record(domain['domain']['name'], {})
 
-        assert 'Required parameter missing: record' in str(exception.value)
+        assert 'Validation failed' in str(exception.value)
 
         assert self.record_count(client, domain) == (start_record_count + 4)
 

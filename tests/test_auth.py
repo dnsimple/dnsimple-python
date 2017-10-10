@@ -68,6 +68,7 @@ class TestAuth(object):
 
         client.domains()
 
+    @pytest.mark.skip(reason='APIv2 does not support auth by domain token')
     def test_domain_token_auth(self, client):
         domain_name = 'dnsimple-domain-token.test'
 
