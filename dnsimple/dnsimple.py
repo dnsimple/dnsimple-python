@@ -3,9 +3,6 @@
 Client for DNSimple REST API
 http://developer.dnsimple.com/overview/
 """
-
-__version__ = '0.4.0'
-
 import os.path
 
 try:
@@ -28,6 +25,10 @@ except ImportError:
     pass  # Issues with setup.py needed to import module but the `request` dependency hasn't been installed yet.
 
 
+version = (1, 0, 0)
+__version__ = '.'.join(str(x) for x in version)
+
+
 class DNSimpleException(Exception):
     pass
 
@@ -42,7 +43,7 @@ class DNSimple(object):
     def __init__(self,
                  username=None, password=None,  # HTTP Basic Auth
                  email=None, api_token=None,  # API Token Auth
-                 account_id=None, # account_id if user token used
+                 account_id=None,  # account_id if user token used
                  sandbox=False):  # Use the testing sandbox.
         """
         Create authenticated API client.
@@ -64,7 +65,7 @@ class DNSimple(object):
         self.__user_agent = 'DNSimple Python API {version}'.format(version=__version__)
 
         if email is None and api_token is None and username is None and password is None and account_id is None:
-            defaults = dict(os.environ)            
+            defaults = dict(os.environ)
             defaults.update({
                 'username': None,
                 'password': None,
@@ -125,7 +126,8 @@ class DNSimple(object):
                     if self.user_account_id in ids:
                         self._account_id = self.user_account_id
                     else:
-                        raise DNSimpleException('Account {} not found. Possible variants: {}'.format(account_id, ', '.format(ids)))
+                        raise DNSimpleException('Account {} not found. Possible variants: {}'.format(account_id,
+                                                                                                     ', '.format(ids)))
             else:
                 self._account_id = account_info['id']
         return self._account_id
