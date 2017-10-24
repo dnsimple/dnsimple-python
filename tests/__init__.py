@@ -1,5 +1,8 @@
 import os
-from ConfigParser import ConfigParser
+try:
+    from ConfigParser import ConfigParser
+except ImportError:
+    from configparser import ConfigParser
 
 from dnsimple import DNSimple
 from .fixtures import client
