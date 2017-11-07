@@ -337,7 +337,6 @@ class DNSimple(object):
         for cert in certs:
             if cert['name'] == id_or_certificate_name:
                 cert_ids.append(cert['id'])
-                print cert['id'], cert['name'], cert['expires_on']
 
         return cert_ids
 
@@ -378,3 +377,24 @@ class DNSimple(object):
                 raise DNSimpleException("Could not find a certificate id for '%s'. Please specify it manually." % id_or_certificate_name)
 
         return self.__rest_helper('/{account}/domains/{name}/certificates/{id}/private_key'.format(account=self.account_id(), name=id_or_domain_name, id=certificate_id[0]), method='GET')
+
+    def certificate_withkey(self, id_or_domain_name, id_or_certificate_name):
+        """
+        Get the certificate and private key for a specific domain
+
+        If the ID of the certificate is given, we try to get the certificate by its ID.
+        If the name of the certificate is given, we get the latest certificate, whether
+        it's active or expired.
+        """
+        certificate_id = []
+        if id_or_certificate_name.isdigit():
+            certificate_id.append(id_or_certificate_name)
+        else:
+            certificate_id += self.certificate_id(id_or_domain_name, id_or_certificate_name)
+
+            if len(certificate_id) == 0:
+                raise DNSimpleException("Could not find a certificate id for '%s'. Please specify it manually." % id_or_certificate_name)
+
+        cert = self.__rest_helper('/{account}/domains/{name}/certificates/{id}'.format(account=self.account_id(), name=id_or_domain_name, id=certificate_id[0]), method='GET')
+        cert[u'private_key'] = self.private_key(id_or_domain_name, id_or_certificate_name)['private_key']
+        return cert
