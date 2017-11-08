@@ -381,7 +381,11 @@ class DNSimple(object):
 
         cert = self.__rest_helper('/{account}/domains/{name}/certificates/{id}'.format(account=self.account_id(), name=id_or_domain_name, id=certificate_id[0]), method='GET')
         cert_dl = self.certificate_download(id_or_domain_name, id_or_certificate_name)
-        return dict(cert.items() + cert_dl.items())
+        cert_key = self.private_key(id_or_domain_name, id_or_certificate_name)
+        cert.update(cert_dl)
+        cert.update(cert_key)
+
+        return cert
 
     def certificate_download(self, id_or_domain_name, id_or_certificate_name):
         """
@@ -420,16 +424,3 @@ class DNSimple(object):
                 raise DNSimpleException("Could not find a certificate id for '%s'. Please specify it manually." % id_or_certificate_name)
 
         return self.__rest_helper('/{account}/domains/{name}/certificates/{id}/private_key'.format(account=self.account_id(), name=id_or_domain_name, id=certificate_id[0]), method='GET')
-
-    def certificate_withkey(self, id_or_domain_name, id_or_certificate_name):
-        """
-        Get the CSR, root, chain and server certificates, as well as private key for
-        a specific domain
-
-        If the ID of the certificate is given, we try to get the certificate by its ID.
-        If the name of the certificate is given, we get the latest certificate, whether
-        it's active or expired.
-        """
-        cert = self.certificate(id_or_domain_name, id_or_certificate_name)
-        key = self.private_key(id_or_domain_name, id_or_certificate_name)
-        return dict(cert.items() + key.items())
