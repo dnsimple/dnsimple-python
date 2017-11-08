@@ -104,7 +104,7 @@ class DNSimple(object):
 
     def __get_auth_header(self):
         """
-        Return a HTTP Basic or X-DNSimple-Token authentication header dict.
+        Return a HTTP Basic or API token authentication header dict.
         """
         if self.__api_token:
             return {'Authorization': 'Bearer {api_token}'.format(api_token=self.__api_token)}
@@ -128,11 +128,31 @@ class DNSimple(object):
             headers.update({
                 'Content-Type': 'application/json'
         })
+        # Set the 'per_page' parameter to its limit of 100 (defaults to 30) so that
+        # we get as many results as possible in one request
+        if params:
+            params['per_page'] = 100
+            params['page'] = 1
+        else:
+            params = {
+                'per_page': 100,
+                'page': 1
+            }
+
         request = Request(method=method, url=url, headers=headers, data=json.dumps(data), params=params)
-
         prepared_request = request.prepare()
+        results = self.__request_helper(prepared_request)
 
-        result = self.__request_helper(prepared_request)
+        result = results['data']
+        # Handle multiple pages of results, and concatenate the entries so that it's
+        # returned as one list of dicts
+        if 'pagination' in results:
+            while results['pagination']['current_page'] < results['pagination']['total_pages']:
+                params['page'] += 1
+                request = Request(method=method, url=url, headers=headers, data=json.dumps(data), params=params)
+                prepared_request = request.prepare()
+                results = self.__request_helper(prepared_request)
+                result += results['data']
 
         return result
 
@@ -155,7 +175,7 @@ class DNSimple(object):
         if 400 <= handle.status_code:
             raise DNSimpleException(response)
 
-        return response['data']
+        return response
 
     # ACCOUNTS
 
@@ -191,9 +211,7 @@ class DNSimple(object):
     def add_domain(self, domain_name):
         """Create a single domain in DNSimple in your account."""
         data = {
-            'domain': {
-                'name': domain_name
-            }
+            'name': domain_name
         }
         return self.__rest_helper('/{account}/domains'.format(account=self.account_id()), data, method='POST')
 
@@ -211,7 +229,7 @@ class DNSimple(object):
         if not registrant_id:
             # Get the registrant ID from the first domain in the account
             try:
-                registrant_id = self.getdomains()[0]['domain']['registrant_id']
+                registrant_id = self.getdomains()[0]['registrant_id']
             except Exception:
                 raise DNSimpleException('Could not find registrant_id! Please specify manually.')
 
@@ -220,12 +238,13 @@ class DNSimple(object):
         }
         return self.__rest_helper('/{account}/registrar/domains/{name}/registrations'.format(account=self.account_id(), name=domain_name), data=data, method='POST')
 
-    def transfer(self, domain_name, registrant_id):
+    def transfer(self, domain_name, registrant_id, auth_code):
         """
         Transfer a domain name from another domain registrar into DNSimple.
         """
         data = {
-            'registrant_id': registrant_id
+            'registrant_id': registrant_id,
+            'auth_code': auth_code
         }
         return self.__rest_helper('/{account}/registrar/domains/{name}/transfers'.format(account=self.account_id(), name=domain_name), data=data, method='POST')
 
@@ -327,7 +346,10 @@ class DNSimple(object):
 
     def certificates(self, id_or_domain_name):
         """Get a list of all certificates (and their CSRs) for the specific domain"""
-        return self.__rest_helper('/{account}/domains/{name}/certificates?sort=expires_on:desc,id:desc'.format(account=self.account_id(), name=id_or_domain_name), method='GET')
+        params = {
+            'sort': 'expires_on:desc,id:desc'
+        }
+        return self.__rest_helper('/{account}/domains/{name}/certificates'.format(account=self.account_id(), name=id_or_domain_name), params=params, method='GET')
 
     def certificate_id(self, id_or_domain_name, id_or_certificate_name):
         """Get a list of certificate ids for a specific domain"""
@@ -343,7 +365,7 @@ class DNSimple(object):
     def certificate(self, id_or_domain_name, id_or_certificate_name):
         """
         Get the CSR, root, chain, and server certificates for a specific domain
-        
+
         If the ID of the certificate is given, we try to get the certificate by its ID.
         If the name of the certificate is given, we get the latest certificate, whether
         it's active or expired.
