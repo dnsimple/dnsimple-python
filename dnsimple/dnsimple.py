@@ -345,7 +345,14 @@ class DNSimple(object):
     # SSL CERTIFICATES
 
     def certificates(self, id_or_domain_name):
-        """Get a list of all certificates (and their CSRs) for the specific domain"""
+        """
+        Get a list of all certificates for a specific domain
+
+        DNSimple API v2 does not provide the server certificate or private key
+        anymore through this endpoint; it only includes the CSR in its response.
+        While we fetch the certificates and private key in certificate(), this
+        would be too intensive to do here.
+        """
         params = {
             'sort': 'expires_on:desc,id:desc'
         }
@@ -364,11 +371,12 @@ class DNSimple(object):
 
     def certificate(self, id_or_domain_name, id_or_certificate_name):
         """
-        Get the CSR, root, chain, and server certificates for a specific domain
+        Get the CSR, root, chain, and server certificates, as well as private key
+        for a specific domain
 
-        If the ID of the certificate is given, we try to get the certificate by its ID.
-        If the name of the certificate is given, we get the latest certificate, whether
-        it's active or expired.
+        If the ID of the certificate is given, we try to get the certificates/private
+        key by its ID. If the name of the certificate is given, we get the latest
+        certificate, whether it's active or expired.
         """
         certificate_id = []
         if id_or_certificate_name.isdigit():
