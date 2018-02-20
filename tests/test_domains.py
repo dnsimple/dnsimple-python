@@ -11,26 +11,16 @@ class TestDomains(object):
         with pytest.raises(DNSimpleException) as exception:
             client.check('add.test')
 
-        assert "The domain name `add.test' is invalid." in str(exception.value)
+        assert "TLD .TEST is invalid or not supported" in str(exception.value)
 
         # Check a domain name that is not available
         status = client.check('google.com')
 
         assert not status['available']
-        assert status['status'] == 'unavailable'
 
-        # Raises exception, but 404 status is 'available' per API documentation:
-        #
-        #   https://developer.dnsimple.com/v1/registrar/#check
-        #
-        #  > If the domain is available then this will return a 404 which indicates
-        #  > that the name is available. If it is not available then the response
-        #  > will be a 200.
-        #
-        with pytest.raises(DNSimpleException) as exception:
-            client.check('dnsimple-python-available-domain.com')
+        status = client.check('dnsimple-python-available-domain.com')
 
-        assert "'available': True" in str(exception.value)
+        assert status['available']
 
     def test_add_domain_with_invalid_attributes(self, client):
         with pytest.raises(DNSimpleException) as exception:

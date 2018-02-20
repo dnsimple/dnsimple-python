@@ -28,7 +28,11 @@ You can provide your DNSimple credentials in one of two ways:
         dns = DNSimple(username=YOUR_USERNAME, password=YOUR_PASSWORD)
 
         # Use email/api_token credentials
-        dns = DNSimple(email=YOUR_EMAIL_ADDRESS, api_token=YOUR_API_TOKEN)
+        dns = DNSimple(api_token=YOUR_API_TOKEN)
+
+				# If you have many accounts you can provide account_id (661 is an example)
+				# You can find your account id in url (https://sandbox.dnsimple.com/a/661/account)
+				dns = DNSimple(username=YOUR_USERNAME, password=YOUR_PASSWORD, account_id=661)
 
 2. Store you username/password or email/api\_token credentials in a file called
 `.dnsimple` in the current directory with the following data:
@@ -38,9 +42,8 @@ You can provide your DNSimple credentials in one of two ways:
         password: yourpassword
 
     Or:
-    
+
         [DNSimple]
-        email: email@domain.com
         api_token: yourapitoken
 
     Or (assuming `$DNSIMPLE_EMAIL` and `$DNSIMPLE_TOKEN` are environment variables):
