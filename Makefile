@@ -14,7 +14,12 @@ env/bin/activate: requirements.txt
 
 dnsimple.egg-info/SOURCES.txt: env
 	./env/bin/python setup.py develop
-	
+
 setup: dnsimple.egg-info/SOURCES.txt
+
+deploy:
+	python setup.py sdist
+	python setup.py bdist_wheel --universal
+	twine upload dist/*
 
 .PHONY: test
