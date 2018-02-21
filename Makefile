@@ -7,15 +7,18 @@ test: setup
 env: env/bin/activate
 
 env/bin/activate: requirements.txt
-	test -d env || virtualenv env;	\
-	./env/bin/pip install -r requirements.txt --upgrade;
+	test -d env || virtualenv env
+	./env/bin/pip install -r requirements.txt --upgrade
 
 dnsimple.egg-info/SOURCES.txt: env
 	./env/bin/python setup.py develop
 
 setup: dnsimple.egg-info/SOURCES.txt
 
-ci: test
+ci-setup:
+	pip install -r requirements.txt --upgrade
+
+ci-test:
 	py.test tests
 
 deploy:
