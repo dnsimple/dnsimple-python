@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 from dnsimple import dnsimple
 
-with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'README.markdown'), 'r') as readme_file:
+with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'README.md'), 'r') as readme_file:
     readme = readme_file.read()
 
 setup(

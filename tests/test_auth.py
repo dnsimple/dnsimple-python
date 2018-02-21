@@ -67,22 +67,3 @@ class TestAuth(object):
         client = DNSimple(sandbox = True)
 
         client.domains()
-
-    @pytest.mark.skip(reason='APIv2 does not support auth by domain token')
-    def test_domain_token_auth(self, client):
-        domain_name = 'dnsimple-domain-token.test'
-
-        domain = client.add_domain(domain_name)
-        assert domain
-
-        token_client = DNSimple(domain_token = domain['domain']['token'], sandbox = True)
-
-        with pytest.raises(DNSimpleException) as exception:
-            token_client.domains()
-
-        assert 'Authentication failed' in str(exception.value)
-        assert token_client.domain(domain_name)['domain']['name'] == domain_name
-
-        client.delete(domain_name)
-
-        assert len(client.domains()) == 0
