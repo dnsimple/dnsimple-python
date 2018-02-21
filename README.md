@@ -36,7 +36,7 @@ dns = DNSimple(username=YOUR_USERNAME, password=YOUR_PASSWORD, account_id=661)
 
 1. Store you username/password or email/api\_token credentials in a file called `.dnsimple` in the current directory with the following data:
 
-```toml
+```
 [DNSimple]
 username: email@domain.com
 password: yourpassword
@@ -44,14 +44,14 @@ password: yourpassword
 
 Or:
 
-```toml
+```
 [DNSimple]
 api_token: yourapitoken
 ```
 
 Or (assuming `$DNSIMPLE_EMAIL` and `$DNSIMPLE_TOKEN` are environment variables):
 
-```toml
+```
 [DNSimple]
 email: %(DNSIMPLE_EMAIL)s
 api_token: %(DNSIMPLE_TOKEN)s
