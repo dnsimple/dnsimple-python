@@ -1,5 +1,5 @@
 setup:
-	test -d env || virtualenv env
+	test -e env || virtualenv env
 	./env/bin/pip install -r requirements.txt --upgrade
 	./env/bin/python setup.py develop
 
