@@ -3,9 +3,11 @@ Python DNSimple
 
 ## Introduction
 
-This is a client for the DNSimple REST API. It currently allows you to fetch existing domain info, as well as register new domains and manage domain records.
+This is a client for the [DNSimple REST API](https://developer.dnsimple.com/). It currently allows you to fetch existing domain info, as well as register new domains and manage domain records.
 
 `dnsimple-python` works for both python 2 & 3.
+
+**Note:** As of 1.0.0 this now uses [DNSimple's APIv2](https://blog.dnsimple.com/2016/12/api-v2-stable/). This has some incompatibilities with APIv1, including auth changes. Please test for breakages before use.
 
 ### Getting started
 
@@ -21,7 +23,8 @@ from dnsimple import DNSimple
 
 You can provide your DNSimple credentials in one of two ways:
 
-1. Provide username/password or email/api\_token credentials programmatically:
+#### Provide username/password or email/api\_token credentials programmatically:
+
 ```python
 # Use username/password authentication: HTTP Basic
 dns = DNSimple(username=YOUR_USERNAME, password=YOUR_PASSWORD)
@@ -34,7 +37,7 @@ dns = DNSimple(api_token=YOUR_API_TOKEN)
 dns = DNSimple(username=YOUR_USERNAME, password=YOUR_PASSWORD, account_id=661)
 ```
 
-1. Store you username/password or email/api\_token credentials in a file called `.dnsimple` in the current directory with the following data:
+##### Store you username/password or email/api\_token credentials in a file called `.dnsimple` in the current directory with the following data:
 
 ```
 [DNSimple]
