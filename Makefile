@@ -13,7 +13,7 @@ ci-setup:
 ci-test:
 	py.test tests
 
-deploy:
+deploy: setup
 	rm dist/*
 	python setup.py sdist
 	twine upload dist/*
