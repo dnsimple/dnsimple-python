@@ -1,4 +1,4 @@
-DEFAULT_GOAL := setup
+.DEFAULT_GOAL := setup
 
 test: setup
 	test -f tests/.env || { echo "Set up your env file before running tests"; exit 1; }
