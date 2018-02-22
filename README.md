@@ -1,6 +1,8 @@
 Python DNSimple
 ===============
 
+[![Build Status](https://travis-ci.org/onlyhavecans/dnsimple-python.svg?branch=master)](https://travis-ci.org/onlyhavecans/dnsimple-python)o
+
 ## Introduction
 
 This is a client for the [DNSimple REST API](https://developer.dnsimple.com/). It currently allows you to fetch existing domain info, as well as register new domains and manage domain records.
