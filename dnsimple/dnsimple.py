@@ -21,6 +21,7 @@ except ImportError:
     import configparser
 try:
     from requests import Request, Session, ConnectionError, HTTPError
+    from requests.auth import AuthBase, HTTPBasicAuth
 except ImportError:
     pass  # Issues with setup.py needed to import module but the `request` dependency hasn't been installed yet.
 
@@ -30,31 +31,63 @@ __version__ = '.'.join(str(x) for x in version)
 
 
 class DNSimpleException(Exception):
+    """
+    The main exception class for all exceptions we raise
+    """
     pass
+
+
+class DNSimpleAuthException(DNSimpleException):
+    """
+    Only raise this on authentication issues
+    """
+    pass
+
+
+class DNSimpleTokenAuth(AuthBase):
+    """
+    Define DNSimple's token based auth
+    https://developer.dnsimple.com/v2/#authentication
+    """
+    def __init__(self, token):
+        self.token = token
+
+    def __eq__(self, other):
+        return all([
+            self.token == getattr(other, 'api_key', None),
+        ])
+
+    def __ne__(self, other):
+        return not self == other
+
+    def __call__(self, r):
+        r.headers['Authorization'] = 'Bearer {0!s}'.format(self.token)
+        return r
 
 
 class DNSimple(object):
 
     _account_id = None
+    _auth = None
     ratelimit_limit = None
     ratelimit_remaining = None
     ratelimit_reset = None
 
     def __init__(self,
-                 username=None, password=None,  # HTTP Basic Auth
-                 email=None, api_token=None,  # API Token Auth
+                 email=None, password=None,  # HTTP Basic Auth
+                 api_token=None,  # API Token Auth
                  account_id=None,  # account_id if user token used
                  sandbox=False):  # Use the testing sandbox.
         """
         Create authenticated API client.
 
-        Provide `api_token` to use X-DNSimple-Token auth.
+        Provide `api_token` to use OAuth2 token.
         Provide `username` and `password` to use HTTP Basic auth.
 
-        If neither username/password nor api_token credentials are
-        provided, they will be read from the .dnsimple file.
+        If neither username/password nor api_token credentials are provided,
+        they will be read from the .dnsimple file.
 
-        If both username/password and email/api_token credentials are provided,
+        If both username/password and api_token credentials are provided,
         the API authentication credentials are preferred.
         """
         if sandbox:
@@ -64,12 +97,11 @@ class DNSimple(object):
 
         self.__user_agent = 'DNSimple Python API {version}'.format(version=__version__)
 
-        if email is None and api_token is None and username is None and password is None and account_id is None:
+        if api_token is None and email is None and password is None and account_id is None:
             defaults = dict(os.environ)
             defaults.update({
-                'username': None,
-                'password': None,
                 'email': None,
+                'password': None,
                 'api_token': None,
                 'account_id': None,
             })
@@ -79,35 +111,22 @@ class DNSimple(object):
                     config.read(cfg)
                     break
             try:
-                username = config.get('DNSimple', 'username')
-                password = config.get('DNSimple', 'password')
                 email = config.get('DNSimple', 'email')
+                password = config.get('DNSimple', 'password')
                 api_token = config.get('DNSimple', 'api_token')
                 account_id = config.get('DNSimple', 'account_id')
             except configparser.NoSectionError:
                 pass
 
-        self.__email, self.__api_token = email, api_token
-
-        if email is None and api_token is None:
-            if username is None and password is None:
-                raise DNSimpleException('No authentication details provided.')
-            self.__auth_string = self.__get_auth_string(username, password)
         self.user_account_id = account_id
 
-    @staticmethod
-    def __get_auth_string(username, password):
-        encoded_string = encodebytes((username + ':' + password).encode())[:-1].decode()
-        return "Basic {encoded_string}".format(encoded_string=encoded_string)
-
-    def __get_auth_header(self):
-        """
-        Return a HTTP Basic or X-DNSimple-Token authentication header dict.
-        """
-        if self.__api_token:
-            return {'Authorization': 'Bearer {api_token}'.format(api_token=self.__api_token)}
+        if api_token is not None:
+            self._auth = DNSimpleTokenAuth(api_token)
         else:
-            return {'Authorization': self.__auth_string}
+            if email is not None and password is not None:
+                self._auth = HTTPBasicAuth(email, password)
+            else:
+                raise DNSimpleAuthException('insufficient authentication details provided.')
 
     @property
     def account_id(self):
@@ -141,17 +160,16 @@ class DNSimple(object):
             url = '{endpoint}/{account_id}{url}'.format(endpoint=self.__endpoint, account_id=self.account_id, url=url)
         else:
             url = self.__endpoint + url
-        headers = self.__get_auth_header()
-        headers.update({
+        headers = {
             'User-Agent': self.__user_agent,
             'Accept': 'application/json',  # Accept required as per documentation
             'Content-Type': 'application/json'
-        })
+        }
         if data is not None:
             json_data = json.dumps(data)
         else:
             json_data = None
-        request = Request(method=method, url=url, headers=headers, data=json_data, params=params)
+        request = Request(method=method, url=url, headers=headers, data=json_data, params=params, auth=self._auth)
 
         prepared_request = request.prepare()
 

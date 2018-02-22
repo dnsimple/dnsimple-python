@@ -3,7 +3,7 @@ import os
 
 from .fixtures import *
 
-from dnsimple import DNSimple, DNSimpleException
+from dnsimple import DNSimple, DNSimpleException, DNSimpleAuthException
 
 @pytest.fixture
 def credentials_file():
@@ -24,32 +24,31 @@ class TestAuth(object):
             pass
 
     def test_authentication_with_no_credentials_raises(self):
-        with pytest.raises(DNSimpleException) as exception:
+        with pytest.raises(DNSimpleAuthException) as exception:
             client = DNSimple()
 
-        assert 'No authentication details provided.' in str(exception.value)
+        assert 'insufficient authentication details provided.' in str(exception.value)
 
     def test_authentication_with_invalid_credentials_raises(self):
         with pytest.raises(DNSimpleException) as exception:
-            client = DNSimple(username = 'user@host.com', password = 'bogus')
+            client = DNSimple(email='user@host.com', password='bogus')
             client.domains()
 
         assert 'Authentication failed' in str(exception.value)
 
     def test_basic_authentication_raises_no_exceptions(self):
         client = DNSimple(
-            username = os.getenv('DNSIMPLE_EMAIL'),
-            password = os.getenv('DNSIMPLE_PASSWORD'),
-            sandbox  = True
+            email=os.getenv('DNSIMPLE_EMAIL'),
+            password=os.getenv('DNSIMPLE_PASSWORD'),
+            sandbox=True
         )
 
         client.domains()
 
     def test_user_token_auth_raises_no_exception(self):
         client = DNSimple(
-            email     = os.getenv('DNSIMPLE_EMAIL'),
-            api_token = os.getenv('DNSIMPLE_API_TOKEN'),
-            sandbox   = True
+            api_token=os.getenv('DNSIMPLE_API_TOKEN'),
+            sandbox=True
         )
 
         client.domains()
@@ -59,7 +58,6 @@ class TestAuth(object):
         file = open(credentials_file, 'w')
         file.writelines([
             "[DNSimple]\n",
-            "email: {0}\n".format(os.getenv('DNSIMPLE_EMAIL')),
             "api_token: {0}\n".format(os.getenv('DNSIMPLE_API_TOKEN'))
         ])
         file.close()
