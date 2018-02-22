@@ -3,7 +3,7 @@
 import os
 from setuptools import setup, find_packages
 
-from dnsimple import dnsimple
+from dnsimple import dnsimple_version as dnsimple
 
 with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'README.md'), 'r') as readme_file:
     readme = readme_file.read()
