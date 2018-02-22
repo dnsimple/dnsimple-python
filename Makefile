@@ -22,6 +22,8 @@ deploy: setup
 	git pull origin master --tags
 	gem install github_changelog_generator
 	github_changelog_generator --future-release=$(VERSION)
+	git add CHANGELOG.md
+	git commit -m "Deploy Version $(VERSION)"
 	git tag $(VERSION)
 	git push
 	git push --tags
