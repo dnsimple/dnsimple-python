@@ -16,7 +16,14 @@ ci-test:
 	py.test tests
 
 deploy: setup
+	git diff-index --quiet HEAD -- || git stash
+	git checkout master
+	git pull origin master
+	git pull origin master --tags
+	gem install github_changelog_generator
+	github_changelog_generator --future-release=$(VERSION)
 	git tag $(VERSION)
+	git push
 	git push --tags
 	rm dist/*
 	./env/bin/python setup.py sdist

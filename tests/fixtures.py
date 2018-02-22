@@ -6,7 +6,6 @@ from dnsimple import DNSimple
 @pytest.fixture
 def client():
     return DNSimple(
-        # email     = os.getenv('DNSIMPLE_EMAIL'),
         api_token = os.getenv('DNSIMPLE_API_TOKEN'),
         sandbox   = True
     )

@@ -1,13 +1,15 @@
 Python DNSimple
 ===============
 
+[![Build Status](https://travis-ci.org/onlyhavecans/dnsimple-python.svg?branch=master)](https://travis-ci.org/onlyhavecans/dnsimple-python)o
+
 ## Introduction
 
 This is a client for the [DNSimple REST API](https://developer.dnsimple.com/). It currently allows you to fetch existing domain info, as well as register new domains and manage domain records.
 
 `dnsimple-python` works for both python 2 & 3.
 
-**Note:** As of 1.0.0 this now uses [DNSimple's APIv2](https://blog.dnsimple.com/2016/12/api-v2-stable/). This has some incompatibilities with APIv1, including auth changes. Please test for breakages before use.
+**Note:** As of 1.0.0 this now uses [DNSimple's APIv2](https://blog.dnsimple.com/2016/12/api-v2-stable/). This is incompatible with older versions of the library because of authentication changes. Please review the docs and tests before deploying to production.
 
 ### Getting started
 
@@ -23,25 +25,25 @@ from dnsimple import DNSimple
 
 You can provide your DNSimple credentials in one of two ways:
 
-#### Provide username/password or email/api\_token credentials programmatically:
+#### Provide email/password or api\_token credentials programmatically:
 
 ```python
-# Use username/password authentication: HTTP Basic
-dns = DNSimple(username=YOUR_USERNAME, password=YOUR_PASSWORD)
+# Use email/password authentication: HTTP Basic
+dns = DNSimple(email=YOUR_USERNAME, password=YOUR_PASSWORD)
 
-# Use email/api_token credentials
+# Use api_token credentials
 dns = DNSimple(api_token=YOUR_API_TOKEN)
 
 # If you have many accounts you can provide account_id (661 is an example)
 # You can find your account id in url (https://sandbox.dnsimple.com/a/661/account)
-dns = DNSimple(username=YOUR_USERNAME, password=YOUR_PASSWORD, account_id=661)
+dns = DNSimple(email=YOUR_USERNAME, password=YOUR_PASSWORD, account_id=661)
 ```
 
-##### Store you username/password or email/api\_token credentials in a file called `.dnsimple` in the current directory with the following data:
+##### Store you email/password or api\_token credentials in a file called `.dnsimple` in the current directory with the following data:
 
 ```
 [DNSimple]
-username: email@domain.com
+email: email@domain.com
 password: yourpassword
 ```
 
@@ -172,3 +174,4 @@ Licensed under the [MIT license](http://www.opensource.org/licenses/mit-license.
 
 * Original Author [Mike MacCana](https://github.com/mikemaccana/)
 * APIv2 Support [Kirill Motkov](https://github.com/lcd1232)
+* Maintainer [David Aronsohn](https://github.com/onlyhavecans)
