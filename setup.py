@@ -13,6 +13,8 @@ setup(
     version=dnsimple.__version__,
     description=u' '.join(dnsimple.__doc__.splitlines()).strip(),
     long_description=readme,
+    maintainer='David Aronsohn',
+    maintainer_email='WagThatTail@Me.com',
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
