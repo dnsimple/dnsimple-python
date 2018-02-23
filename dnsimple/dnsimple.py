@@ -4,6 +4,7 @@ Client for DNSimple REST API
 http://developer.dnsimple.com/overview/
 """
 import os.path
+import time
 
 try:
     # Use stdlib's json if available (2.6+)
@@ -389,3 +390,35 @@ class DNSimple(object):
             'contact': data
         }
         return self.__rest_helper('/contacts', data=data, method='POST')
+
+
+    # # SSL CERTIFICATES
+
+    def certificates(self, id_or_domain_name):
+        """Get a list of all certificates for the specific domain """
+        return self.__rest_helper('/domains/{name}/certificates'.format(name=id_or_domain_name), method='GET')
+
+    def certificate(self, id_or_domain_name, id_or_certificate_name):
+        """ Get a specific certificate for a specific domain """
+        certificate_id = []
+        if id_or_certificate_name.isdigit():
+            certificate_id[0] = id_or_certificate_name
+        else:
+            certificates = self.certificates(id_or_domain_name)
+            # Check if a valid certificate exists
+            for cert in certificates:
+                if cert['certificate']['name'] == id_or_certificate_name and cert['certificate']['expires_on'] >= time.strftime("%Y-%m-%d"):
+                    certificate_id.append(cert['certificate']['id'])
+
+            # If none were found, check expired certificates
+            if len(certificate_id) == 0:
+                for cert in certificates:
+                   if cert['certificate']['name'] == id_or_certificate_name:
+                       certificate_id.append(cert['certificate']['id'])
+
+            if len(certificate_id) == 0:
+                raise DNSimpleException("Could not find a certificate id for '%s'. Please specify it manually." % id_or_certificate_name)
+            elif len(certificate_id) > 1:
+                raise DNSimpleException("Multiple certificate ids were found for '%s'. Please specify certificate id manually." % id_or_certificate_name)
+
+        return self.__rest_helper('/domains/{name}/certificates/{id}'.format(name=id_or_domain_name, id=certificate_id[0]), method='GET')
