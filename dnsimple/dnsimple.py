@@ -24,9 +24,11 @@ try:
     from requests.auth import AuthBase, HTTPBasicAuth
 except ImportError:
     pass  # Issues with setup.py needed to import module but the `request` dependency hasn't been installed yet.
+except NameError:
+    pass  # Issues with setup.py needed to import module but the `request.auth` dependency hasn't been installed yet.
 
 
-version = (1, 0, 1)
+version = (1, 0, 2)
 __version__ = '.'.join(str(x) for x in version)
 
 

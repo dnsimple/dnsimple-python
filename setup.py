@@ -3,15 +3,13 @@
 import os
 from setuptools import setup, find_packages
 
-from dnsimple import dnsimple
-
 with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'README.md'), 'r') as readme_file:
     readme = readme_file.read()
 
 setup(
     name='dnsimple',
-    version=dnsimple.__version__,
-    description=u' '.join(dnsimple.__doc__.splitlines()).strip(),
+    version='1.0.2',
+    description='Python API client for Domain Management Automation with DNSimple https://developer.dnsimple.com',
     long_description=readme,
     maintainer='David Aronsohn',
     maintainer_email='WagThatTail@Me.com',
