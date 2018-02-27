@@ -24,6 +24,9 @@ try:
     from requests.auth import AuthBase, HTTPBasicAuth
 except ImportError:
     pass  # Issues with setup.py needed to import module but the `request` dependency hasn't been installed yet.
+except NameError:
+    pass  # Issues with setup.py needed to import module but the `request.auth` dependency hasn't been installed yet.
+
 
 from .dnsimple_version import version, __version__
 
