@@ -1,6 +1,6 @@
 # Change Log
 
-## [1.0.1](https://github.com/onlyhavecans/dnsimple-python/tree/1.0.1) (2018-02-21)
+## [1.0.1](https://github.com/onlyhavecans/dnsimple-python/tree/1.0.1) (2018-02-22)
 [Full Changelog](https://github.com/onlyhavecans/dnsimple-python/compare/1.0.0...1.0.1)
 
 **Merged pull requests:**
