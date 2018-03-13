@@ -149,3 +149,29 @@ class TestRecords(object):
             client.delete_record(domain['domain']['id'], 999999)
 
         assert 'Record `999999` not found' in str(exception.value)
+
+    def test_updating_records(self, domain, client, token_client):
+        start_record_count = self.record_count(client, domain)
+
+        # Add an A record
+        record = client.add_record(domain['domain']['name'], {
+            'record_type': 'A',
+            'name':        'update',
+            'content':     '192.168.1.2'
+        })
+
+        assert isinstance(record, dict)
+
+        record_id = record['record'].get('id')
+        assert record_id  # is truthy
+        assert record['record']['name']    == 'update'
+        assert record['record']['content'] == '192.168.1.2'
+
+        domain_name = domain['domain']['name']
+        record = token_client.update_record(domain_name, record_id, {
+            'content':     '192.168.1.3'
+        })
+
+        assert record['record']['content'] == '192.168.1.3'
+
+        assert self.record_count(client, domain) == (start_record_count + 1)
