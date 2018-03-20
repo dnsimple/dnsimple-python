@@ -345,8 +345,9 @@ class DNSimple(object):
         - 'prio'
         - 'regions'
         """
-        return self.__rest_helper('/zones/{domain}/records/{record}'
-                                  .format(domain=id_or_domain_name, record=record_id), data=data, method='PUT')
+        result = self.__rest_helper('/zones/{domain}/records/{record}'
+                                    .format(domain=id_or_domain_name, record=record_id), data=data, method='PATCH')
+        return self.__add_backward_compatibility(result, 'record')
 
     updaterecord = update_record  # Alias for backwards-compatibility
 
