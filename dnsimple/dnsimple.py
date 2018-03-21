@@ -13,10 +13,6 @@ except ImportError:
     # Otherwise require extra simplejson library
     import simplejson as json
 try:
-    from base64 import encodebytes
-except ImportError:
-    from base64 import encodestring as encodebytes
-try:
     import ConfigParser as configparser
 except ImportError:
     import configparser
