@@ -1,6 +1,6 @@
 VERSION := $(shell python setup.py --version)
 
-test:
+test: pyenv
 	tox
 
 virtualenv:
@@ -11,8 +11,10 @@ virtualenv:
 
 pyenv:
 	pyenv install --skip-existing 2.7.14
+	pyenv install --skip-existing 3.4.8
+	pyenv install --skip-existing 3.5.5
 	pyenv install --skip-existing 3.6.4
-	pyenv local 3.6.4 2.7.14
+	pyenv local 3.6.4 3.5.5 3.4.8 2.7.14
 	pip install --upgrade tox tox-pyenv
 
 deploy: setup
