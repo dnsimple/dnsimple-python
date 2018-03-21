@@ -1,13 +1,14 @@
 VERSION := $(shell python setup.py --version)
 
 test: setup
+	test -f tests/.env || { echo "Set up your env file before running tests"; exit 1; }
 	tox
 
 ci-setup:
 	pip install -r requirements.txt --upgrade
 
 ci-test:
-	pytest tests
+	py.test tests
 
 venv:
 	test -e env || python3 -m venv env
