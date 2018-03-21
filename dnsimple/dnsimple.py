@@ -4,6 +4,7 @@ Client for DNSimple REST API
 http://developer.dnsimple.com/overview/
 """
 import os.path
+from dnsimple import __version__
 
 try:
     # Use stdlib's json if available (2.6+)
@@ -26,10 +27,6 @@ except ImportError:
     pass  # Issues with setup.py needed to import module but the `request` dependency hasn't been installed yet.
 except NameError:
     pass  # Issues with setup.py needed to import module but the `request.auth` dependency hasn't been installed yet.
-
-
-version = (1, 0, 2)
-__version__ = '.'.join(str(x) for x in version)
 
 
 class DNSimpleException(Exception):
