@@ -1,19 +1,19 @@
 VERSION := $(shell python setup.py --version)
 
-setup:
-	test -e env || virtualenv env
+test:
+	tox
+
+virtualenv:
+	test -e env || python3 -m venv env
+	./env/bin/pip install --upgrade tox
 	./env/bin/pip install -r requirements.txt --upgrade
 	./env/bin/python setup.py develop
 
-test: setup
-	test -f tests/.env || { echo "Set up your env file before running tests"; exit 1; }
-	./env/bin/py.test tests
-
-ci-setup:
-	pip install -r requirements.txt --upgrade
-
-ci-test:
-	py.test tests
+pyenv:
+	pyenv install --skip-existing 2.7.14
+	pyenv install --skip-existing 3.6.4
+	pyenv local 3.6.4 2.7.14
+	pip install --upgrade tox tox-pyenv
 
 deploy: setup
 	git diff-index --quiet HEAD -- || git stash
