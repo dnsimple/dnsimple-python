@@ -16,6 +16,7 @@ ci-test:
 	py.test tests
 
 deploy: setup
+	./env/bin/pip install --update versioneer
 	git diff-index --quiet HEAD -- || git stash
 	git checkout master
 	git pull origin master
