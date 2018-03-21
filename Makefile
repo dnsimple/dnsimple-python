@@ -29,7 +29,7 @@ deploy: setup
 	git push
 	git push --tags
 	rm dist/*
-	./env/bin/python setup.py register sdist
+	./env/bin/python setup.py sdist
 	gpg --detach-sign -a dist/dnsimple-$(VERSION).tar.gz
 	./env/bin/pip install twine --upgrade
 	./env/bin/twine upload dist/*
