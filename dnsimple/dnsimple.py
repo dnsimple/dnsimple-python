@@ -28,8 +28,7 @@ except NameError:
     pass  # Issues with setup.py needed to import module but the `request.auth` dependency hasn't been installed yet.
 
 
-version = (1, 0, 2)
-__version__ = '.'.join(str(x) for x in version)
+from .dnsimple_version import version, __version__
 
 
 class DNSimpleException(Exception):
