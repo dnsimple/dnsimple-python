@@ -1,20 +1,24 @@
 VERSION := $(shell python setup.py --version)
 
-test: pyenv
+test: setup
 	tox
 
-virtualenv:
+ci-setup:
+	pip install -r requirements.txt --upgrade
+
+ci-test:
+	pytest tests
+
+venv:
 	test -e env || python3 -m venv env
 	./env/bin/pip install --upgrade tox
 	./env/bin/pip install -r requirements.txt --upgrade
 	./env/bin/python setup.py develop
 
-pyenv:
+setup: venv
 	pyenv install --skip-existing 2.7.14
-	pyenv install --skip-existing 3.4.8
-	pyenv install --skip-existing 3.5.5
 	pyenv install --skip-existing 3.6.4
-	pyenv local 3.6.4 3.5.5 3.4.8 2.7.14
+	pyenv local 3.6.4 2.7.14
 	pip install --upgrade tox tox-pyenv
 
 deploy: setup
