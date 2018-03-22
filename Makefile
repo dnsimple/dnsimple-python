@@ -12,7 +12,6 @@ ci-test:
 
 venv:
 	test -e env || python3 -m venv env
-	./env/bin/pip install --upgrade tox
 	./env/bin/pip install -r requirements.txt --upgrade
 	./env/bin/python setup.py develop
 
