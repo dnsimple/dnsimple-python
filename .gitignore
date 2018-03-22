@@ -11,5 +11,9 @@ dist/
 .tox/
 .cache
 .pytest_cache
-.env
 env
+
+## Credential files
+.dnsimple
+.env
+.envrc
