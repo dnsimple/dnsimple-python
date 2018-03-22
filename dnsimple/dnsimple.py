@@ -13,10 +13,6 @@ except ImportError:
     # Otherwise require extra simplejson library
     import simplejson as json
 try:
-    from base64 import encodebytes
-except ImportError:
-    from base64 import encodestring as encodebytes
-try:
     import ConfigParser as configparser
 except ImportError:
     import configparser
@@ -145,8 +141,8 @@ class DNSimple(object):
                     if self.user_account_id in ids:
                         self._account_id = self.user_account_id
                     else:
-                        raise DNSimpleException('Account {} not found. Possible variants: {}'.format(account_id,
-                                                                                                     ', '.format(ids)))
+                        raise DNSimpleException('Account {} not found. Possible variants: {}'.format(self._account_id,
+                                                                                                     ', '.join(ids)))
             else:
                 self._account_id = account_info['id']
         return self._account_id
