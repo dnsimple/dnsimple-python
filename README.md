@@ -159,12 +159,18 @@ All operations on domain records are now supported:
 
 ## Running Tests
 
-Before running tests, you'll need to ensure your environment is set up correctly:
+Before running tests, you'll need to ensure your environment is set up correctly.
+Currently we do live tests against DNSimple's sandbox so you will need to set that up. This also means that running tests concurrently will cause failures.
 
+### Set up DNSimple Sandbox account
 1. If you don't already have a DNSimple sandbox account, [create one](https://sandbox.dnsimple.com/signup) and make sure to have your email address, password, and API token handy.
-1. Ensure you have the `virtualenv` package installed (`pip install virtualenv --upgrade`) since tests are run from this isolated environment
 1. Copy the file `tests/.env.example` to `tests/.env` and supply your sandbox credentials
-1. From the project root, run `make test` -- this will set up your local environment with `virutalenv`, install all necessary dependencies, and run all the tests.
+
+### Setup Python
+If you don't wish to use pyenv you will want to skip this and run `tox` manually after setting up your environment
+
+1. install [pyenv](https://github.com/pyenv/pyenv) using homebrew or git
+1. `make test` to run all tests
 
 ## License
 
