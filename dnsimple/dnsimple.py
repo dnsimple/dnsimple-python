@@ -299,7 +299,11 @@ class DNSimple(object):
         """ Get the list of records for the specific domain """
         params = params or {'per_page': 100}
         result = self.__rest_helper('/zones/{name}/records'.format(name=id_or_domain_name), method='GET', params=params)
-        return self.__add_backward_compatibility(result, 'record')
+        records = self.__add_backward_compatibility(result, 'record')
+        for r in records:
+            r['record']['record_type'] = r['record'].pop('type')
+            r['record']['prio'] = r['record'].pop('priority')
+        return records
 
     getrecords = records  # Alias for backwards-compatibility
 
