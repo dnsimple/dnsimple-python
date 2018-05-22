@@ -202,7 +202,7 @@ class DNSimple(object):
         # 204 code means no content
         if handle.status_code == 204:
             # Small patch for second param
-            return {}, None
+            return {}, None, None
 
         response = handle.json()
 
