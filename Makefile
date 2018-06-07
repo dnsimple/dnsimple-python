@@ -22,7 +22,7 @@ setup: venv
 	pip install --upgrade tox tox-pyenv
 
 deploy: setup
-	./env/bin/pip install --update versioneer
+	./env/bin/pip install --upgrade versioneer
 	git diff-index --quiet HEAD -- || git stash
 	git checkout master
 	git pull origin master
