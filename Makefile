@@ -31,7 +31,7 @@ deploy: setup
 	github_changelog_generator --future-release=$(VERSION)
 	git add CHANGELOG.md
 	git commit -m "Deploy Version $(VERSION)"
-	git tag $(VERSION)
+	git tag -f $(VERSION)
 	git push
 	git push --tags
 	rm dist/*
