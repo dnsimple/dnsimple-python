@@ -1,5 +1,24 @@
 # Change Log
 
+## [1.1.0](https://github.com/onlyhavecans/dnsimple-python/tree/1.1.0) (2018-06-07)
+[Full Changelog](https://github.com/onlyhavecans/dnsimple-python/compare/1.0.2...1.1.0)
+
+**Closed issues:**
+
+- update\_record in APIv2 should use PATCH, not PUT [\#34](https://github.com/onlyhavecans/dnsimple-python/issues/34)
+- 1.0.1 pip install failing [\#32](https://github.com/onlyhavecans/dnsimple-python/issues/32)
+
+**Merged pull requests:**
+
+- Add methods corresponding to certificates endpoints [\#40](https://github.com/onlyhavecans/dnsimple-python/pull/40) ([DeviateFish](https://github.com/DeviateFish))
+- Minor Code Cleanup [\#38](https://github.com/onlyhavecans/dnsimple-python/pull/38) ([onlyhavecans](https://github.com/onlyhavecans))
+- fix version import [\#37](https://github.com/onlyhavecans/dnsimple-python/pull/37) ([onlyhavecans](https://github.com/onlyhavecans))
+- Move to using tox for local tests [\#36](https://github.com/onlyhavecans/dnsimple-python/pull/36) ([onlyhavecans](https://github.com/onlyhavecans))
+- use HTTP PATCH for updating records [\#35](https://github.com/onlyhavecans/dnsimple-python/pull/35) ([dcrosta](https://github.com/dcrosta))
+
+## [1.0.2](https://github.com/onlyhavecans/dnsimple-python/tree/1.0.2) (2018-02-27)
+[Full Changelog](https://github.com/onlyhavecans/dnsimple-python/compare/1.0.1...1.0.2)
+
 ## [1.0.1](https://github.com/onlyhavecans/dnsimple-python/tree/1.0.1) (2018-02-22)
 [Full Changelog](https://github.com/onlyhavecans/dnsimple-python/compare/1.0.0...1.0.1)
 
