@@ -386,3 +386,40 @@ class DNSimple(object):
             'contact': data
         }
         return self.__rest_helper('/contacts', data=data, method='POST')
+
+
+    # # CERTIFICATES
+
+    def certificates(self, domain):
+        """Get a list of all certificates associated with a domain"""
+        return self.__rest_helper('/domains/{domain}/certificates'.format(domain=domain), method='GET')
+
+    def certificate(self, domain, certificate_id):
+        """Gets a single certificate for a given domain"""
+        return self.__rest_helper(
+            '/domains/{domain}/certificates/{certificate}'.format(
+                domain=domain,
+                certificate=certificate_id
+            ),
+            method='GET'
+        )
+
+    def download_certificate(self, domain, certificate_id):
+        """Gets a pem-encoded certificate, root certificate, and intermediate chain"""
+        return self.__rest_helper(
+            '/domains/{domain}/certificates/{certificate}/download'.format(
+                domain=domain,
+                certificate=certificate_id
+            ),
+            method='GET'
+        )
+
+    def certificate_private_key(self, domain, certificate_id):
+        """Gets the private key associated with a given certificate"""
+        return self.__rest_helper(
+            '/domains/{domain}/certificates/{certificate}/private_key'.format(
+                domain=domain,
+                certificate=certificate_id
+            ),
+            method='GET'
+        )

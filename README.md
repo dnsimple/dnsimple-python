@@ -157,6 +157,15 @@ All operations on domain records are now supported:
 * Update record: `update_record(id_or_domainname, record_id, data)`
 * Delete record: `delete_record(id_or_domainname, record_id)`
 
+## SSL Certificates
+
+All read-only operations around ssl certificates are supported:
+
+* [List certificates](https://developer.dnsimple.com/v2/certificates/#listCertificates): `certificates(id_or_domainname)`
+* [Get certificate details](https://developer.dnsimple.com/v2/certificates/#getCertificate): `certificate(id_or_domainname, certificate_id)`
+* [Download a certificate](https://developer.dnsimple.com/v2/certificates/#downloadCertificate): `download_certificate(id_or_domainname, certificate_id)`
+* [Get a certificate's private key](https://developer.dnsimple.com/v2/certificates/#getCertificatePrivateKey): `certificate_private_key(id_or_domainname, certificate_id)`
+
 ## Running Tests
 
 Before running tests, you'll need to ensure your environment is set up correctly.
