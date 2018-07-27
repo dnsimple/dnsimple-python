@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.2.0+2.g92a126a](https://github.com/onlyhavecans/dnsimple-python/tree/1.2.0+2.g92a126a) (2018-07-26)
+[Full Changelog](https://github.com/onlyhavecans/dnsimple-python/compare/1.1.0...1.2.0+2.g92a126a)
+
+**Merged pull requests:**
+
+- Add records pagination [\#41](https://github.com/onlyhavecans/dnsimple-python/pull/41) ([onlyhavecans](https://github.com/onlyhavecans))
+
 ## [1.1.0](https://github.com/onlyhavecans/dnsimple-python/tree/1.1.0) (2018-06-07)
 [Full Changelog](https://github.com/onlyhavecans/dnsimple-python/compare/1.0.2...1.1.0)
 
