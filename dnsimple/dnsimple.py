@@ -169,7 +169,15 @@ class DNSimple(object):
 
         prepared_request = request.prepare()
 
-        r_json, r_headers = self.__request_helper(prepared_request)
+        r_json, r_headers, r_pagination = self.__request_helper(prepared_request)
+
+        while r_pagination and r_pagination.get('current_page') < r_pagination.get('total_pages'):
+            params = params or {}
+            params['page'] = r_pagination.get('current_page') + 1
+            request = Request(method=method, url=url, headers=headers, data=json_data, params=params, auth=self._auth)
+            prepared_request = request.prepare()
+            next_json, r_headers, r_pagination = self.__request_helper(prepared_request)
+            r_json += next_json
 
         if r_headers is not None:
             self.ratelimit_limit = r_headers['X-RateLimit-Limit']
@@ -194,14 +202,14 @@ class DNSimple(object):
         # 204 code means no content
         if handle.status_code == 204:
             # Small patch for second param
-            return {}, None
+            return {}, None, None
 
         response = handle.json()
 
         if 400 <= handle.status_code:
             raise DNSimpleException(response)
 
-        return response['data'], handle.headers
+        return response['data'], handle.headers, response.get('pagination')
 
     def __add_backward_compatibility(self, data, key):
         """
@@ -287,10 +295,15 @@ class DNSimple(object):
 
     # RECORDS
 
-    def records(self, id_or_domain_name):
+    def records(self, id_or_domain_name, params=None):
         """ Get the list of records for the specific domain """
-        result = self.__rest_helper('/zones/{name}/records'.format(name=id_or_domain_name), method='GET')
-        return self.__add_backward_compatibility(result, 'record')
+        params = params or {'per_page': 100}
+        result = self.__rest_helper('/zones/{name}/records'.format(name=id_or_domain_name), method='GET', params=params)
+        records = self.__add_backward_compatibility(result, 'record')
+        for r in records:
+            r['record']['record_type'] = r['record'].pop('type')
+            r['record']['prio'] = r['record'].pop('priority')
+        return records
 
     getrecords = records  # Alias for backwards-compatibility
 
