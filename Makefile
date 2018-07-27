@@ -16,9 +16,10 @@ venv:
 	./env/bin/python setup.py develop
 
 setup: venv
-	pyenv install --skip-existing 2.7.14
-	pyenv install --skip-existing 3.6.4
-	pyenv local 3.6.4 2.7.14
+	pyenv install --skip-existing 2.7.15
+	pyenv install --skip-existing 3.7.0
+	pyenv install --skip-existing 3.6.5
+	pyenv local 3.7.0 3.6.5 2.7.14
 	pip install --upgrade tox tox-pyenv
 
 deploy: setup
