@@ -13,6 +13,7 @@ setup(
     cmdclass=versioneer.get_cmdclass(),
     description='Python API client for Domain Management Automation with DNSimple https://developer.dnsimple.com',
     long_description=readme,
+    long_description_content_type="text/markdown",
     maintainer='David Aronsohn',
     maintainer_email='WagThatTail@Me.com',
     packages=find_packages(),
