@@ -1,9 +1,15 @@
 language: python
 
-python: "3.8"
+python:
+  - "3.8"
 
 install:
   - pip install -r requirements.txt
 
 script:
   make test
+
+notifications:
+  email: false
+  slack:
+    secure: "IhBqukvKdd8uw5VzyP9nzdgfXYWrnSOPBvDsCWhw/syMg9O2vwdIV5nNPaOlsdHzv+aZG5QFOsNavwW4FIOBLJLmcaDyvoLbytUHCebG+EnmE7bFZ+DHtqUu6tua6/xwY51JABTGFwdA+eiWl+KVHh+inxLUpcbuVa8agBAYOvE="
