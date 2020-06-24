@@ -1,192 +1,140 @@
-Python DNSimple
-===============
+## :warning: Development Warning
 
-[![Build Status](https://travis-ci.org/onlyhavecans/dnsimple-python.svg?branch=master)](https://travis-ci.org/onlyhavecans/dnsimple-python)
+This project targets the development of the API client for the [DNSimple API v2](https://developer.dnsimple.com/v2/).
 
-## Introduction
+This version is currently under development, therefore the methods and the implementation should he considered a work-in-progress. Changes in the method naming, method signatures, public or internal APIs may happen at any time.
 
-This is a client for the [DNSimple REST API](https://developer.dnsimple.com/). It currently allows you to fetch existing domain info, as well as register new domains and manage domain records.
+The code is tested with an automated test suite connected to a continuous integration tool, therefore you should not expect bugs to be merged into master. Regardless, use this library at your own risk.
 
-`dnsimple-python` works for both python 2 & 3.
+# DNSimple Python Client
 
-**Note:** As of 1.0.0 this now uses [DNSimple's APIv2](https://blog.dnsimple.com/2016/12/api-v2-stable/). This is incompatible with older versions of the library because of authentication changes. Please review the docs and tests before deploying to production.
+A Python client for the [DNSimple API v2](https://developer.dnsimple.com/v2/).
 
-### Getting started
+[DNSimple](https://dnsimple.com/) provides DNS hosting and domain registration that is simple and friendly.
+We provide a full API and an easy-to-use web interface so you can get your domain registered and set up with a minimal amount of effort.
 
-You'll need the `json` module that is included with python version 2.6 and later, or the `simplejson` module if you are using an earlier version.
+## Installation
 
-`dnsimple-python` also depends on the `requests` library.
+Where `<version>` denotes the version of the client you want to install.
 
-Import the module:
+To install the latest version:
+
+```shell
+pip install "dnsimple-python"
+```
+
+To install a specific version:
+
+```shell
+pip install "dnsimple-python==0.3.0"
+
+```
+
+## Usage
+
+This library is a Python client you can use to interact with the [DNSimple API v2](https://developer.dnsimple.com/v2/). Here are some examples.
 
 ```python
-from dnsimple import DNSimple
+from dnsimple import Client
+
+client = Client(access_token='a1b2c3')
+
+# Fetch your details
+response = client.identity.whoami()             # execute the call
+data = response.data                            # extract the relevant data from the response or
+account = client.identity.whoami().data.account # execute the call and get the data in one line
 ```
 
-You can provide your DNSimple credentials in one of two ways:
-
-#### Provide email/password or api\_token credentials programmatically:
+### Define an account ID
 
 ```python
-# Use email/password authentication: HTTP Basic
-dns = DNSimple(email=YOUR_USERNAME, password=YOUR_PASSWORD)
+from dnsimple import Client
 
-# Use api_token credentials
-dns = DNSimple(api_token=YOUR_API_TOKEN)
+client = Client(access_token='a1b2c3')
+account_id = 1010
 
-# If you have many accounts you can provide account_id (661 is an example)
-# You can find your account id in url (https://sandbox.dnsimple.com/a/661/account)
-dns = DNSimple(email=YOUR_USERNAME, password=YOUR_PASSWORD, account_id=661)
+# You can also fetch it from the whoami response
+# as long as you authenticate with an Account access token
+whoami = client.identity.whoami().data
+account_id = whoami.account.id
 ```
 
-##### Store you email/password or api\_token credentials in a file called `.dnsimple` in the current directory with the following data:
-
-```
-[DNSimple]
-email: email@domain.com
-password: yourpassword
-```
-
-Or:
-
-```
-[DNSimple]
-api_token: yourapitoken
-```
-
-Or (assuming `$DNSIMPLE_EMAIL` and `$DNSIMPLE_TOKEN` are environment variables):
-
-```
-[DNSimple]
-email: %(DNSIMPLE_EMAIL)s
-api_token: %(DNSIMPLE_TOKEN)s
-```
-
-You then need not provide any credentials when constructing `DNSimple`:
+### List your domains
 
 ```python
-dns = DNSimple()
+from dnsimple import Client
+
+client = Client(access_token='a1b2c3')
+
+account_id = client.identity.whoami().data.account.id
+domains = client.domains.list_domains(account_id).data                           # Domains from the 1010 account (first page)
+client.domains.list_domains(account_id, sort='expires_on:asc').data              # Domains from the 1010 account in ascending order by domain expiration date
+client.domains.list_domains(account_id, filter={'name_like': 'example'}).data    # Domains from the 1010 account filtered by the domain name name
 ```
 
-## Domain Operations
-
-### Check out your existing domains:
-
-Just run:
+### Create a domain
 
 ```python
-domains = dns.domains()
+from dnsimple import Client
+
+client = Client(access_token='a1b2c3')
+
+account_id = client.identity.whoami().data.account.id
+response = client.domains.create_domain(account_id, 'example.com')
+domain = response.data # The newly created domain
 ```
 
-Results appear as a Python dict:
+### Get a domain
 
 ```python
-{'domain': {'created_at': '2010-10-14T09:45:32Z',
-            'expires_at': '10/14/2011 5:45:00 AM',
-            'id': 999,
-            'last_enom_order_id': None,
-            'name': 'yourdomain.com',
-            'name_server_status': 'active',
-            'registrant_id': 99,
-            'registration_status': 'registered',
-            'updated_at': '2010-10-14T10:00:14Z',
-            'user_id': 99}},
-{'domain': {'created_at': '2010-10-15T16:02:34Z',
-            'expires_at': '10/15/2011 12:02:00 PM',
-            'id': 999,
-            'last_enom_order_id': None,
-            'name': 'anotherdomain.com',
-            'name_server_status': 'active',
-            'registrant_id': 99,
-            'registration_status': 'registered',
-            'updated_at': '2010-10-15T16:30:16Z',
-            'user_id': 99}}]
+from dnsimple import Client
+
+client = Client(access_token='a1b2c3')
+
+account_id = client.identity.whoami().data.account.id
+domain_id = client.domains.list_domains(account_id).data[0].id
+domain = client.domains.get_domain(account_id, domain_id).data # The domain you are looking for
 ```
 
-### Get details for a specific domain
+## Sandbox Environment
+
+We highly recommend testing against our [sandbox environment](https://developer.dnsimple.com/sandbox/) before using our
+production environment. This will allow you to avoid real purchases, live charges on your credit card, and reduce the
+chance of your running up against rate limits.
+
+The client supports both the production and sandbox environment. To switch to sandbox pass the sandbox API host using 
+the `base_url` option when you construct the client:
 
 ```python
-dns.domain('mikemaccana.com')
+from dnsimple import Client
+
+client = Client(base_url='https://api.sandbox.dnsimple.com', access_token="a1b2c3")
 ```
 
-Results are the same as `domains()` above, but only show the domain specified.
-
-### Check whether a domain is available
+You can also set the sandbox environment like so:
 
 ```python
-dns.check('google.com')
+from dnsimple import Client
 
-# Hmm, looks like I'm too late to get that one...
-{u'currency': u'USD',
-u'currency_symbol': u'$',
-u'minimum_number_of_years': 1,
-u'name': u'google.com',
-u'price': u'14.00',
-u'status': u'unavailable'}
+client = Client(sandbox=True, access_token='a1b2c3')
 ```
 
-### Register a new domain
+You will need to ensure that you are using an access token created in the sandbox environment.
+Production tokens will *not* work in the sandbox environment.
+
+## Setting a custom `User-Agent` header
+
+You customize the `User-Agent` header for the calls made to the DNSimple API:
 
 ```python
-dns.register('newdomain.com')
+from dnsimple import Client
+
+client = Client(user_agent="my-app")
 ```
 
-This will register 'newdomain.com', automatically picking the registrant\_id from your first domain. To specify a particularly `registrant_id`, just run:
-
-```python
-dns.register('newdomain.com', 99)
-```
-
-Responses will be in a dictionary describing the newly created domain, same as the `domain()` call above.
-
-### Delete a domain
-
-Careful with this one!
-
-```python
-dns.delete('domain-to-die.com')
-```
-
-## Record operations
-
-All operations on domain records are now supported:
-
-* List records: `records(id_or_domainname)`
-* Get record details: `record(id_or_domainname, record_id)`
-* Add record: `add_record(id_or_domainname, data)`
-* Update record: `update_record(id_or_domainname, record_id, data)`
-* Delete record: `delete_record(id_or_domainname, record_id)`
-
-## SSL Certificates
-
-All read-only operations around ssl certificates are supported:
-
-* [List certificates](https://developer.dnsimple.com/v2/certificates/#listCertificates): `certificates(id_or_domainname)`
-* [Get certificate details](https://developer.dnsimple.com/v2/certificates/#getCertificate): `certificate(id_or_domainname, certificate_id)`
-* [Download a certificate](https://developer.dnsimple.com/v2/certificates/#downloadCertificate): `download_certificate(id_or_domainname, certificate_id)`
-* [Get a certificate's private key](https://developer.dnsimple.com/v2/certificates/#getCertificatePrivateKey): `certificate_private_key(id_or_domainname, certificate_id)`
-
-## Running Tests
-
-Before running tests, you'll need to ensure your environment is set up correctly.
-Currently we do live tests against DNSimple's sandbox so you will need to set that up. This also means that running tests concurrently will cause failures.
-
-### Set up DNSimple Sandbox account
-1. If you don't already have a DNSimple sandbox account, [create one](https://sandbox.dnsimple.com/signup) and make sure to have your email address, password, and API token handy.
-1. Copy the file `tests/.env.example` to `tests/.env` and supply your sandbox credentials
-
-### Setup Python
-If you don't wish to use pyenv you will want to skip this and run `tox` manually after setting up your environment
-
-1. install [pyenv](https://github.com/pyenv/pyenv) using homebrew or git
-1. `make test` to run all tests
+The value you provide will be appended to the default `User-Agent` the client uses. 
+For example, if you use `my-app`, the final header value will be `my-app dnsimple-python/0.1.0` (note that it will vary depending on the client version).
 
 ## License
 
-Licensed under the [MIT license](http://www.opensource.org/licenses/mit-license.php)
-
-## Authors
-
-* Original Author [Mike MacCana](https://github.com/mikemaccana/)
-* APIv2 Support [Kirill Motkov](https://github.com/lcd1232)
-* Maintainer [David Aronsohn](https://github.com/onlyhavecans)
+Copyright (c) 2010-2020 DNSimple Corporation. This is Free Software distributed under the MIT license.

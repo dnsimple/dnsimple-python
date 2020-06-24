@@ -1,44 +1,5 @@
-VERSION := $(shell python setup.py --version)
+init:
+	pip install -r requirements.txt
 
-test: setup
-	test -f tests/.env || { echo "Set up your env file before running tests"; exit 1; }
-	tox
-
-ci-setup:
-	pip install -r requirements.txt --upgrade
-
-ci-test:
-	py.test tests
-
-venv:
-	test -e env || python3 -m venv env
-	./env/bin/pip install -r requirements.txt --upgrade
-	./env/bin/python setup.py develop
-
-setup: venv
-	pyenv install --skip-existing 2.7.15
-	pyenv install --skip-existing 3.7.0
-	pyenv install --skip-existing 3.6.5
-	pyenv local 3.7.0 3.6.5 2.7.14
-	pip install --upgrade tox tox-pyenv
-
-deploy: setup
-	./env/bin/pip install --upgrade versioneer
-	git diff-index --quiet HEAD -- || git stash
-	git checkout master
-	git pull origin master
-	git pull origin master --tags
-	gem install github_changelog_generator
-	github_changelog_generator --future-release=$(VERSION)
-	git add CHANGELOG.md
-	git commit -m "Deploy Version $(VERSION)"
-	git tag -f $(VERSION)
-	git push
-	git push --tags
-	rm dist/*
-	./env/bin/python setup.py sdist
-	gpg --detach-sign -a dist/dnsimple-$(VERSION).tar.gz
-	./env/bin/pip install twine --upgrade
-	./env/bin/twine upload dist/*
-
-.PHONY: test
+test:
+	python -m unittest discover -p "*_test.py" -v

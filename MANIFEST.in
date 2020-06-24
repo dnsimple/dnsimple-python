@@ -1,3 +1,1 @@
-include README.md
-include versioneer.py
-include dnsimple/_version.py
+include LICENSE.txt
