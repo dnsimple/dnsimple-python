@@ -3,6 +3,7 @@
 ## Getting Started
 
 #### 1. Clone the repository
+
 Clone the repository and move into it:
 
 ```shell
@@ -32,7 +33,7 @@ To run the test suite:
 ```shell
 make test
 ```
-  
+
 ## Releasing
 
 The following instructions uses `$VERSION` as a placeholder, where `$VERSION` is a `MAJOR.MINOR.BUGFIX` release such as `1.2.0`.
@@ -40,7 +41,7 @@ The following instructions uses `$VERSION` as a placeholder, where `$VERSION` is
 1. Run the test suite and ensure all the tests pass.
 2. Set the version in `version.py` (located in `./dnsimple/version.py`).
     ```python
-   version = '$VERSION'
+version = '$VERSION'
     ```
 3. Run the test suite and ensure all tests pass: `make test`
 4. Finalize the `## master` section in `CHANGELOG.md` assigning the version.
@@ -55,7 +56,7 @@ The following instructions uses `$VERSION` as a placeholder, where `$VERSION` is
     git tag -a v$VERSION -s -m "Release $VERSION"
     git push origin --tags
     ```
-   
+
 ## Generating distribution packages
 
 Make sure you have the latest versions of setuptools and wheel installed:
@@ -89,10 +90,9 @@ You can also check if your distribution is ready to be uploaded like so:
 ```shell
 twine check dist/*
 ```
- 
+
 ## Testing
 
 Submit unit tests for your changes. You can test your changes on your machine by [running the test suite](#testing).
 
 When you submit a PR, tests will also be run on the [continuous integration environment via Travis](https://travis-ci.com/dnsimple/dnsimple-python).
-
