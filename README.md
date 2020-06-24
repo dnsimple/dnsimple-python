@@ -137,4 +137,4 @@ For example, if you use `my-app`, the final header value will be `my-app dnsimpl
 
 ## License
 
-Copyright (c) 2010-2020 DNSimple Corporation. This is Free Software distributed under the MIT license.
+Copyright (c) 2020 DNSimple Corporation. This is Free Software distributed under the MIT license.
