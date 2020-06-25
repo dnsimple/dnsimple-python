@@ -21,7 +21,7 @@ stringcase==1.2.0
 typing-extensions==3.7.4.2
 typing-inspect==0.6.0
 urllib3==1.25.9
-wcwidth==0.2.4
+wcwidth==0.2.5
 
 pip~=20.1.1
 setuptools~=47.1.1
