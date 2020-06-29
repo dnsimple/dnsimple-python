@@ -45,7 +45,7 @@ class Contacts(object):
         :return: dnsimple.Response
             The newly created contact
         """
-        response = self.client.post(f'/{account_id}/contacts', data=contact.to_json)
+        response = self.client.post(f'/{account_id}/contacts', data=contact.to_json())
         return Response(response, Contact)
 
     def get_contact(self, account_id, contact_id):
@@ -81,7 +81,7 @@ class Contacts(object):
         :return: dnsimple.Response
             The updated contact
         """
-        response = self.client.patch(f'/{account_id}/contacts/{contact_id}', data=contact.to_json)
+        response = self.client.patch(f'/{account_id}/contacts/{contact_id}', data=contact.to_json())
         return Response(response, Contact)
 
     def delete_contact(self, account_id, contact_id):

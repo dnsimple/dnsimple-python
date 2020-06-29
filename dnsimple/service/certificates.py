@@ -106,7 +106,7 @@ class Certificates(object):
             The certificate purchase
         """
         response = self.client.post(f'/{account_id}/domains/{domain}/certificates/letsencrypt',
-                                    data=certificate_input.to_json)
+                                    data=certificate_input.to_json())
         return Response(response, CertificatePurchase)
 
     def issue_letsencrypt_certificate(self, account_id, domain, certificate_id):

@@ -150,7 +150,7 @@ class Zones(object):
         :return: dnsimple.Response
             The newly created zone record
         """
-        response = self.client.post(f'/{account_id}/zones/{zone}/records', data=record.to_json)
+        response = self.client.post(f'/{account_id}/zones/{zone}/records', data=record.to_json())
         return Response(response, ZoneRecord)
 
     def get_record(self, account_id, zone, record_id):
@@ -189,7 +189,7 @@ class Zones(object):
         :return: dnsimple.Response
             The updated zone record
         """
-        response = self.client.patch(f'/{account_id}/zones/{zone}/records/{record_id}', data=record.to_json)
+        response = self.client.patch(f'/{account_id}/zones/{zone}/records/{record_id}', data=record.to_json())
         return Response(response, ZoneRecord)
 
     def delete_record(self, account_id, zone, record_id):

@@ -70,7 +70,7 @@ class Registrar(object):
         :return: dnsimple.Response
             The newly registered domain
         """
-        response = self.client.post(f'/{account_id}/registrar/domains/{domain}/registrations', request.to_json)
+        response = self.client.post(f'/{account_id}/registrar/domains/{domain}/registrations', request.to_json())
         return Response(response, DomainRegistration)
 
     def transfer_domain(self, account_id, domain, request):
@@ -89,7 +89,7 @@ class Registrar(object):
         :return: dnsimple.Response
             The domain transfer
         """
-        response = self.client.post(f'/{account_id}/registrar/domains/{domain}/transfers', request.to_json)
+        response = self.client.post(f'/{account_id}/registrar/domains/{domain}/transfers', request.to_json())
         return Response(response, DomainTransfer)
 
     def get_domain_transfer(self, account_id, domain, domain_transfer):
@@ -149,7 +149,7 @@ class Registrar(object):
         :return: dnsimple.Request
             The domain renewal
         """
-        response = self.client.post(f'/{account_id}/registrar/domains/{domain}/renewals', request.to_json)
+        response = self.client.post(f'/{account_id}/registrar/domains/{domain}/renewals', request.to_json())
         return Response(response, DomainRenewal)
 
     def transfer_domain_out(self, account_id, domain):

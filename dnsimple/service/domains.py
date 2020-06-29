@@ -260,7 +260,7 @@ class Domains(object):
         :return: dnsimple.Response
             The newly created domain delegation signer record
         """
-        response = self.client.post(f'/{account_id}/domains/{domain}/ds_records', data=ds_input.to_json)
+        response = self.client.post(f'/{account_id}/domains/{domain}/ds_records', data=ds_input.to_json())
         return Response(response, DelegationSignerRecord)
 
     def get_delegation_signer_record(self, account_id, domain, ds_record_id):
@@ -404,7 +404,7 @@ class Domains(object):
         :return: dnsimple.Response
             The newly created domain push
         """
-        response = self.client.post(f'/{account_id}/domains/{domain}/pushes', data=push_input.to_json)
+        response = self.client.post(f'/{account_id}/domains/{domain}/pushes', data=push_input.to_json())
         return Response(response, DomainPush)
 
     def list_pushes(self, account_id, page=None, per_page=None):
@@ -442,7 +442,7 @@ class Domains(object):
         :return: dnsimple.Response
             An empty response
         """
-        response = self.client.post(f'/{account_id}/pushes/{push_id}', data=push_input.to_json)
+        response = self.client.post(f'/{account_id}/pushes/{push_id}', data=push_input.to_json())
         return Response(response)
 
     def reject_push(self, account_id, push_id):
