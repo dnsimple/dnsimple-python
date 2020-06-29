@@ -128,7 +128,7 @@ class Client(object):
         :return: requests.Response
             The response object for the request sent
         """
-        request = Request(method='POST', url=self.versioned(path), headers=self.headers, data=data)
+        request = Request(method='POST', url=self.versioned(path), headers=self.headers, auth=self.auth, data=data)
         return self.session.send(request.prepare())
 
     def put(self, path, data=None):
@@ -142,7 +142,7 @@ class Client(object):
         :return: requests.Response
             The response object for the request sent
         """
-        request = Request(method='PUT', url=self.versioned(path), headers=self.headers, data=data)
+        request = Request(method='PUT', url=self.versioned(path), headers=self.headers, auth=self.auth, data=data)
         return self.session.send(request.prepare())
 
     def patch(self, path, data=None):
@@ -156,7 +156,7 @@ class Client(object):
         :return: requests.Response
             The response object for the request sent
         """
-        request = Request(method='PATCH', url=self.versioned(path), headers=self.headers, data=data)
+        request = Request(method='PATCH', url=self.versioned(path), headers=self.headers, auth=self.auth, data=data)
         return self.session.send(request.prepare())
 
     def delete(self, path):
@@ -168,7 +168,8 @@ class Client(object):
         :return: request.Response
             The response object for the request sent
         """
-        return self.session.send(Request(method='DELETE', url=self.versioned(path), headers=self.headers).prepare())
+        request = Request(method='DELETE', url=self.versioned(path), headers=self.headers, auth=self.auth).prepare()
+        return self.session.send(request)
 
     def versioned(self, path):
         """
