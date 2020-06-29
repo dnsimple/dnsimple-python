@@ -1,3 +1,5 @@
+import json
+
 from dnsimple.response import Response
 from dnsimple.struct import Domain, Dnssec, Collaborator, DelegationSignerRecord, EmailForward, DomainPush
 
@@ -58,7 +60,7 @@ class Domains(object):
         :return: dnsimple.Response
             The newly created domain
         """
-        response = self.client.post(f'/{account_id}/domains', data={'name': domain_name})
+        response = self.client.post(f'/{account_id}/domains', data=json.dumps({'name': domain_name}))
         return Response(response, Domain)
 
     def get_domain(self, account_id, domain):
@@ -136,7 +138,7 @@ class Domains(object):
         :return: dnsimple.Response
             The collaborator added to the domain in the account
         """
-        response = self.client.post(f'/{account_id}/domains/{domain}/collaborators', data={'email': email})
+        response = self.client.post(f'/{account_id}/domains/{domain}/collaborators', data=json.dumps({'email': email}))
         return Response(response, Collaborator)
 
     def remove_collaborator(self, account_id, domain, collaborator):
@@ -347,7 +349,7 @@ class Domains(object):
         :return: dnsimple.Response
             The newly created email forward under the domain in the account
         """
-        response = self.client.post(f'/{account_id}/domains/{domain}/email_forwards', data={'from': email_forwards_input.email_from, 'to': email_forwards_input.email_to})
+        response = self.client.post(f'/{account_id}/domains/{domain}/email_forwards', data=json.dumps({'from': email_forwards_input.email_from, 'to': email_forwards_input.email_to}))
         return Response(response, EmailForward)
 
     def get_email_forward(self, account_id, domain, email_forward_id):
