@@ -9,7 +9,7 @@ def return_list_of(cls, data):
     :return:
         A list of objects of the type specified found in the response
     """
-    return list(map(lambda x: cls(x), data))
+    return [cls(x) for x in data]
 
 
 def attach_attributes_to(obj: object, data: object) -> object:
