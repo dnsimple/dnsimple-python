@@ -30,7 +30,7 @@ class DomainsPushesTest(DNSimpleTest):
         pushes = self.domains.list_pushes(2020).data
 
         self.assertEqual(2, len(pushes))
-        self.assertEqual(101, pushes[0].domain_id)
+        self.assertEqual(100, pushes[0].domain_id)
 
     @responses.activate
     def test_list_pushes_supports_pagination(self):
