@@ -15,18 +15,23 @@ cd dnsimple-python
 
 Make sure you have Python (7.3 onwards) installed.
 
-Make sure you have the required libraries installed:
+Init the project
 
 ```shell
-pip install -r requirements.txt
+make init
 ```
 
-(Optional) Install pyenv using *Homebrew* (on macOS) or following the instructions in the [pyenv project](https://github.com/pyenv/pyenv).
+This will install a virtual python environment `venv`. Once you have run the command
+you can start using the virtual environment like so:
+
+```shell
+source ./venv/bin/activate
+```
 
 #### 3. Testing
 
 [Run the test suite](#testing) to check everything is working as expected and to install the project specific 
-dependencies (the first time you'll run the script it will install all the dependencies for you).
+dependencies (the first time you'll run the script all the dependencies will be installed for you).
 
 To run the test suite: 
 
@@ -59,37 +64,26 @@ version = '$VERSION'
 
 ## Generating distribution packages
 
-Make sure you have the latest versions of setuptools and wheel installed:
-
 ```shell
-python3 -m pip install --user --upgrade setuptools wheel
-```
-
-Now run this command from the same directory where setup.py is located:
-
-```shell
-python3 setup.py sdist bdist_wheel
-```
-
-## Uploading the distribution packages
-
-You'll have to install twine:
-
-```shell
-python3 -m pip install --user --upgrade twine
-```
-
-Once installed, run Twine to upload all of the archives under dist:
-
-```shell
-python3 -m twine upload --repository testpypi dist/*
+make package
 ```
 
 You can also check if your distribution is ready to be uploaded like so:
 
 ```shell
-twine check dist/*
+make test_package
 ```
+
+## Uploading the distribution packages (to testpypi)
+
+Run
+
+```shell
+make upload_package
+```
+
+and follow the instructions. This will upload the package to the testpypi environment.
+
 
 ## Testing
 
