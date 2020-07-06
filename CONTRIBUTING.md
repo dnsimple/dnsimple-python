@@ -13,7 +13,7 @@ cd dnsimple-python
 
 #### 2. Install dependencies
 
-Make sure you have Python (7.3 onwards) installed.
+Make sure you have Python (3.8 onwards) installed.
 
 Init the project
 
