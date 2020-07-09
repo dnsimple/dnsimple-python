@@ -137,7 +137,7 @@ class DNSimple(object):
                 elif self.user_account_id is None:
                     raise DNSimpleException('Found many accounts for this user access token. Specify account_id.')
                 else:
-                    ids = [el['id'] for el in data]
+                    ids = [str(el['id']) for el in data]
                     if self.user_account_id in ids:
                         self._account_id = self.user_account_id
                     else:
