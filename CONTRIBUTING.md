@@ -30,10 +30,10 @@ source ./venv/bin/activate
 
 #### 3. Testing
 
-[Run the test suite](#testing) to check everything is working as expected and to install the project specific 
+[Run the test suite](#testing) to check everything is working as expected and to install the project specific
 dependencies (the first time you'll run the script all the dependencies will be installed for you).
 
-To run the test suite: 
+To run the test suite:
 
 ```shell
 make test
@@ -43,20 +43,27 @@ make test
 
 The following instructions uses `$VERSION` as a placeholder, where `$VERSION` is a `MAJOR.MINOR.BUGFIX` release such as `1.2.0`.
 
-1. Run the test suite and ensure all the tests pass.
-2. Set the version in `version.py` (located in `./dnsimple/version.py`).
+1. Set the version in `./dnsimple/version.py`.
+
     ```python
-version = '$VERSION'
+    version = '$VERSION'
     ```
-3. Run the test suite and ensure all tests pass: `make test`
-4. Finalize the `## master` section in `CHANGELOG.md` assigning the version.
-5. Commit and push the changes
+
+2. Run the test suite and ensure all tests pass: `make test`
+
+3. Finalize the `## master` section in `CHANGELOG.md` assigning the version.
+
+4. Commit and push the changes
+
     ```shell
     git commit -a -m "Release $VERSION"
     git push origin master
     ```
-6. Wait for the CI to complete.
-7. Create a signed tag.
+
+5. Wait for CI to complete.
+
+6. Create a signed tag.
+
     ```shell
     git tag -a v$VERSION -s -m "Release $VERSION"
     git push origin --tags
