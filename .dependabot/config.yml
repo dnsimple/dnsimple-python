@@ -2,9 +2,8 @@ version: 1
 update_configs:
   - package_manager: python
     directory: "/"
-    update_schedule: "weekly"
+    update_schedule: "daily"
     default_labels:
-      - "backlog-dependencies"
       - "task"
       - "dependencies"
-      - "dependabot"
+      - "backlog-dependencies"
