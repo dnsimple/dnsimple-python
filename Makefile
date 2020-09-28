@@ -20,4 +20,4 @@ update_install_twine:
 	python -m pip install --upgrade twine
 
 upload_package: update_install_twine package
-	python -m twine upload --repository testpypi dist/*
+	python -m twine upload dist/*
