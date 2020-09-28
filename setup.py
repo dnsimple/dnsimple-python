@@ -7,7 +7,7 @@ with open("README.md", "r") as f:
     readme = f.read()
 
 setup(
-    name="dnsimple-python",
+    name="dnsimple",
     version=version,
     description="DNSimple API service for python",
     long_description_content_type="text/markdown",
