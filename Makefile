@@ -10,6 +10,9 @@ test: install_requirements
 update_install_setuptools:
 	python -m pip install --upgrade setuptools wheel
 
+clean_package:
+	rm -rf dist/*
+
 package: update_install_setuptools
 	python setup.py sdist bdist_wheel
 
@@ -19,5 +22,5 @@ test_package: package update_install_twine
 update_install_twine:
 	python -m pip install --upgrade twine
 
-upload_package: update_install_twine package
+upload_package: update_install_twine clean_package package
 	python -m twine upload dist/*
