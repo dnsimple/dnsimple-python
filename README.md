@@ -19,13 +19,13 @@ Where `<version>` denotes the version of the client you want to install.
 To install the latest version:
 
 ```shell
-pip install "dnsimple-python"
+pip install dnsimple
 ```
 
 To install a specific version:
 
 ```shell
-pip install "dnsimple-python==0.3.0"
+pip install dnsimple==0.3.0"
 
 ```
 
