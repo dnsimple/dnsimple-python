@@ -1,5 +1,5 @@
 attrs==20.3.0
-certifi==2020.6.20
+certifi==2020.11.8
 chardet==3.0.4
 coverage==5.3
 dataclasses-json==0.5.2
