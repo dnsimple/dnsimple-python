@@ -22,5 +22,8 @@ test_package: package update_install_twine
 update_install_twine:
 	python -m pip install --upgrade twine
 
+test_upload_pacakge: update_install_twine clean_package package
+	python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+
 upload_package: update_install_twine clean_package package
 	python -m twine upload dist/*

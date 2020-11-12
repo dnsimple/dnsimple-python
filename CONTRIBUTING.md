@@ -81,7 +81,20 @@ You can also check if your distribution is ready to be uploaded like so:
 make test_package
 ```
 
-## Uploading the distribution packages (to testpypi)
+## Uploading the distribution packages
+
+**1. TestPyPi**
+
+Run
+
+```shell
+make test_upload_pacakge
+```
+
+This will upload the package to the testpypi environment.
+After the package has been uploaded successfully you can move onto the next step.
+
+**2. Live PyPi**
 
 Run
 
@@ -89,8 +102,7 @@ Run
 make upload_package
 ```
 
-and follow the instructions. This will upload the package to the testpypi environment.
-
+This will upload the package to the live pypi index.
 
 ## Testing
 
