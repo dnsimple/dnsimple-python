@@ -19,13 +19,13 @@ Where `<version>` denotes the version of the client you want to install.
 To install the latest version:
 
 ```shell
-pip install "dnsimple-python"
+pip install "dnsimple"
 ```
 
 To install a specific version:
 
 ```shell
-pip install "dnsimple-python==0.3.0"
+pip install "dnsimple==2.0.1"
 
 ```
 
@@ -101,7 +101,7 @@ We highly recommend testing against our [sandbox environment](https://developer.
 production environment. This will allow you to avoid real purchases, live charges on your credit card, and reduce the
 chance of your running up against rate limits.
 
-The client supports both the production and sandbox environment. To switch to sandbox pass the sandbox API host using 
+The client supports both the production and sandbox environment. To switch to sandbox pass the sandbox API host using
 the `base_url` option when you construct the client:
 
 ```python
@@ -131,7 +131,7 @@ from dnsimple import Client
 client = Client(user_agent="my-app")
 ```
 
-The value you provide will be appended to the default `User-Agent` the client uses. 
+The value you provide will be appended to the default `User-Agent` the client uses.
 For example, if you use `my-app`, the final header value will be `my-app dnsimple-python/0.1.0` (note that it will vary depending on the client version).
 
 ## License
