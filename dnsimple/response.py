@@ -50,7 +50,7 @@ class Response(object):
 
         self.add_data(obj, http_response)
 
-        if http_response.status_code != '204':
+        if http_response.status_code != 204:
             self.__class__.pagination = None if http_response.json().get('pagination') is None else Pagination(
                 http_response.json().get('pagination'))
 

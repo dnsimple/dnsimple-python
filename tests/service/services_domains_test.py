@@ -36,7 +36,7 @@ class TestName(DNSimpleTest):
                                            fixture_name='applyService/success'))
         response = self.services.apply_service(1010, 'example.com', 2)
 
-        self.assertEqual('204', response.http_response.status_code)
+        self.assertEqual(204, response.http_response.status_code)
 
     @responses.activate
     def test_unapply_service(self):
@@ -45,7 +45,7 @@ class TestName(DNSimpleTest):
                                            fixture_name='unapplyService/success'))
         response = self.services.unapply_service(1010, 'example.com', 2)
 
-        self.assertEqual('204', response.http_response.status_code)
+        self.assertEqual(204, response.http_response.status_code)
 
 
 if __name__ == '__main__':
