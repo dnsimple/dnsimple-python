@@ -24,8 +24,9 @@ class DNSimpleMockResponse(responses.Response):
                 headers[header_dic[0]] = header_dic[1]
 
         content = split_payload[len(split_payload) - 1]
+        status_code = int(split_payload[0].split(' ')[1])
         super(DNSimpleMockResponse, self).__init__(method, url, body=content, headers=headers,
-                                                   status=split_payload[0].split(' ')[1])
+                                                   status=status_code)
 
 
 class DNSimpleTest(unittest.TestCase):
