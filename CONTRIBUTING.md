@@ -51,13 +51,13 @@ The following instructions uses `$VERSION` as a placeholder, where `$VERSION` is
 
 2. Run the test suite and ensure all tests pass: `make test`
 
-3. Finalize the `## master` section in `CHANGELOG.md` assigning the version.
+3. Finalize the `## main` section in `CHANGELOG.md` assigning the version.
 
 4. Commit and push the changes
 
     ```shell
-    git commit -a -m "Release $VERSION"
-    git push origin master
+    git commit -s -a -m "Release $VERSION"
+    git push origin main
     ```
 
 5. Wait for CI to complete.

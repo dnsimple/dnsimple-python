@@ -3,7 +3,13 @@
 This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 
 
-## master
+## main
+
+- CHANGED:
+  Dependencies update
+  Fixed #98
+
+## 2.1.0
 
 - CHANGED: Dependencies update
 
