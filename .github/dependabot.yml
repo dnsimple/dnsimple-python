@@ -1,0 +1,41 @@
+version: 2
+registries:
+  git-github-com:
+    type: git
+    url: https://github.com
+    username: x-access-token
+    password: "${{secrets.GIT_GITHUB_COM_PASSWORD}}"
+
+updates:
+- package-ecosystem: pip
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "12:00"
+  open-pull-requests-limit: 10
+  labels:
+  - task
+  - dependencies
+  - backlog-dependencies
+  ignore:
+  - dependency-name: marshmallow
+    versions:
+    - 3.11.0
+  - dependency-name: setuptools
+    versions:
+    - 52.0.0
+    - 53.1.0
+    - 54.0.0
+    - 54.1.1
+    - 54.1.2
+    - 54.2.0
+  - dependency-name: responses
+    versions:
+    - 0.13.0
+    - 0.13.1
+  - dependency-name: pip
+    versions:
+    - "21.0"
+    - 21.0.1
+  registries:
+  - git-github-com
