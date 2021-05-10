@@ -6,6 +6,10 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 ## main
 
 - CHANGED:
+
+## 2.1.2
+
+- CHANGED:
   Dependencies updates with a security update for urllib3
 
 ## 2.1.1
