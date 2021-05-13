@@ -44,8 +44,8 @@ class DomainsTest(DNSimpleTest):
                                            path='/1010/domains',
                                            fixture_name='createDomain/created'))
         domain = self.domains.create_domain(1010, 'example-beta.com').data
-        self.assertEqual(1, domain.id)
-        self.assertEqual('example-alpha.com', domain.name)
+        self.assertIsInstance(domain.id, int)
+        self.assertEqual('example-beta.com', domain.name)
         self.assertIsInstance(domain, Domain)
 
     @responses.activate

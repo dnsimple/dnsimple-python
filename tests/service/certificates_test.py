@@ -1,6 +1,7 @@
 import unittest
 
 import responses
+import datetime
 
 from dnsimple.response import Pagination
 from dnsimple.struct import Certificate, LetsencryptCertificateInput
@@ -34,33 +35,20 @@ class CertificatesTest(DNSimpleTest):
                                            fixture_name='getCertificate/success'))
         certificate = self.certificates.get_certificate(1010, 'example.com', 1).data
 
-        self.assertEqual(1, certificate.id)
-        self.assertEqual(2, certificate.domain_id)
-        self.assertEqual(3, certificate.contact_id)
+        self.assertIsInstance(certificate.id, int)
+        self.assertIsInstance(certificate.domain_id, int)
+        self.assertIsInstance(certificate.contact_id, int)
         self.assertEqual('www', certificate.name)
-        self.assertEqual('www.weppos.net', certificate.common_name)
+        self.assertEqual('www.bingo.pizza', certificate.common_name)
         self.assertEqual(1, certificate.years)
-        self.assertEqual('-----BEGIN CERTIFICATE '
-                         'REQUEST-----\nMIICljCCAX4CAQAwGTEXMBUGA1UEAwwOd3d3LndlcHBvcy5uZXQwggEiMA0GCSqG'
-                         '\nSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC3MJwx9ahBG3kAwRjQdRvYZqtovUaxY6jp\nhd09975gO'
-                         '+2eYPDbc1yhNftVJ4KBT0zdEqzX0CwIlxE1MsnZ2YOsC7IJO531hMBp'
-                         '\ndBxM4tSG07xPz70AVUi9rY6YCUoJHmxoFbclpHFbtXZocR393WyzUK8047uM2mlz\n03AZKcMdyfeuo2'
-                         '/9TcxpTSCkklGqwqS9wtTogckaDHJDoBunAkMioGfOSMe7Yi6E\nYRtG4yPJYsDaq2yPJWV8'
-                         '+i0PFR1Wi5RCnPt0YdQWstHuZrxABi45+XVkzKtz3TUc\nYxrvPBucVa6uzd953u8CixNFkiOefvb/dajsv1GIwH6'
-                         '/Cvc1ftz1AgMBAAGgODA2\nBgkqhkiG9w0BCQ4xKTAnMCUGA1UdEQQeMByCDnd3dy53ZXBwb3MubmV0ggp3ZXBw'
-                         '\nb3MubmV0MA0GCSqGSIb3DQEBCwUAA4IBAQCDnVBO9RdJX0eFeZzlv5c8yG8duhKP\nl0Vl+V88fJylb'
-                         '/cbNj9qFPkKTK0vTXmS2XUFBChKPtLucp8+Z754UswX+QCsdc7U'
-                         '\nTTSG0CkyilcSubdZUERGej1XfrVQhrokk7Fu0Jh3BdT6REP0SIDTpA8ku/aRQiAp\np+h19M37S7+w'
-                         '/DMGDAq2LSX8jOpJ1yIokRDyLZpmwyLxutC21DXMGoJ3xZeUFrUT\nqRNwzkn2dJzgTrPkzhaXalUBqv'
-                         '+nfXHqHaWljZa/O0NVCFrHCdTdd53/6EE2Yabv\nq5SFTkRCpaxrvM/7a8Tr4ixD1/VKD6rw3'
-                         '+WC00000000000000000000\n-----END CERTIFICATE REQUEST-----\n', certificate.csr)
+        self.assertEqual(len(certificate.csr), 976)
         self.assertEqual('issued', certificate.state)
         self.assertFalse(certificate.auto_renew)
-        self.assertListEqual(['weppos.net', 'www.weppos.net'], certificate.alternate_names)
+        self.assertListEqual([], certificate.alternate_names)
         self.assertEqual('letsencrypt', certificate.authority_identifier)
-        self.assertEqual('2016-06-11T18:47:08Z', certificate.created_at)
-        self.assertEqual('2016-06-11T18:47:37Z', certificate.updated_at)
-        self.assertEqual('2016-09-09', certificate.expires_on)
+        self.assertIsInstance(datetime.datetime.strptime(certificate.created_at, '%Y-%m-%dT%H:%M:%SZ'), datetime.datetime)
+        self.assertIsInstance(datetime.datetime.strptime(certificate.updated_at, '%Y-%m-%dT%H:%M:%SZ'), datetime.datetime)
+        self.assertIsInstance(datetime.datetime.strptime(certificate.expires_on, '%Y-%m-%d'), datetime.datetime)
 
     @responses.activate
     def test_download_certificate(self):
@@ -164,20 +152,19 @@ class CertificatesTest(DNSimpleTest):
         certificate_purchase = self.certificates.purchase_letsencrypt_certificate(1010, 'example.com',
                                                                                   LetsencryptCertificateInput(42)).data
 
-        self.assertEqual(300, certificate_purchase.id)
-        self.assertEqual(300, certificate_purchase.certificate_id)
-        self.assertEqual('requesting', certificate_purchase.state)
+        self.assertEqual(101967, certificate_purchase.id)
+        self.assertEqual(101967, certificate_purchase.certificate_id)
+        self.assertEqual('new', certificate_purchase.state)
         self.assertFalse(certificate_purchase.auto_renew)
-        self.assertEqual('2017-10-19T08:18:53Z', certificate_purchase.created_at)
-        self.assertEqual('2017-10-19T08:22:17Z', certificate_purchase.updated_at)
-        self.assertIsNone(certificate_purchase.expires_on)
+        self.assertIsInstance(datetime.datetime.strptime(certificate_purchase.created_at, '%Y-%m-%dT%H:%M:%SZ'), datetime.datetime)
+        self.assertIsInstance(datetime.datetime.strptime(certificate_purchase.updated_at, '%Y-%m-%dT%H:%M:%SZ'), datetime.datetime)
 
     @responses.activate
     def test_issue_letsencrypt_certificate(self):
         responses.add(DNSimpleMockResponse(method=responses.POST,
-                                           path='/1010/domains/example.com/certificates/letsencrypt/300/issue',
+                                           path='/1010/domains/example.com/certificates/letsencrypt/101967/issue',
                                            fixture_name='issueLetsencryptCertificate/success'))
-        certificate_issued = self.certificates.issue_letsencrypt_certificate(1010, 'example.com', 300).data
+        certificate_issued = self.certificates.issue_letsencrypt_certificate(1010, 'example.com', 101967).data
 
         self.assertEqual('requesting', certificate_issued.state)
         self.assertIsInstance(certificate_issued, Certificate)
@@ -189,13 +176,13 @@ class CertificatesTest(DNSimpleTest):
                                            fixture_name='purchaseRenewalLetsencryptCertificate/success'))
         renewal = self.certificates.purchase_letsencrypt_certificate_renewal(1010, 'example.com', 200).data
 
-        self.assertEqual(999, renewal.id)
-        self.assertEqual(200, renewal.old_certificate_id)
-        self.assertEqual(300, renewal.new_certificate_id)
+        self.assertIsInstance(renewal.id, int)
+        self.assertIsInstance(renewal.old_certificate_id, int)
+        self.assertIsInstance(renewal.new_certificate_id, int)
         self.assertEqual('new', renewal.state)
         self.assertFalse(renewal.auto_renew)
-        self.assertEqual('2017-10-19T08:18:53Z', renewal.created_at)
-        self.assertEqual('2017-10-19T08:18:53Z', renewal.updated_at)
+        self.assertIsInstance(datetime.datetime.strptime(renewal.created_at, '%Y-%m-%dT%H:%M:%SZ'), datetime.datetime)
+        self.assertIsInstance(datetime.datetime.strptime(renewal.updated_at, '%Y-%m-%dT%H:%M:%SZ'), datetime.datetime)
 
     @responses.activate
     def test_issue_letsencrypt_certificate_renewal(self):
