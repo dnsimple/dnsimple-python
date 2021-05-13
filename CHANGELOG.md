@@ -6,6 +6,8 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 ## main
 
 - CHANGED:
+  - Feature: Added `registrar.get_domain_prices` to retrieve whether a domain is premium and the prices to register, transfer, and renew. (dnsimple/dnsimple-python#174)
+  - Dependency updates
 
 ## 2.1.2
 

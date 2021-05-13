@@ -2,7 +2,7 @@ import json
 
 from dnsimple.response import Response
 from dnsimple.struct import DomainCheck, DomainPremiumPrice, DomainRegistration, DomainTransfer, DomainRenewal, \
-    VanityNameServer, WhoisPrivacy, WhoisPrivacyRenewal
+    VanityNameServer, WhoisPrivacy, WhoisPrivacyRenewal, DomainPrice
 
 
 class Registrar(object):
@@ -53,6 +53,23 @@ class Registrar(object):
             options = {}
         response = self.client.get(f'/{account_id}/registrar/domains/{domain}/premium_price', params=options)
         return Response(response, DomainPremiumPrice)
+
+    def get_domain_prices(self, account_id, domain):
+        """
+        Get prices for a domain.
+
+        https://developer.dnsimple.com/v2/registrar/#getDomainPrices
+
+        :param account_id: int
+            The account ID
+        :param domain: str
+            The domain name
+
+        :return: dnsimple.Response
+            The domain prices
+        """
+        response = self.client.get(f'/{account_id}/registrar/domains/{domain}/prices')
+        return Response(response, DomainPrice)
 
     def register_domain(self, account_id, domain, request):
         """
