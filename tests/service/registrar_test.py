@@ -44,6 +44,16 @@ class RegistrarTest(DNSimpleTest):
         self.assertEqual(20.0, domain_prices.transfer_price)
 
     @responses.activate
+    def test_get_domain_prices_for_unsupported_tld(self):
+        responses.add(DNSimpleMockResponse(method=responses.GET,
+                                           path='/1010/registrar/domains/bingo.pizza/prices',
+                                           fixture_name='getDomainPrices/failure'))
+        try:
+            self.registrar.get_domain_prices(1010, 'bingo.pizza')
+        except DNSimpleException as dnse:
+            self.assertEqual('TLD .PINEAPPLE is not supported', dnse.message)
+
+    @responses.activate
     def test_check_domain_premium_price_passing_action(self):
         responses.add(DNSimpleMockResponse(method=responses.GET,
                                            path='/1010/registrar/domains/ruby.codes/premium_price?action=registration',
