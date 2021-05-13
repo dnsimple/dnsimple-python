@@ -31,6 +31,19 @@ class RegistrarTest(DNSimpleTest):
         self.assertEqual('registration', domain_premium_price.action)
 
     @responses.activate
+    def test_get_domain_prices(self):
+        responses.add(DNSimpleMockResponse(method=responses.GET,
+                                           path='/1010/registrar/domains/bingo.pizza/prices',
+                                           fixture_name='getDomainPrices/success'))
+        domain_prices = self.registrar.get_domain_prices(1010, 'bingo.pizza').data
+
+        self.assertEqual('bingo.pizza', domain_prices.domain)
+        self.assertEqual(True, domain_prices.premium)
+        self.assertEqual(20.0, domain_prices.registration_price)
+        self.assertEqual(20.0, domain_prices.renewal_price)
+        self.assertEqual(20.0, domain_prices.transfer_price)
+
+    @responses.activate
     def test_check_domain_premium_price_passing_action(self):
         responses.add(DNSimpleMockResponse(method=responses.GET,
                                            path='/1010/registrar/domains/ruby.codes/premium_price?action=registration',
