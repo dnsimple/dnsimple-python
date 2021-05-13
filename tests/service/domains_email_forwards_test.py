@@ -1,6 +1,7 @@
 import unittest
 
 import responses
+import datetime
 
 from dnsimple.struct import EmailForward, EmailForwardInput
 from tests.helpers import DNSimpleTest, DNSimpleMockResponse
@@ -40,13 +41,13 @@ class DomainsEmailForwardsTest(DNSimpleTest):
                                            path='/1010/domains/example.com/email_forwards',
                                            fixture_name='createEmailForward/created'))
         email_forward = self.domains.create_email_forward(1010, 'example.com',
-                                                          EmailForwardInput('jim@a-domain.com', 'jim@another.com')).data
-        self.assertEqual(17706, email_forward.id)
-        self.assertEqual(228963, email_forward.domain_id)
-        self.assertEqual('jim@a-domain.com', email_forward.email_from)
-        self.assertEqual('jim@another.com', email_forward.email_to)
-        self.assertEqual('2016-02-04T14:26:50Z', email_forward.created_at)
-        self.assertEqual('2016-02-04T14:26:50Z', email_forward.updated_at)
+                                                          EmailForwardInput('example@dnsimple.xyz', 'example@example.com')).data
+        self.assertIsInstance(email_forward.id, int)
+        self.assertIsInstance(email_forward.domain_id, int)
+        self.assertEqual('example@dnsimple.xyz', email_forward.email_from)
+        self.assertEqual('example@example.com', email_forward.email_to)
+        self.assertIsInstance(datetime.datetime.strptime(email_forward.created_at, '%Y-%m-%dT%H:%M:%SZ'), datetime.datetime)
+        self.assertIsInstance(datetime.datetime.strptime(email_forward.updated_at, '%Y-%m-%dT%H:%M:%SZ'), datetime.datetime)
 
     @responses.activate
     def test_get_email_forward(self):
@@ -55,7 +56,7 @@ class DomainsEmailForwardsTest(DNSimpleTest):
                                            fixture_name='getEmailForward/success'))
         email_forward = self.domains.get_email_forward(1010, 'example.com', 17706).data
 
-        self.assertEqual(228963, email_forward.domain_id)
+        self.assertIsInstance(email_forward.domain_id, int)
 
     @responses.activate
     def test_delete_email_forward(self):
