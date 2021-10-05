@@ -25,6 +25,8 @@ class Tld(Struct):
     """True if DNSimple supports renewals for this TLD"""
     transfer_enabled = None
     """True if DNSimple supports inbound transfers for this TLD"""
+    dnssec_interface_type = None
+    """Type of data interface required for DNSSEC for this TLD"""
 
     def __init__(self, data):
         super().__init__(data)

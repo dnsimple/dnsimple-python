@@ -22,6 +22,8 @@ class DelegationSignerRecord(Struct):
     """The digest type used."""
     keytag = None
     """The keytag for the associated DNSKEY."""
+    public_key = None
+    """The public key that references the corresponding DNSKEY record."""
     created_at = None
     """When the delegation signing record was created in DNSimple."""
     updated_at = None
@@ -35,21 +37,27 @@ class DelegationSignerRecord(Struct):
 class DelegationSignerRecordInput(dict):
     """Represents the input we send to create a domain delegation signer record"""
 
-    def __init__(self, algorithm, digest, digest_type, keytag):
+    def __init__(self, algorithm, digest=None, digest_type=None, keytag=None, public_key=None):
         """
         :param algorithm: str
             Required DNSSEC algorithms defined in
             http://www.iana.org/assignments/dns-sec-alg-numbers/dns-sec-alg-numbers.xhtml
             - pass the Number value as a string (i.e. '8').
         :param digest: str
-            Required The hexadecimal representation of the digest of the corresponding DNSKEY record.
+            Required if TLD requires DS data.
+            The hexadecimal representation of the digest of the corresponding DNSKEY record.
         :param digest_type: str
-            Required DNSSEC digest types defined in http://www.iana.org/assignments/ds-rr-types/ds-rr-types.xhtml
+            Required if TLD requires DS data.
+            DNSSEC digest types defined in http://www.iana.org/assignments/ds-rr-types/ds-rr-types.xhtml
             - pass the Number value as string (i.e. '2').
         :param keytag: str
-            Required A keytag that references the corresponding DNSKEY record.
+            Required if TLD requires DS data.
+            A keytag that references the corresponding DNSKEY record.
+        :param public_key: str
+            Required if TLD requires KEY data.
+            The public key that references the corresponding DNSKEY record.
         """
-        dict.__init__(self, algorithm=algorithm, digest=digest, digest_type=digest_type, keytag=keytag)
+        dict.__init__(self, algorithm=algorithm, digest=digest, digest_type=digest_type, keytag=keytag, public_key=public_key)
 
     def to_json(self):
         return json.dumps(omitempty(self))

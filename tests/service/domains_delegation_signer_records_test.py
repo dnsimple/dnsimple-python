@@ -31,9 +31,10 @@ class DomainsDelegationSignerRecordsTest(DNSimpleTest):
         responses.add(DNSimpleMockResponse(method=responses.POST,
                                            path='/1010/domains/1/ds_records',
                                            fixture_name='createDelegationSignerRecord/created'))
-        delegation_signer_record_input = DelegationSignerRecordInput('13',
-                                                                     '684a1f049d7d082b7f98691657da5a65764913df7f065f6f8c36edf62d66ca03',
-                                                                     '2', '2371')
+        delegation_signer_record_input = DelegationSignerRecordInput(algorithm='13',
+                                                                     digest='684a1f049d7d082b7f98691657da5a65764913df7f065f6f8c36edf62d66ca03',
+                                                                     digest_type='2',
+                                                                     keytag='2371')
 
         delegation_signer_record = self.domains.create_domain_delegation_signer_record(1010, 1,
                                                                                        delegation_signer_record_input).data
@@ -48,8 +49,12 @@ class DomainsDelegationSignerRecordsTest(DNSimpleTest):
                                            fixture_name='createDelegationSignerRecord/validation-error'))
 
         try:
-            self.domains.create_domain_delegation_signer_record(1010, 1,
-                                                                DelegationSignerRecordInput(None, None, None, None))
+            delegation_signer_record_input = DelegationSignerRecordInput(algorithm=None,
+                                                                         digest=None,
+                                                                         digest_type=None,
+                                                                         keytag=None)
+
+            self.domains.create_domain_delegation_signer_record(1010, 1, delegation_signer_record_input)
         except DNSimpleException as dnse:
             self.assertEqual(dnse.message, 'Validation failed')
             self.assertEqual("can't be blank", dnse.errors.get('algorithm')[0])
@@ -68,6 +73,7 @@ class DomainsDelegationSignerRecordsTest(DNSimpleTest):
         self.assertEqual('C1F6E04A5A61FBF65BF9DC8294C363CF11C89E802D926BDAB79C55D27BEFA94F', record.digest)
         self.assertEqual('2', record.digest_type)
         self.assertEqual('44620', record.keytag)
+        self.assertEqual(None, record.public_key)
         self.assertEqual('2017-03-03T13:49:58Z', record.created_at)
         self.assertEqual('2017-03-03T13:49:58Z', record.updated_at)
 

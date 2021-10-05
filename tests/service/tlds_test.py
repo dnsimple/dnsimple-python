@@ -33,7 +33,7 @@ class TldsTest(DNSimpleTest):
                                            path='/tlds?sort=tld:asc',
                                            fixture_name='listTlds/success'))
         self.tlds.list_tlds(sort='tld:asc')
-    
+
     @responses.activate
     def test_get_tld(self):
         responses.add(DNSimpleMockResponse(method=responses.GET,
@@ -50,7 +50,8 @@ class TldsTest(DNSimpleTest):
         self.assertTrue(tld.registration_enabled)
         self.assertTrue(tld.renewal_enabled)
         self.assertTrue(tld.transfer_enabled)
-        
+        self.assertEqual(tld.dnssec_interface_type, 'ds')
+
     @responses.activate
     def test_get_tld_extended_attributes(self):
         responses.add(DNSimpleMockResponse(method=responses.GET,
