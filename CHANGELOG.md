@@ -5,6 +5,9 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 
 ## main
 
+- CHANGED:
+  - Dependency updates
+
 - REMOVED:
   - Developer warning in README.md
 
