@@ -2,7 +2,7 @@
 
 ## Getting Started
 
-#### 1. Clone the repository
+### 1. Clone the repository
 
 Clone the repository and move into it:
 
@@ -11,7 +11,7 @@ git clone git@github.com:dnsimple/dnsimple-python.git
 cd dnsimple-python
 ```
 
-#### 2. Install dependencies
+### 2. Install dependencies
 
 Make sure you have Python (3.8 onwards) installed.
 
@@ -28,7 +28,7 @@ you can start using the virtual environment like so:
 source ./venv/bin/activate
 ```
 
-#### 3. Testing
+### 3. Testing
 
 [Run the test suite](#testing) to check everything is working as expected and to install the project specific
 dependencies (the first time you'll run the script all the dependencies will be installed for you).
@@ -83,7 +83,7 @@ make test_package
 
 ## Uploading the distribution packages
 
-**1. TestPyPi**
+### 1. TestPyPi
 
 Run
 
@@ -94,7 +94,7 @@ make test_upload_pacakge
 This will upload the package to the testpypi environment.
 After the package has been uploaded successfully you can move onto the next step.
 
-**2. Live PyPi**
+### 2. Live PyPi
 
 Run
 
