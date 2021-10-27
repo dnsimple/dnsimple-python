@@ -15,7 +15,7 @@ py==1.10.0
 pyparsing==2.4.7
 pytest==6.2.5
 requests==2.26.0
-responses==0.14.0
+responses==0.15.0
 six==1.16.0
 stringcase==1.2.0
 typing-extensions==3.10.0.2
