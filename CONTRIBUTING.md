@@ -88,7 +88,7 @@ make test_package
 Run
 
 ```shell
-make test_upload_pacakge
+make test_upload_package
 ```
 
 This will upload the package to the testpypi environment.
