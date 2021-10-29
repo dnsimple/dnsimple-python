@@ -4,6 +4,8 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 
 ## main
 
+## 2.3.0
+
 - CHANGED:
   - Dependency updates
   - Added support for DS key-data interface (dnsimple/dnsimple-python#210).
