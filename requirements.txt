@@ -11,7 +11,7 @@ mypy-extensions==0.4.3
 omitempty==0.1.1
 packaging==21.0
 pluggy==1.0.0
-py==1.10.0
+py==1.11.0
 pyparsing==3.0.3
 pytest==6.2.5
 requests==2.26.0
