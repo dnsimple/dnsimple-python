@@ -18,7 +18,7 @@ requests==2.26.0
 responses==0.15.0
 six==1.16.0
 stringcase==1.2.0
-typing-extensions==3.10.0.2
+typing-extensions==4.0.0
 typing-inspect==0.7.1
 urllib3==1.26.7
 wcwidth==0.2.5
