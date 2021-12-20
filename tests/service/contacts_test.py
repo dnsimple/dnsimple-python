@@ -18,6 +18,8 @@ class ContactsTest(DNSimpleTest):
 
         self.assertEqual(2, len(contacts))
         self.assertIsInstance(contacts[0], Contact)
+        self.assertEqual(1, contacts[0].id)
+        self.assertEqual(2, contacts[1].id)
 
     @responses.activate
     def test_list_contacts_supports_pagination(self):
