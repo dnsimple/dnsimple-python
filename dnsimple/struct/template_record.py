@@ -30,7 +30,7 @@ class TemplateRecord(dict):
     """When the template record was last updated in DNSimple"""
 
     def __init__(self, data):
-        attach_attributes_to(self.__class__, data)
+        attach_attributes_to(self, data)
         dict.__init__(self, id=self.id, template_id=self.template_id, name=self.name, content=self.content,
                       ttl=self.ttl, type=self.type, priority=self.priority, created_at=self.created_at,
                       updated_at=self.updated_at)

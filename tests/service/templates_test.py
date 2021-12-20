@@ -17,6 +17,8 @@ class TemplatesTest(DNSimpleTest):
 
         self.assertEqual(2, len(templates))
         self.assertIsInstance(templates[0], Template)
+        self.assertEqual(1, templates[0].id)
+        self.assertEqual(2, templates[1].id)
 
     @responses.activate
     def test_list_templates_supports_pagination(self):
