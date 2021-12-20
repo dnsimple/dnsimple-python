@@ -46,7 +46,7 @@ class Contact(dict):
     """When the contact was last updated in DNSimple"""
 
     def __init__(self, data):
-        attach_attributes_to(self.__class__, data)
+        attach_attributes_to(self, data)
         dict.__init__(self, label=self.label, first_name=self.first_name, last_name=self.last_name,
                       job_title=self.job_title, organization_name=self.organization_name, email=self.email,
                       phone=self.phone, fax=self.fax, address1=self.address1, address2=self.address2, city=self.city,
