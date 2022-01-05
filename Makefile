@@ -7,7 +7,7 @@ install_requirements: init
 test: install_requirements
 	python -m unittest discover -p "*_test.py" -v
 
-update_install_setuptools:
+update_install_setuptools: install_requirements
 	python -m pip install --upgrade setuptools wheel
 
 clean_package:
