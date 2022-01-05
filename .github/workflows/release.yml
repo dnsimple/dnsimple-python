@@ -8,9 +8,8 @@ on:
 
 jobs:
   package:
-    needs: [markdownlint-cli, yamllint]
     runs-on: ubuntu-latest
-    name: Python ${{ matrix.python-version }}
+    name: Package
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
