@@ -15,6 +15,8 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
       - run: make package
+        with:
+          python-version: 'pypy3'
   publish:
     name: Publish to PyPI
     runs-on: ubuntu-latest
