@@ -1,2 +1,2 @@
-version = '2.3.0'
+version = '2.3.1'
 """Current version of the dnsimple-python service"""
