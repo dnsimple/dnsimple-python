@@ -7,6 +7,15 @@ on:
       - v*.*.*
 
 jobs:
+  package:
+    needs: [markdownlint-cli, yamllint]
+    runs-on: ubuntu-latest
+    name: Python ${{ matrix.python-version }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+      - run: make package
   publish:
     name: Publish to PyPI
     runs-on: ubuntu-latest
