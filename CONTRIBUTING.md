@@ -69,41 +69,6 @@ The following instructions uses `$VERSION` as a placeholder, where `$VERSION` is
     git push origin --tags
     ```
 
-## Generating distribution packages
-
-```shell
-make package
-```
-
-You can also check if your distribution is ready to be uploaded like so:
-
-```shell
-make test_package
-```
-
-## Uploading the distribution packages
-
-### 1. TestPyPi
-
-Run
-
-```shell
-make test_upload_package
-```
-
-This will upload the package to the testpypi environment.
-After the package has been uploaded successfully you can move onto the next step.
-
-### 2. Live PyPi
-
-Run
-
-```shell
-make upload_package
-```
-
-This will upload the package to the live pypi index.
-
 ## Testing
 
 Submit unit tests for your changes. You can test your changes on your machine by [running the test suite](#testing).
