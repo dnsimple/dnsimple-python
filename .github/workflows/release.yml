@@ -7,9 +7,9 @@ on:
       - v*.*.*
 
 jobs:
-  package:
+  publish:
+    name: Publish to PyPI
     runs-on: ubuntu-latest
-    name: Package
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
@@ -17,11 +17,6 @@ jobs:
         with:
           python-version: 'pypy3'
       - run: make package
-  publish:
-    needs: [package]
-    name: Publish to PyPI
-    runs-on: ubuntu-latest
-    steps:
       - uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: ${{ secrets.PYPI_USER }}
