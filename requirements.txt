@@ -14,7 +14,7 @@ pluggy==1.0.0
 py==1.11.0
 pyparsing==3.0.6
 pytest==6.2.5
-requests==2.27.0
+requests==2.27.1
 responses==0.16.0
 six==1.16.0
 stringcase==1.2.0
