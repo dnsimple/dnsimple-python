@@ -19,5 +19,5 @@ jobs:
       - run: make package
       - uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          user: ${{ secrets.PYPI_USER }}
+          user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
