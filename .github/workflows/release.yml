@@ -19,4 +19,4 @@ jobs:
       - run: make package
       - uses: pypa/gh-action-pypi-publish@master
         with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
+          password: pypi-AgEIcHlwaS5vcmcCJDY5ZmMwMThhLWViOTItNGU4OC1hZWI0LWI0OWM2NWViMzVhMgACOXsicGVybWlzc2lvbnMiOiB7InByb2plY3RzIjogWyJkbnNpbXBsZSJdfSwgInZlcnNpb24iOiAxfQAABiBxIg9GQ3NEmoUPiE34HHVEBfL9rIUrolvatwpAn1SMPA
