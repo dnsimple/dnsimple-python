@@ -27,8 +27,8 @@ jobs:
       - name: Build package
         run: python setup.py sdist bdist_wheel
 
-      - run: Publish distribution to PyPI
-      - uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Publish distribution to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
