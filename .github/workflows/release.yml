@@ -12,16 +12,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 'pypy3'
+          python-version: '3.8.5'
+
       - name: Install dependencies
         run: >-
-          make init
-      - name: Package
+          python -m pip install -r requirements.txt
+          python -m pip install --upgrade pip setuptools wheel
+
+      - name: Build package
         run: >-
-          make package
+          python setup.py sdist bdist_wheel
+
       - run: Publish distribution to PyPI
       - uses: pypa/gh-action-pypi-publish@release/v1
         with:
