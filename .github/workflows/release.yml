@@ -15,20 +15,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
-      - name: Install pypa/build
+          python-version: 'pypy3'
+      - name: Install dependencies
         run: >-
-          python -m
-          pip install
-          build
-          --user
-      - name: Build a binary wheel and a source tarball
+          python -m pip install --user --upgrade setuptools wheel
+      - name: Build
         run: >-
-          python -m
-          build
-          --sdist
-          --wheel
-          --outdir dist/
+          python setup.py sdist bdist_wheel
       - run: Publish distribution to PyPI
       - uses: pypa/gh-action-pypi-publish@master
         with:
