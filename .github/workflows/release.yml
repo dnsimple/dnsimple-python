@@ -18,7 +18,7 @@ jobs:
           python-version: 'pypy3'
       - name: Install dependencies
         run: >-
-          make init update_install_twine
+          make init
       - name: Package
         run: >-
           make package
