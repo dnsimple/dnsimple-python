@@ -92,4 +92,4 @@ class Pagination(object):
     """The total number of pages available given the current per_page value"""
 
     def __init__(self, data):
-        attach_attributes_to(self.__class__, data)
+        attach_attributes_to(self, data)

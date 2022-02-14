@@ -26,7 +26,7 @@ class Template(dict):
     """When the template was last updated in DNSimple"""
 
     def __init__(self, data):
-        attach_attributes_to(self.__class__, data)
+        attach_attributes_to(self, data)
         dict.__init__(self, id=self.id, account_id=self.account_id, name=self.name, sid=self.sid,
                       description=self.description, created_at=self.created_at, updated_at=self.updated_at)
 

@@ -16,7 +16,7 @@ class Webhook(dict):
     """The callback URL"""
 
     def __init__(self, data):
-        attach_attributes_to(self.__class__, data)
+        attach_attributes_to(self, data)
         dict.__init__(self, id=self.id, url=self.url)
 
     def to_json(self):

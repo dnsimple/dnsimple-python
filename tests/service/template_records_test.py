@@ -16,6 +16,8 @@ class TemplateRecordsTest(DNSimpleTest):
 
         self.assertEqual(2, len(records))
         self.assertIsInstance(records[0], TemplateRecord)
+        self.assertEqual(296, records[0].id)
+        self.assertEqual(298, records[1].id)
 
     @responses.activate
     def test_list_template_records_supports_pagination(self):

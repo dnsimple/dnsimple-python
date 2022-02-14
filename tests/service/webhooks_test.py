@@ -16,6 +16,8 @@ class WebhooksTest(DNSimpleTest):
 
         self.assertEqual(2, len(webhooks))
         self.assertIsInstance(webhooks[0], Webhook)
+        self.assertEqual(1, webhooks[0].id)
+        self.assertEqual(2, webhooks[1].id)
 
     @responses.activate
     def test_list_webhooks_supports_sorting(self):
