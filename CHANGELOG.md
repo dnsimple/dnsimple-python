@@ -4,8 +4,11 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 
 ## main
 
+## 2.4.0
+
 - CHANGED:
   - Dropped support of Python 3.6
+  - Dependency updates
 
 ## 2.3.1
 
