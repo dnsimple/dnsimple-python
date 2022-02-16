@@ -15,7 +15,7 @@ py==1.11.0
 pyparsing==3.0.7
 pytest==7.0.1
 requests==2.27.1
-responses==0.17.0
+responses==0.18.0
 six==1.16.0
 stringcase==1.2.0
 typing-extensions==4.1.1
@@ -23,5 +23,5 @@ typing-inspect==0.7.1
 urllib3==1.26.8
 wcwidth==0.2.5
 
-pip~=21.3.1
-setuptools~=59.6.0
+pip~=22.0.3
+setuptools~=60.9.1
