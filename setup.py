@@ -23,5 +23,6 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python"
     ],
-    install_requires=["requests", "omitempty"]
+    install_requires=["requests", "omitempty"],
+    python_requires='>=3.8'
 )
