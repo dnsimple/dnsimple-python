@@ -23,5 +23,5 @@ typing-inspect==0.7.1
 urllib3==1.26.8
 wcwidth==0.2.5
 
-pip~=21.3.1
-setuptools~=59.6.0
+pip~=22.0.3
+setuptools~=60.9.1
