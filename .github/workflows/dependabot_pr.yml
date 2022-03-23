@@ -2,7 +2,7 @@
 ### This workflow doesn't have access to secrets and has a read-only token
 name: Dependabot PR Check
 on:
-  push
+  pull_request:
 
 jobs:
   check-dependabot:
