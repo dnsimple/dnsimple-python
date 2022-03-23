@@ -3,6 +3,10 @@ name: ci
 
 on:
   push:
+    # Ignore dependabot branches as we trigger
+    # them directly via the workflow_run
+    branches-ignore:
+      - 'dependabot/**'
   pull_request:
     # Ignore dependabot branches as we trigger
     # them directly via the workflow_run
