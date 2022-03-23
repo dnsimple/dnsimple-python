@@ -38,6 +38,7 @@ jobs:
         uses: karancode/yamllint-github-action@master
         with:
           yamllint_file_or_dir: .
+          yamllint_config_filepath: .yamllint.yaml
           yamllint_strict: false
           yamllint_comment: false
 
