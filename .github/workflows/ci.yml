@@ -4,8 +4,15 @@ name: ci
 on:
   push:
   pull_request:
+    # Ignore dependabot branches as we trigger them directly via the workflow_run
+    branches-ignore:
+      - 'dependabot/**'
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Dependabot PR Check"]
+    types:
+      - completed
 
 jobs:
   markdownlint-cli:
