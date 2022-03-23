@@ -18,6 +18,7 @@ on:
 jobs:
   markdownlint-cli:
     runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -29,6 +30,7 @@ jobs:
 
   yamllint:
     runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -38,6 +40,7 @@ jobs:
   build:
     needs: [markdownlint-cli, yamllint]
     runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     name: Python ${{ matrix.python-version }}
     strategy:
       matrix:
@@ -55,7 +58,7 @@ jobs:
       - run: make test
 
   slack-workflow-status:
-    if: always()
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     name: Post Workflow Status To Slack
     needs:
       - build
