@@ -35,7 +35,11 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
       - name: Run YAML Lint
-        uses: actionshub/yamllint@main
+        uses: karancode/yamllint-github-action@master
+        with:
+          yamllint_file_or_dir: .
+          yamllint_strict: false
+          yamllint_comment: false
 
   build:
     needs: [markdownlint-cli, yamllint]
