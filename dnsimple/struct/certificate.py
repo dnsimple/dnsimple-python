@@ -2,6 +2,7 @@ import json
 from dataclasses import dataclass
 
 import omitempty
+import warnings
 
 from dnsimple.struct import Struct
 
@@ -60,8 +61,11 @@ class CertificateBundle(Struct):
 
 
 class LetsencryptCertificateInput(dict):
-    def __init__(self, contact_id, auto_renew=None, name=None, alternate_names=None):
-        dict.__init__(self, contact_id=contact_id, auto_renew=auto_renew, name=name, alternate_names=alternate_names)
+    def __init__(self, contact_id=None, auto_renew=None, name=None, alternate_names=None):
+        dict.__init__(self, auto_renew=auto_renew, name=name, alternate_names=alternate_names)
+        if contact_id is not None:
+            warnings.warn("DEPRECATION WARNING: LetsencryptCertificateInput#contact_id is deprecated and will be ignored.")
+
 
     def to_json(self):
         return json.dumps(omitempty(self))
