@@ -3,24 +3,13 @@ name: ci
 
 on:
   push:
-    # Ignore dependabot branches as we trigger
-    # them directly via the workflow_run
-    branches-ignore:
-      - 'dependabot/**'
   pull_request:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-  workflow_run:
-    workflows: ["Dependabot PR Check"]
-    types:
-      - completed
 
 jobs:
   markdownlint-cli:
     runs-on: ubuntu-latest
-    if: |
-      (startsWith(github.head_ref, 'dependabot') == false && github.event_name != 'workflow_run') ||
-      github.event.workflow_run.conclusion == 'success'
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -32,26 +21,15 @@ jobs:
 
   yamllint:
     runs-on: ubuntu-latest
-    if: |
-      (startsWith(github.head_ref, 'dependabot') == false && github.event_name != 'workflow_run') ||
-      github.event.workflow_run.conclusion == 'success'
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
       - name: Run YAML Lint
-        uses: karancode/yamllint-github-action@master
-        with:
-          yamllint_file_or_dir: .
-          yamllint_config_filepath: .yamllint.yaml
-          yamllint_strict: false
-          yamllint_comment: false
+        uses: actionshub/yamllint@main
 
   build:
     needs: [markdownlint-cli, yamllint]
     runs-on: ubuntu-latest
-    if: |
-      (startsWith(github.head_ref, 'dependabot') == false && github.event_name != 'workflow_run') ||
-      github.event.workflow_run.conclusion == 'success'
     name: Python ${{ matrix.python-version }}
     strategy:
       matrix:
@@ -69,9 +47,7 @@ jobs:
       - run: make test
 
   slack-workflow-status:
-    if: |
-      (startsWith(github.head_ref, 'dependabot') == false && github.event_name != 'workflow_run') ||
-      github.event.workflow_run.conclusion == 'success'
+    if: always()
     name: Post Workflow Status To Slack
     needs:
       - build
