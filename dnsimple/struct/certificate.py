@@ -64,7 +64,7 @@ class LetsencryptCertificateInput(dict):
     def __init__(self, contact_id=None, auto_renew=None, name=None, alternate_names=None):
         dict.__init__(self, auto_renew=auto_renew, name=name, alternate_names=alternate_names)
         if contact_id is not None:
-            warnings.warn("DEPRECATION WARNING: LetsencryptCertificateInput#contact_id is deprecated and will be ignored.")
+            warnings.warn("DEPRECATION WARNING: LetsencryptCertificateInput#contact_id is deprecated and its value is ignored and will be removed in the next major version.")
 
 
     def to_json(self):
