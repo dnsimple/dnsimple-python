@@ -1,5 +1,5 @@
 from dnsimple.response import Response
-from dnsimple.struct import Certificate, CertificateBundle, CertificatePurchase, CertificateRenewal
+from dnsimple.struct import Certificate, CertificateBundle, CertificatePurchase, CertificateRenewal, LetsencryptCertificateInput
 
 
 class Certificates(object):
@@ -86,7 +86,7 @@ class Certificates(object):
         response = self.client.get(f'/{account_id}/domains/{domain}/certificates/{certificate_id}/private_key')
         return Response(response, CertificateBundle)
 
-    def purchase_letsencrypt_certificate(self, account_id, domain, certificate_input):
+    def purchase_letsencrypt_certificate(self, account_id, domain, certificate_input = LetsencryptCertificateInput()):
         """
         Purchase a Let's Encrypt certificate
 
