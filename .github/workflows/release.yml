@@ -14,9 +14,10 @@ jobs:
         uses: lewagon/wait-on-check-action@v1.0.0
         with:
           ref: 'refs/heads/main'
-          check-name: 'CI'
+          running-workflow-name: 'Publish to PyPI'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 10
+          allowed-conclusions: success
 
       - uses: actions/checkout@v2
 
