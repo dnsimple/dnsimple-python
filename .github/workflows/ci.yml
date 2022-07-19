@@ -1,5 +1,5 @@
----
-name: ci
+# When changing the name apply the changes in the ./release.yml file
+name: CI
 
 on:
   push:

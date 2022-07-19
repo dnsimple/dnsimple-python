@@ -1,4 +1,3 @@
----
 name: release
 
 on:
@@ -11,6 +10,14 @@ jobs:
     name: Publish to PyPI
     runs-on: ubuntu-latest
     steps:
+      - name: Wait for tests to succeed
+        uses: lewagon/wait-on-check-action@v1.0.0
+        with:
+          ref: 'refs/heads/main'
+          check-name: 'CI'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+
       - uses: actions/checkout@v2
 
       - name: Set up Python
