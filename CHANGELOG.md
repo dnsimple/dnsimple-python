@@ -4,6 +4,8 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 
 ## main
 
+## 2.5.0
+
 - CHANGED:
   - Deprecate Certificate's `contact_id` (dnsimple/dnsimple-python#314)
   - Dependency updates
