@@ -16,4 +16,4 @@ class DNSimpleException(Exception):
     def __str__(self):
         if self.errors is None:
             return self.message
-        return f'{self.message} -> {"".join(self.errors, ",")}'
+        return f'{self.message}: {"".join(self.errors, ",")}'
