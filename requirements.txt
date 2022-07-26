@@ -20,7 +20,7 @@ six==1.16.0
 stringcase==1.2.0
 typing-extensions==4.3.0
 typing-inspect==0.7.1
-urllib3==1.26.10
+urllib3==1.26.11
 wcwidth==0.2.5
 
 pip~=22.1.2
