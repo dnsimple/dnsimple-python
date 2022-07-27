@@ -2,7 +2,7 @@
 
 A Python client for the [DNSimple API v2](https://developer.dnsimple.com/v2/).
 
-[![CI](https://github.com/dnsimple/dnsimple-python/actions/workflows/ci.yml/badge.svg)](https://github.com/dnsimple/dnsimple-python/actions/workflows/ci.yml)
+[![CI](https://github.com/dnsimple/dnsimple-python/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/dnsimple/dnsimple-python/actions/workflows/ci.yml)
 
 ## Installation
 
