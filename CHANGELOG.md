@@ -4,6 +4,12 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 
 ## main
 
+## 2.6.0
+
+- CHANGED:
+  - Exceptions error messages are displayed correctly ([dnsimple/dnsimple-python#340](https://github.com/dnsimple/dnsimple-python/pull/340))
+  - Dependency updates
+
 ## 2.5.0
 
 - CHANGED:
