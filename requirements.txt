@@ -4,7 +4,7 @@ chardet==5.0.0
 coverage==6.4.3
 dataclasses-json==0.5.7
 idna==3.3
-marshmallow==3.17.0
+marshmallow==3.17.1
 marshmallow-enum==1.5.1
 more-itertools==8.14.0
 mypy-extensions==0.4.3
