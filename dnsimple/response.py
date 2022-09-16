@@ -38,9 +38,7 @@ class Response(object):
         if int(http_response.status_code) in range(400, 504):
             if http_response.text != '':
                 message = http_response.json().get('message')
-                attribute_errors = None
-                if http_response.json().get('errors'):
-                    attribute_errors = http_response.json().get('errors')
+                attribute_errors = http_response.json().get('errors')
                 raise DNSimpleException(message=message, attribute_errors=attribute_errors, http_response=http_response)
 
             raise DNSimpleException(http_response=http_response)
