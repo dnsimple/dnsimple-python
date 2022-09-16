@@ -113,7 +113,7 @@ class RegistrarTest(DNSimpleTest):
             self.registrar.transfer_domain(1010, 'ruby.codes', DomainTransferRequest(2, 'TheAuthCode'))
         except DNSimpleException as dnse:
             self.assertEqual('Validation failed', dnse.message)
-            self.assertEqual('You must provide an authorization code for the domain', dnse.errors['base'][0])
+            self.assertEqual('You must provide an authorization code for the domain', dnse.attribute_errors['base'][0])
 
     @responses.activate
     def test_transfer_domain_error(self):
@@ -166,7 +166,7 @@ class RegistrarTest(DNSimpleTest):
             self.registrar.renew_domain(1010, 'example.com', DomainRenewRequest(period=1))
         except DNSimpleException as dnse:
             self.assertEqual('example.com may not be renewed at this time', dnse.message)
-        
+
     @responses.activate
     def test_transfer_domain_out(self):
         responses.add(DNSimpleMockResponse(method=responses.POST,
