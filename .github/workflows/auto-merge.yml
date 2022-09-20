@@ -35,4 +35,4 @@ jobs:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           number: ${{ github.event.number }}
           method: squash
-          repo: ${{ github.event.repository }}
+          repo: "${{ github.event.repository }}"
