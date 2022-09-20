@@ -33,6 +33,6 @@ jobs:
       - uses: juliangruber/merge-pull-request-action@v1
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-          number: ${{ github.event.issue.number }}
+          number: ${{ github.event.number }}
           method: squash
-          repo: ${{ github.repository }}
+          repo: ${{ github.event.repository }}
