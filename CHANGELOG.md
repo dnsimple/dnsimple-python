@@ -4,8 +4,10 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 
 ## main
 
+## 2.7.0
+
 - CHANGED:
-  - Rename exceptions `errors` field to `attribute_errors`
+  - Deprecate exceptions `errors` attr and move to `attribute_errors`
   - Added `reason`, `status` and `response` fields to exceptions
   - Updates the exception string serialization format
 

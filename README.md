@@ -47,6 +47,32 @@ data = response.data                            # extract the relevant data from
 account = client.identity.whoami().data.account # execute the call and get the data in one line
 ```
 
+### Sandbox Environment
+
+We highly recommend testing against our [sandbox environment](https://developer.dnsimple.com/sandbox/) before using our
+production environment. This will allow you to avoid real purchases, live charges on your credit card, and reduce the
+chance of your running up against rate limits.
+
+The client supports both the production and sandbox environment. To switch to sandbox pass the sandbox API host using
+the `base_url` option when you construct the client:
+
+```python
+from dnsimple import Client
+
+client = Client(base_url='https://api.sandbox.dnsimple.com', access_token="a1b2c3")
+```
+
+You can also set the sandbox environment like so:
+
+```python
+from dnsimple import Client
+
+client = Client(sandbox=True, access_token='a1b2c3')
+```
+
+You will need to ensure that you are using an access token created in the sandbox environment.
+Production tokens will *not* work in the sandbox environment.
+
 ### Define an account ID
 
 ```python
@@ -97,32 +123,6 @@ account_id = client.identity.whoami().data.account.id
 domain_id = client.domains.list_domains(account_id).data[0].id
 domain = client.domains.get_domain(account_id, domain_id).data # The domain you are looking for
 ```
-
-## Sandbox Environment
-
-We highly recommend testing against our [sandbox environment](https://developer.dnsimple.com/sandbox/) before using our
-production environment. This will allow you to avoid real purchases, live charges on your credit card, and reduce the
-chance of your running up against rate limits.
-
-The client supports both the production and sandbox environment. To switch to sandbox pass the sandbox API host using
-the `base_url` option when you construct the client:
-
-```python
-from dnsimple import Client
-
-client = Client(base_url='https://api.sandbox.dnsimple.com', access_token="a1b2c3")
-```
-
-You can also set the sandbox environment like so:
-
-```python
-from dnsimple import Client
-
-client = Client(sandbox=True, access_token='a1b2c3')
-```
-
-You will need to ensure that you are using an access token created in the sandbox environment.
-Production tokens will *not* work in the sandbox environment.
 
 ## Setting a custom `User-Agent` header
 
