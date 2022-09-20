@@ -30,6 +30,9 @@ jobs:
           wait-interval: 10
           allowed-conclusions: success
       - uses: hmarr/auto-approve-action@v2
-      - uses: alexwilson/enable-github-automerge-action@main
+      - uses: juliangruber/merge-pull-request-action@v1
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
+          number: ${{ github.event.issue.number }}
+          method: squash
+          repo: ${{ github.repository }}
