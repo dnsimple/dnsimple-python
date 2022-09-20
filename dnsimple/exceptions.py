@@ -1,3 +1,5 @@
+import warnings
+
 class DNSimpleException(Exception):
     """
     Root Exception raised for errors in the client.
@@ -31,3 +33,9 @@ class DNSimpleException(Exception):
             error_message += "HTTP response body: {0}\n".format(self.response.text)
 
         return error_message
+
+    @property
+    def errors(self):
+        """Return the attribute errors"""
+        warnings.warn("DEPRECATION WARNING: errors is deprecated, use attribute_errors instead.")
+        return self.attribute_errors

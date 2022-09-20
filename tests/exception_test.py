@@ -60,5 +60,17 @@ class ExceptionTest(DNSimpleTest):
             self.assertEqual(ex.message, None)
             self.assertEqual(ex.attribute_errors, None)
 
+    @responses.activate
+    def test_backward_compat_errors_attr_exception(self):
+        responses.add(DNSimpleMockResponse(method=responses.POST,
+                                           path='/1010/domains',
+                                           fixture_name='validation-error'))
+        try:
+            self.domains.create_domain(1010, 'example-beta.com')
+        except DNSimpleException as ex:
+            self.assertIsNotNone(ex.attribute_errors)
+            self.assertIsNotNone(ex.errors)
+            self.assertEqual(ex.errors, ex.attribute_errors)
+
 if __name__ == '__main__':
     unittest.main()
