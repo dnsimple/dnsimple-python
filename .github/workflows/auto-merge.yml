@@ -18,6 +18,18 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
+      actions: read
+      checks: read
+      contents: read
+      deployments: read
+      id-token: read
+      issues: none
+      discussions: none
+      packages: none
+      pages: none
+      repository-projects: none
+      security-events: none
+      statuses: read
 
     if: github.event.pull_request.user.login == 'dependabot[bot]' && contains(github.event.pull_request.labels.*.name, 'automerge')
     steps:
