@@ -24,4 +24,4 @@ urllib3==1.26.11
 wcwidth==0.2.5
 
 pip~=22.2
-setuptools~=65.0.1
+setuptools~=65.3.0
