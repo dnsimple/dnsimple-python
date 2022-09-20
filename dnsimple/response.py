@@ -36,11 +36,12 @@ class Response(object):
             When the server responds with an error code
         """
         if int(http_response.status_code) in range(400, 504):
-            message = http_response.json().get('message')
-            errors = None
-            if http_response.json().get('errors'):
-                errors = http_response.json().get('errors')
-            raise DNSimpleException(message=message, errors=errors)
+            if http_response.text != '':
+                message = http_response.json().get('message')
+                attribute_errors = http_response.json().get('errors')
+                raise DNSimpleException(message=message, attribute_errors=attribute_errors, http_response=http_response)
+
+            raise DNSimpleException(http_response=http_response)
 
         self.__class__.http_response = http_response
         self.__class__.headers = self.__class__.http_response.headers

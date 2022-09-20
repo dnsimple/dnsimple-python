@@ -4,16 +4,30 @@ class DNSimpleException(Exception):
 
     :param message: str
         The raw response from the server
-    :param errors: array[str]
-        An array of error messages
+    :param attribute_errors: dict
+        A dict of attribute error
+    :param http_response: requests.Response
+        HTTP response object
     """
 
-    def __init__(self, message=None, errors=None):
+    def __init__(self, message=None, attribute_errors=None, http_response=None):
         self.message = message
-        self.errors = errors
-        super().__init__(self.message)
+        self.attribute_errors = attribute_errors
+        self.status = None
+        self.reason = None
+        self.response = None
+
+        if http_response is not None:
+            self.reason = http_response.reason
+            self.status = http_response.status_code
+            self.response = http_response
 
     def __str__(self):
-        if self.errors is None:
-            return self.message
-        return f'{self.message}: {"".join(self.errors, ",")}'
+        """Custom error messages for exception"""
+        error_message = "({0})\n"\
+                        "Reason: {1}\n".format(self.status, self.reason)
+
+        if self.response is not None:
+            error_message += "HTTP response body: {0}\n".format(self.response.text)
+
+        return error_message

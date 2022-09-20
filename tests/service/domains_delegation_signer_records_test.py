@@ -57,7 +57,7 @@ class DomainsDelegationSignerRecordsTest(DNSimpleTest):
             self.domains.create_domain_delegation_signer_record(1010, 1, delegation_signer_record_input)
         except DNSimpleException as dnse:
             self.assertEqual(dnse.message, 'Validation failed')
-            self.assertEqual("can't be blank", dnse.errors.get('algorithm')[0])
+            self.assertEqual("can't be blank", dnse.attribute_errors.get('algorithm')[0])
 
     @responses.activate
     def test_get_domain_delegation_signer_record(self):
