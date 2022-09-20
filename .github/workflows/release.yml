@@ -12,6 +12,7 @@ jobs:
     steps:
       - name: Wait for tests to succeed
         uses: lewagon/wait-on-check-action@v1.1.2
+        timeout-minutes: 15
         with:
           ref: 'refs/heads/main'
           running-workflow-name: 'Publish to PyPI'

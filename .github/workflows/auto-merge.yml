@@ -11,20 +11,23 @@ on:
       - ready_for_review
       - reopened
       - unlocked
-  pull_request_review:
-    types:
-      - submitted
-  check_suite:
-    types:
-      - completed
-  status: {}
 
 jobs:
-  enable-auto-merge:
+  auto-merge:
+    name: 'Auto-merge'
     runs-on: ubuntu-latest
 
     if: github.event.pull_request.user.login == 'dependabot[bot]' && contains(github.event.pull_request.labels.*.name, 'automerge')
     steps:
-    - uses: alexwilson/enable-github-automerge-action@main
-      with:
-        github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Wait for tests to succeed
+        uses: lewagon/wait-on-check-action@v1.1.2
+        timeout-minutes: 15
+        with:
+          ref: ${{ github.ref }}
+          running-workflow-name: 'Auto-merge'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+          allowed-conclusions: success
+      - uses: alexwilson/enable-github-automerge-action@main
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
