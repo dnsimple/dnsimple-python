@@ -4,9 +4,10 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 
 ## main
 
-## 2.7.1
+## 2.8.0
 
 - CHANGED:
+  - Drop py as a dependency ([dnsimple/dnsimple-python#388](https://github.com/dnsimple/dnsimple-python/pull/388))
   - Dependency updates
 
 ## 2.7.0
