@@ -4,6 +4,11 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 
 ## main
 
+## 2.7.1
+
+- CHANGED:
+  - Dependency updates
+
 ## 2.7.0
 
 - CHANGED:
