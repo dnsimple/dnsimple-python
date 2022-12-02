@@ -1,6 +1,6 @@
 attrs==22.1.0
 certifi==2022.9.24
-chardet==5.0.0
+chardet==5.1.0
 coverage==6.5.0
 dataclasses-json==0.5.7
 idna==3.4
