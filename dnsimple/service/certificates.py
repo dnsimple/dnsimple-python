@@ -1,5 +1,5 @@
 from dnsimple.response import Response
-from dnsimple.struct import Certificate, CertificateBundle, CertificatePurchase, CertificateRenewal, LetsencryptCertificateInput
+from dnsimple.struct import Certificate, CertificateBundle, CertificatePurchase, CertificateRenewal, LetsencryptCertificateInput, LetsencryptCertificateRenewalInput
 
 
 class Certificates(object):
@@ -131,7 +131,7 @@ class Certificates(object):
         response = self.client.post(f'/{account_id}/domains/{domain}/certificates/letsencrypt/{certificate_id}/issue')
         return Response(response, Certificate)
 
-    def purchase_letsencrypt_certificate_renewal(self, account_id, domain, certificate_id):
+    def purchase_letsencrypt_certificate_renewal(self, account_id, domain, certificate_id, certificate_renewal_input = LetsencryptCertificateRenewalInput()):
         """
         Purchase a Let's Encrypt certificate renewal.
 
@@ -147,7 +147,7 @@ class Certificates(object):
         :return: dnsimple.Response
             The certificate renewal
         """
-        response = self.client.post(f'/{account_id}/domains/{domain}/certificates/letsencrypt/{certificate_id}/renewals')
+        response = self.client.post(f'/{account_id}/domains/{domain}/certificates/letsencrypt/{certificate_id}/renewals', data=certificate_renewal_input.to_json())
         return Response(response, CertificateRenewal)
 
     def issue_letsencrypt_certificate_renewal(self, account_id, domain, certificate_id, certificate_renewal_id):

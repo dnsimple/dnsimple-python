@@ -61,10 +61,19 @@ class CertificateBundle(Struct):
 
 
 class LetsencryptCertificateInput(dict):
-    def __init__(self, contact_id=None, auto_renew=None, name=None, alternate_names=None):
-        dict.__init__(self, auto_renew=auto_renew, name=name, alternate_names=alternate_names)
+    def __init__(self, contact_id=None, auto_renew=None, name=None, alternate_names=None, signature_algorithm=None):
+        dict.__init__(self, auto_renew=auto_renew, name=name, alternate_names=alternate_names, signature_algorithm=signature_algorithm)
         if contact_id is not None:
             warnings.warn("DEPRECATION WARNING: LetsencryptCertificateInput#contact_id is deprecated and its value is ignored and will be removed in the next major version.")
+
+
+    def to_json(self):
+        return json.dumps(omitempty(self))
+
+
+class LetsencryptCertificateRenewalInput(dict):
+    def __init__(self, auto_renew=None, signature_algorithm=None):
+        dict.__init__(self, auto_renew=auto_renew, signature_algorithm=signature_algorithm)
 
 
     def to_json(self):
