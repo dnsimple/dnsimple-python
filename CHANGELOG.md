@@ -2,7 +2,12 @@
 
 This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 
-## main
+## 2.9.0
+
+- NEW:
+  - Added support for `signature_algorithm` in Let's Encrypt APIs
+- CHANGED:
+  - Dependency updates
 
 ## 2.8.0
 
