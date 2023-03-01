@@ -4,7 +4,7 @@ import responses
 import datetime
 
 from dnsimple.response import Pagination
-from dnsimple.struct import Certificate, LetsencryptCertificateInput
+from dnsimple.struct import Certificate, LetsencryptCertificateInput, LetsencryptCertificateRenewalInput
 from tests.helpers import DNSimpleMockResponse, DNSimpleTest
 
 
@@ -174,7 +174,7 @@ class CertificatesTest(DNSimpleTest):
         responses.add(DNSimpleMockResponse(method=responses.POST,
                                            path='/1010/domains/example.com/certificates/letsencrypt/200/renewals',
                                            fixture_name='purchaseRenewalLetsencryptCertificate/success'))
-        renewal = self.certificates.purchase_letsencrypt_certificate_renewal(1010, 'example.com', 200).data
+        renewal = self.certificates.purchase_letsencrypt_certificate_renewal(1010, 'example.com', 200, LetsencryptCertificateRenewalInput(False, "RSA")).data
 
         self.assertIsInstance(renewal.id, int)
         self.assertIsInstance(renewal.old_certificate_id, int)
