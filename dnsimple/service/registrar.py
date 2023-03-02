@@ -76,6 +76,44 @@ class Registrar(object):
         response = self.client.get(f'/{account_id}/registrar/domains/{domain}/prices')
         return Response(response, DomainPrice)
 
+    def get_domain_registration(self, account_id, domain, domain_registration):
+        """
+        Get the details of an existing domain registration.
+
+        https://developer.dnsimple.com/v2/registrar/#getDomainRegistration
+
+        :param account_id: int
+            The account ID
+        :param domain: str
+            The domain name
+        :param domain_registration: int
+            The domain registration ID
+
+        :return: dnsimple.Response
+            The domain registration
+        """
+        response = self.client.get(f'/{account_id}/registrar/domains/{domain}/registrations/{domain_registration}')
+        return Response(response, DomainRegistration)
+
+    def get_domain_renewal(self, account_id, domain, domain_renewal):
+        """
+        Get the details of an existing domain renewal.
+
+        https://developer.dnsimple.com/v2/registrar/#getDomainRenewal
+
+        :param account_id: int
+            The account ID
+        :param domain: str
+            The domain name
+        :param domain_renewal: int
+            The domain renewal ID
+
+        :return: dnsimple.Response
+            The domain renewal
+        """
+        response = self.client.get(f'/{account_id}/registrar/domains/{domain}/renewals/{domain_renewal}')
+        return Response(response, DomainRenewal)
+
     def register_domain(self, account_id, domain, request):
         """
         Registers a domain

@@ -54,6 +54,37 @@ class RegistrarTest(DNSimpleTest):
             self.assertEqual('TLD .PINEAPPLE is not supported', dnse.message)
 
     @responses.activate
+    def test_get_domain_registration(self):
+        responses.add(DNSimpleMockResponse(method=responses.GET,
+                                           path='/1010/registrar/domains/bingo.pizza/registrations/361',
+                                           fixture_name='getDomainRegistration/success'))
+        domain_registration = self.registrar.get_domain_registration(1010, 'bingo.pizza', 361).data
+
+        self.assertEqual(domain_registration.id, 361)
+        self.assertEqual(domain_registration.domain_id, 104040)
+        self.assertEqual(domain_registration.registrant_id, 2715)
+        self.assertEqual(domain_registration.period, 1)
+        self.assertEqual(domain_registration.state, "registering")
+        self.assertEqual(domain_registration.auto_renew, False)
+        self.assertEqual(domain_registration.whois_privacy, False)
+        self.assertEqual(domain_registration.created_at, "2023-01-27T17:44:32Z")
+        self.assertEqual(domain_registration.updated_at, "2023-01-27T17:44:40Z")
+
+    @responses.activate
+    def test_get_domain_renewal(self):
+        responses.add(DNSimpleMockResponse(method=responses.GET,
+                                           path='/1010/registrar/domains/bingo.pizza/renewals/1',
+                                           fixture_name='getDomainRenewal/success'))
+        domain_renewal = self.registrar.get_domain_renewal(1010, 'bingo.pizza', 1).data
+
+        self.assertEqual(domain_renewal.id, 1)
+        self.assertEqual(domain_renewal.domain_id, 999)
+        self.assertEqual(domain_renewal.period, 1)
+        self.assertEqual(domain_renewal.state, "renewed")
+        self.assertEqual(domain_renewal.created_at, "2016-12-09T19:46:45Z")
+        self.assertEqual(domain_renewal.updated_at, "2016-12-12T19:46:45Z")
+
+    @responses.activate
     def test_check_domain_premium_price_passing_action(self):
         responses.add(DNSimpleMockResponse(method=responses.GET,
                                            path='/1010/registrar/domains/ruby.codes/premium_price?action=registration',
