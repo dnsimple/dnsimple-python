@@ -92,7 +92,7 @@ class Registrar(object):
         :return: dnsimple.Response
             The domain registration
         """
-        response = self.client.get(f'/{account_id}/registrar/domain/{domain}/registrations/{domain_registration}')
+        response = self.client.get(f'/{account_id}/registrar/domains/{domain}/registrations/{domain_registration}')
         return Response(response, DomainRegistration)
 
     def get_domain_renewal(self, account_id, domain, domain_renewal):
@@ -111,7 +111,7 @@ class Registrar(object):
         :return: dnsimple.Response
             The domain renewal
         """
-        response = self.client.get(f'/{account_id}/registrar/domain/{domain}/renewals/{domain_renewal}')
+        response = self.client.get(f'/{account_id}/registrar/domains/{domain}/renewals/{domain_renewal}')
         return Response(response, DomainRenewal)
 
     def register_domain(self, account_id, domain, request):
