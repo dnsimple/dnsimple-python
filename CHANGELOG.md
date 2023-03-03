@@ -2,6 +2,11 @@
 
 This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 
+## 2.10.0
+
+- NEW:
+  - Added support for get_domain_registration and get_domain_renewal Registrar APIs.
+
 ## 2.9.0
 
 - NEW:
