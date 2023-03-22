@@ -13,19 +13,20 @@ cd dnsimple-python
 
 ### 2. Install dependencies
 
-Make sure you have Python (3.8 onwards) installed.
+[Poetry](https://python-poetry.org/) is used by this library, so ensure you have it installed.
+
+Make sure you have Python (3.7 onwards) installed.
 
 Init the project
 
 ```shell
-make init
+poetry install
 ```
 
-This will install a virtual python environment `venv`. Once you have run the command
-you can start using the virtual environment like so:
+To start a shell in the virtual environment:
 
 ```shell
-source ./venv/bin/activate
+poetry shell
 ```
 
 ### 3. Testing
