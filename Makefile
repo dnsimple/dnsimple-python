@@ -1,4 +1,4 @@
-install_requirements: init
+install_requirements:
 	poetry install
 
 test: install_requirements
