@@ -15,7 +15,7 @@ cd dnsimple-python
 
 [Poetry](https://python-poetry.org/) is used by this library, so ensure you have it installed.
 
-Make sure you have Python (3.7 onwards) installed.
+Make sure you have Python installed.
 
 Init the project
 

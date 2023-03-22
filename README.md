@@ -13,7 +13,7 @@ A Python client for the [DNSimple API v2](https://developer.dnsimple.com/v2/).
 
 ## Requirements
 
-- Python 3.7+ (PyPy supported) - Note later versions of Python may be supported, but we make no guarantees as they are not tracked in our CI.
+- Python 3.8+ (PyPy supported) - Note later versions of Python may be supported, but we make no guarantees as they are not tracked in our CI.
 
 ## Installation
 
