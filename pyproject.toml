@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "dnsimple"
+version = "2.10.0"
+description = "DNSimple API service for python"
+authors = ["DNSimple External Integrations Team <support@dnsimple.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "dnsimple"}]
+homepage = "https://github.com/dnsimple/dnsimple-python"
+repository = "https://github.com/dnsimple/dnsimple-python"
+classifiers = [
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python"
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+requests = "^2.28.2"
+omitempty = "^0.1.1"
+
+[tool.poetry.group.test.dependencies]
+responses = "^0.23.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
