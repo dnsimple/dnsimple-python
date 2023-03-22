@@ -1,8 +1,8 @@
 init:
-	python3 -m venv ./venv
+	poetry shell
 
 install_requirements: init
-	pip install -r requirements.txt
+	poetry install
 
 test: install_requirements
 	python -m unittest discover -p "*_test.py" -v
