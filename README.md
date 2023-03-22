@@ -6,7 +6,7 @@ A Python client for the [DNSimple API v2](https://developer.dnsimple.com/v2/).
 
 ## Documentation
 
-- [dnsimple-ruby PyPi](https://pypi.org/project/dnsimple/)
+- [dnsimple PyPI](https://pypi.org/project/dnsimple/)
 - [DNSimple API documentation](https://developer.dnsimple.com/)
 - [DNSimple API examples repository](https://github.com/dnsimple/dnsimple-api-examples)
 - [DNSimple support documentation](https://support.dnsimple.com/)
@@ -137,7 +137,7 @@ client = Client(user_agent="my-app")
 The value you provide will be appended to the default `User-Agent` the client uses.
 For example, if you use `my-app`, the final header value will be `my-app dnsimple-python/0.1.0` (note that it will vary depending on the client version).
 
-## Contributing
+## Contributing
 
 Contibutions are welcomed. Please open an issue to discuss the changes before opening a PR. For more details on how to do development please refer to [CONTRIBUTING.md](CONTRIBUTING.md)
 
