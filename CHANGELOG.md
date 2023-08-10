@@ -2,6 +2,15 @@
 
 This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 
+## main
+
+## 2.10.1 (Unreleased)
+
+FEATURES:
+
+- NEW: Added `Zones.activate_dns` to activate DNS services (resolution) for a zone. (dnsimple/dnsimple-python#432)
+- NEW: Added `Zones.deactivate_dns` to deactivate DNS services (resolution) for a zone. (dnsimple/dnsimple-python#432)
+
 ## 2.10.0
 
 - NEW:

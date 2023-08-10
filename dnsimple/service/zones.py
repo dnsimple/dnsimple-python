@@ -12,6 +12,38 @@ class Zones(object):
     def __init__(self, client):
         self.client = client
 
+    def activate_dns(self, account_id, zone_name):
+        """
+        Activates DNS resolution for the zone in the account.
+
+        See https://developer.dnsimple.com/v2/zones/#activateZoneService
+
+        :param account_id: int
+            The account ID
+        :param zone_name:
+            The zone name
+
+        :return: dnsimple.Response
+        """
+        response = self.client.put(f'/{account_id}/zones/{zone_name}/activation')
+        return Response(response, Zone)
+
+    def deactivate_dns(self, account_id, zone_name):
+        """
+        Deactivates DNS resolution for the zone in the account.
+
+        See https://developer.dnsimple.com/v2/zones/#deactivateZoneService
+
+        :param account_id: int
+            The account ID
+        :param zone_name:
+            The zone name
+
+        :return: dnsimple.Response
+        """
+        response = self.client.delete(f'/{account_id}/zones/{zone_name}/activation')
+        return Response(response, Zone)
+
     def list_zones(self, account_id, filter=None, sort=None, page=None, per_page=None):
         """
         Lists the zones in the account.

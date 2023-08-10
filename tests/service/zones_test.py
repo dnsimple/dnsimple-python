@@ -9,6 +9,34 @@ from tests.helpers import DNSimpleTest, DNSimpleMockResponse
 
 class ZonesTest(DNSimpleTest):
     @responses.activate
+    def test_activate_zone(self):
+        responses.add(DNSimpleMockResponse(method=responses.PUT,
+                                           path='/1010/zones/example.com/activation',
+                                           fixture_name='activateZoneService/success'))
+        zone = self.zones.activate_dns(1010, 'example.com').data
+
+        self.assertEqual(1, zone.id)
+        self.assertEqual(1010, zone.account_id)
+        self.assertEqual('example.com', zone.name)
+        self.assertFalse(zone.reverse)
+        self.assertEqual('2015-04-23T07:40:03Z', zone.created_at)
+        self.assertEqual('2015-04-23T07:40:03Z', zone.updated_at)
+
+    @responses.activate
+    def test_deactivate_zone(self):
+        responses.add(DNSimpleMockResponse(method=responses.DELETE,
+                                           path='/1010/zones/example.com/activation',
+                                           fixture_name='deactivateZoneService/success'))
+        zone = self.zones.deactivate_dns(1010, 'example.com').data
+
+        self.assertEqual(1, zone.id)
+        self.assertEqual(1010, zone.account_id)
+        self.assertEqual('example.com', zone.name)
+        self.assertFalse(zone.reverse)
+        self.assertEqual('2015-04-23T07:40:03Z', zone.created_at)
+        self.assertEqual('2015-04-23T07:40:03Z', zone.updated_at)
+
+    @responses.activate
     def test_list_zones(self):
         responses.add(DNSimpleMockResponse(method=responses.GET,
                                            path='/1010/zones',
