@@ -349,7 +349,7 @@ class Domains(object):
         :return: dnsimple.Response
             The newly created email forward under the domain in the account
         """
-        response = self.client.post(f'/{account_id}/domains/{domain}/email_forwards', data=json.dumps({'from': email_forwards_input.email_from, 'to': email_forwards_input.email_to}))
+        response = self.client.post(f'/{account_id}/domains/{domain}/email_forwards', data=json.dumps({'alias_name': email_forwards_input.email_from, 'destination_email': email_forwards_input.email_to}))
         return Response(response, EmailForward)
 
     def get_email_forward(self, account_id, domain, email_forward_id):
