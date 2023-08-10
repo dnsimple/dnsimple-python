@@ -4,7 +4,7 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 
 ## main
 
-## 2.10.1 (Unreleased)
+## 2.10.1
 
 FEATURES:
 
