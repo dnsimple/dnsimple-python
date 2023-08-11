@@ -44,10 +44,10 @@ make test
 
 The following instructions uses `$VERSION` as a placeholder, where `$VERSION` is a `MAJOR.MINOR.BUGFIX` release such as `1.2.0`.
 
-1. Set the version in `./dnsimple/version.py`.
+1. Set the version in `./dnsimple/version.py` and `pyproject.toml`.
 
-    ```python
-    version = '$VERSION'
+    ```
+    version = "$VERSION"
     ```
 
 2. Run the test suite and ensure all tests pass: `make test`
