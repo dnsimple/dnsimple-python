@@ -4,6 +4,7 @@ import warnings
 from dnsimple.response import Response
 from dnsimple.struct import DomainCheck, DomainPremiumPrice, DomainRegistration, DomainTransfer, DomainRenewal, \
     VanityNameServer, WhoisPrivacy, WhoisPrivacyRenewal, DomainPrice
+from dnsimple.struct.registrant import RegistrantChange
 
 
 class Registrar(object):
@@ -418,3 +419,28 @@ class Registrar(object):
         """
         response = self.client.post(f'/{account_id}/registrar/domains/{domain}/whois_privacy')
         return Response(response, WhoisPrivacyRenewal)
+
+    def create_registrant_change(self, account_id, domain, contact, extended_attributes):
+        """
+        Start a registrant change.
+
+        See https://developer.dnsimple.com/v2/registrar/#createRegistrantChange
+
+        :param account_id: int
+            The account ID
+        :param domain: int/str
+            The domain name or id
+        :param contact: int
+            The contact id
+        :param extended_attributes: dict
+            The extended attributes
+
+        :return: dnsimple.Response
+            The registrant change
+        """
+        response = self.client.post(f'/{account_id}/registrar/registrant_changes', json.dumps({
+            "domain_id": domain,
+            "contact_id": contact,
+            "extended_attributes": extended_attributes,
+        }))
+        return Response(response, RegistrantChange)
