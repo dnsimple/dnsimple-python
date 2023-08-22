@@ -46,7 +46,7 @@ The following instructions uses `$VERSION` as a placeholder, where `$VERSION` is
 
 1. Set the version in `./dnsimple/version.py` and `pyproject.toml`.
 
-    ```
+    ```python
     version = "$VERSION"
     ```
 
