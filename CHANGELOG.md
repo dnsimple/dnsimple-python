@@ -4,6 +4,12 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 
 ## main
 
+## 2.10.2 (Unreleased)
+
+FEATURES:
+
+- NEW: Added `Registrar.create_registrant_change` to start a registrant change. (dnsimple/dnsimple-python#433)
+
 ## 2.10.1
 
 FEATURES:
