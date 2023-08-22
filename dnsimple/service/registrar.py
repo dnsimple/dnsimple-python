@@ -3,8 +3,7 @@ import warnings
 
 from dnsimple.response import Response
 from dnsimple.struct import DomainCheck, DomainPremiumPrice, DomainRegistration, DomainTransfer, DomainRenewal, \
-    VanityNameServer, WhoisPrivacy, WhoisPrivacyRenewal, DomainPrice
-from dnsimple.struct.registrant import RegistrantChange
+    RegistrantChange, VanityNameServer, WhoisPrivacy, WhoisPrivacyRenewal, DomainPrice
 
 
 class Registrar(object):
