@@ -458,7 +458,7 @@ class Registrar(object):
         :param account:
             The account id
         """
-        response = self.client.post(f"/{account}/registrar/registrant_changes/check")
+        response = self.client.post(f"/{account}/registrar/registrant_changes/check", data=input.to_json())
         return Response(response, RegistrantChangeCheck)
 
     def get_registrant_change(self, account: int, registrantchange: int):
