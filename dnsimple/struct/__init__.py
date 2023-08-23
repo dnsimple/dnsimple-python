@@ -15,7 +15,7 @@ from dnsimple.struct.domain_renewal import DomainRenewal, DomainRenewRequest
 from dnsimple.struct.domain_transfer import DomainTransfer, DomainTransferRequest
 from dnsimple.struct.domain_push import DomainPush
 from dnsimple.struct.email_forward import EmailForward, EmailForwardInput
-from dnsimple.struct.registrant import RegistrantChange, CheckRegistrantChangeInput, CreateRegistrantChangeInput, ExtendedAttribute, ExtendedAttributeOption, RegistrantChangeCheck
+from dnsimple.struct.registrant import RegistrantChange, CheckRegistrantChangeInput, CreateRegistrantChangeInput, RegistrantChangeCheck
 from dnsimple.struct.service import Service
 from dnsimple.struct.template import Template
 from dnsimple.struct.template_record import TemplateRecord
