@@ -4,6 +4,7 @@ import warnings
 from dnsimple.response import Response
 from dnsimple.struct import DomainCheck, DomainPremiumPrice, DomainRegistration, DomainTransfer, DomainRenewal, \
     RegistrantChange, VanityNameServer, WhoisPrivacy, WhoisPrivacyRenewal, DomainPrice
+from dnsimple.struct.registrant import CheckRegistrantChangeInput, CreateRegistrantChangeInput, RegistrantChangeCheck
 
 
 class Registrar(object):
@@ -419,27 +420,77 @@ class Registrar(object):
         response = self.client.post(f'/{account_id}/registrar/domains/{domain}/whois_privacy')
         return Response(response, WhoisPrivacyRenewal)
 
-    def create_registrant_change(self, account_id, domain, contact, extended_attributes):
+
+    def list_registrant_changes(self, account: int):
         """
-        Start a registrant change.
+        List registrant changes in the account.
+
+        See https://developer.dnsimple.com/v2/registrar/#listRegistrantChanges
+
+        :param account:
+            The account id
+        """
+        response = self.client.get(f"/{account}/registrar/registrant_changes")
+        return Response(response, RegistrantChange)
+
+    def create_registrant_change(
+        self, account: int, input: CreateRegistrantChangeInput
+    ):
+        """
+        Start registrant change.
 
         See https://developer.dnsimple.com/v2/registrar/#createRegistrantChange
 
-        :param account_id: int
-            The account ID
-        :param domain: int/str
-            The domain name or id
-        :param contact: int
-            The contact id
-        :param extended_attributes: dict
-            The extended attributes
-
-        :return: dnsimple.Response
-            The registrant change
+        :param account:
+            The account id
         """
-        response = self.client.post(f'/{account_id}/registrar/registrant_changes', json.dumps({
-            "domain_id": domain,
-            "contact_id": contact,
-            "extended_attributes": extended_attributes,
-        }))
+        response = self.client.post(f"/{account}/registrar/registrant_changes", data=input.to_json())
         return Response(response, RegistrantChange)
+
+    def check_registrant_change(
+        self, account: int, input: CheckRegistrantChangeInput
+    ):
+        """
+        Retrieves the requirements of a registrant change.
+
+        See https://developer.dnsimple.com/v2/registrar/#checkRegistrantChange
+
+        :param account:
+            The account id
+        """
+        response = self.client.post(f"/{account}/registrar/registrant_changes/check")
+        return Response(response, RegistrantChangeCheck)
+
+    def get_registrant_change(self, account: int, registrantchange: int):
+        """
+        Retrieves the details of an existing registrant change.
+
+        See https://developer.dnsimple.com/v2/registrar/#getRegistrantChange
+
+        :param account:
+            The account id
+        :param registrantchange:
+            The registrant change id
+        """
+        response = self.client.get(
+            f"/{account}/registrar/registrant_changes/{registrantchange}"
+        )
+        return Response(response, RegistrantChange)
+
+    def delete_registrant_change(self, account: int, registrantchange: int):
+        """
+        Cancel an ongoing registrant change from the account.
+
+        See https://developer.dnsimple.com/v2/registrar/#deleteRegistrantChange
+
+        :param account:
+            The account id
+        :param registrantchange:
+            The registrant change id
+        """
+        response = self.client.delete(
+            f"/{account}/registrar/registrant_changes/{registrantchange}"
+        )
+        return Response(
+            response,
+        )
