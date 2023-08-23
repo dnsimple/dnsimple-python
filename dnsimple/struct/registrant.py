@@ -1,90 +1,90 @@
 from dataclasses import dataclass
 from dnsimple.struct import Struct
-from typing import Dict, List, Literal, Union
 import json
+import omitempty
 
 
 @dataclass
 class RegistrantChange(Struct):
-    id: int
-    account_id: int
-    contact_id: int
-    domain_id: int
-    state: Literal["new", "pending", "cancelling", "cancelled", "completed"]
-    extended_attributes: Dict[str, str]
-    registry_owner_change: bool
-    irt_lock_lifted_by: str
-    created_at: str
-    updated_at: str
+    id = None
+    account_id = None
+    contact_id = None
+    domain_id = None
+    state = None
+    extended_attributes = None
+    registry_owner_change = None
+    irt_lock_lifted_by = None
+    created_at = None
+    updated_at = None
 
     def __init__(self, data):
         super().__init__(data)
 
     def to_json(self):
-        return json.dumps(self)
+        return json.dumps(omitempty(self))
 
 
 @dataclass
 class RegistrantChangeCheck(Struct):
-    contact_id: int
-    domain_id: int
-    extended_attributes: List["ExtendedAttribute"]
-    registry_owner_change: bool
+    contact_id = None
+    domain_id = None
+    extended_attributes = None
+    registry_owner_change = None
 
     def __init__(self, data):
         super().__init__(data)
 
     def to_json(self):
-        return json.dumps(self)
+        return json.dumps(omitempty(self))
 
 
 @dataclass
 class ExtendedAttribute(Struct):
-    name: str
-    description: str
-    required: bool
-    options: List["ExtendedAttributeOption"]
+    name = None
+    description = None
+    required = None
+    options = None
 
     def __init__(self, data):
         super().__init__(data)
 
     def to_json(self):
-        return json.dumps(self)
+        return json.dumps(omitempty(self))
 
 
 @dataclass
 class ExtendedAttributeOption(Struct):
-    title: str
-    value: str
-    description: str
+    title = None
+    value = None
+    description = None
 
     def __init__(self, data):
         super().__init__(data)
 
     def to_json(self):
-        return json.dumps(self)
+        return json.dumps(omitempty(self))
 
 
 @dataclass
 class CreateRegistrantChangeInput(Struct):
-    domain_id: Union[str, int]
-    contact_id: Union[str, int]
-    extended_attributes: Dict[str, str]
+    domain_id = None
+    contact_id = None
+    extended_attributes = None
 
     def __init__(self, data):
         super().__init__(data)
 
     def to_json(self):
-        return json.dumps(self)
+        return json.dumps(omitempty(self))
 
 
 @dataclass
 class CheckRegistrantChangeInput(Struct):
-    domain_id: Union[str, int]
-    contact_id: Union[str, int]
+    domain_id = None
+    contact_id = None
 
     def __init__(self, data):
         super().__init__(data)
 
     def to_json(self):
-        return json.dumps(self)
+        return json.dumps(omitempty(self))
