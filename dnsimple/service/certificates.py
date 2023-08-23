@@ -1,175 +1,169 @@
+from dataclasses import dataclass
+from dataclasses import field
+from dataclasses_json import config
+from dataclasses_json import dataclass_json
 from dnsimple.response import Response
-from dnsimple.struct import Certificate, CertificateBundle, CertificatePurchase, CertificateRenewal, LetsencryptCertificateInput, LetsencryptCertificateRenewalInput
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Literal
+from typing import Union
+import dnsimple.struct as types
 
 
 class Certificates(object):
-    """The Certificates service handles communication with the certificate related methods of the DNSimple API"""
-
     def __init__(self, client):
         self.client = client
 
-    def list_certificates(self, account_id, domain, page=None, per_page=None):
+    def list_certificates(self, account: int, domain: str, *, sort=None):
         """
-        List the certificates for a domain in the account.
+        Lists the certificates for a domain.
 
         See https://developer.dnsimple.com/v2/certificates/#listCertificates
 
-        :param account_id: int
-            The account ID
-        :param domain: int/str
+        :param account:
+            The account id
+        :param domain:
             The domain name or id
-        :param page: int
-            The page to return (default: 1)
-        :param per_page: int
-            The number of entries to return per page (default: 30, maximum: 100)
-
-        :return: dnsimple.Response
-            The list of certificates for the domain
         """
-        response = self.client.get(f'/{account_id}/domains/{domain}/certificates', page=page, per_page=per_page)
-        return Response(response, Certificate)
+        response = self.client.get(f"/{account}/domains/{domain}/certificates")
+        return Response(response, types.Certificate)
 
-    def get_certificate(self, account_id, domain, certificate_id):
+    def get_certificate(self, account: int, domain: str, certificate: int):
         """
-        Get the details of a certificate.
+        Retrieves the details of an existing certificate.
 
         See https://developer.dnsimple.com/v2/certificates/#getCertificate
 
-        :param account_id: int
-            The account ID
-        :param domain: int/str
+        :param account:
+            The account id
+        :param domain:
             The domain name or id
-        :param certificate_id: int
+        :param certificate:
             The certificate id
-
-        :return: dnsimple.Response
-            The certificate requested
         """
-        response = self.client.get(f'/{account_id}/domains/{domain}/certificates/{certificate_id}')
-        return Response(response, Certificate)
+        response = self.client.get(
+            f"/{account}/domains/{domain}/certificates/{certificate}"
+        )
+        return Response(response, types.Certificate)
 
-    def download_certificate(self, account_id, domain, certificate_id):
+    def download_certificate(self, account: int, domain: str, certificate: int):
         """
-        Gets the PEM-encoded certificate, along with the root certificate and intermediate chain
+        Gets the PEM-encoded certificate, along with the root certificate and intermediate chain.
 
         See https://developer.dnsimple.com/v2/certificates/#downloadCertificate
 
-        :param account_id: int
-            The account ID
-        :param domain: int/str
+        :param account:
+            The account id
+        :param domain:
             The domain name or id
-        :param certificate_id: int
+        :param certificate:
             The certificate id
-
-        :return: dnsimple.Response
-            The certificate in the domain
         """
-        response = self.client.get(f'/{account_id}/domains/{domain}/certificates/{certificate_id}/download')
-        return Response(response, CertificateBundle)
+        response = self.client.get(
+            f"/{account}/domains/{domain}/certificates/{certificate}/download"
+        )
+        return Response(response, types.CertificateDownload)
 
-    def get_certificate_private_key(self, account_id, domain, certificate_id):
+    def get_certificate_private_key(self, account: int, domain: str, certificate: int):
         """
-        Get the PEM-encoded certificate private key
+        Gets the PEM-encoded certificate private key.
 
         See https://developer.dnsimple.com/v2/certificates/#getCertificatePrivateKey
 
-        :param account_id: int
-            The account ID
-        :param domain: int/str
+        :param account:
+            The account id
+        :param domain:
             The domain name or id
-        :param certificate_id: int
-            The certificate ID
-
-        :return: dnsimple.Response
-            The PEM-encoded certificate private key
+        :param certificate:
+            The certificate id
         """
-        response = self.client.get(f'/{account_id}/domains/{domain}/certificates/{certificate_id}/private_key')
-        return Response(response, CertificateBundle)
+        response = self.client.get(
+            f"/{account}/domains/{domain}/certificates/{certificate}/private_key"
+        )
+        return Response(response, types.CertificatePrivateKey)
 
-    def purchase_letsencrypt_certificate(self, account_id, domain, certificate_input = LetsencryptCertificateInput()):
+    def purchase_letsencrypt_certificate(
+        self,
+        account: int,
+        domain: str,
+        input: types.PurchaseLetsencryptCertificateInput,
+    ):
         """
-        Purchase a Let's Encrypt certificate
-
-        This method creates a new certificate order. The certificate ID should be used to request the issuance of the
-        certificate using {#issue_letsencrypt_certificate}.
+        Orders a [Let's Encrypt](https://dnsimple.com/letsencrypt) certificate with DNSimple.
 
         See https://developer.dnsimple.com/v2/certificates/#purchaseLetsencryptCertificate
 
-        :param account_id: int
+        :param account:
             The account id
-        :param domain: int/str
+        :param domain:
             The domain name or id
-        :param certificate_input: dnsimple.struct.LetsencryptCertificateInput
-            A set of attributes to purchase the Let's Encrypt certificate
-
-        :return: dnsimple.Response
-            The certificate purchase
         """
-        response = self.client.post(f'/{account_id}/domains/{domain}/certificates/letsencrypt',
-                                    data=certificate_input.to_json())
-        return Response(response, CertificatePurchase)
+        response = self.client.post(
+            f"/{account}/domains/{domain}/certificates/letsencrypt"
+        )
+        return Response(response, types.LetsencryptCertificatePurchase)
 
-    def issue_letsencrypt_certificate(self, account_id, domain, certificate_id):
+    def issue_letsencrypt_certificate(self, account: int, domain: str, purchaseId: int):
         """
-        Issue a pending Let's Encrypt certificate order.
-
-        Note that the issuance process is async. A successful response means the issuance request has been successfully
-        acknowledged and queued for processing.
+        Issues a [Let's Encrypt](https://dnsimple.com/letsencrypt) certificate ordered with DNSimple.
 
         See https://developer.dnsimple.com/v2/certificates/#issueLetsencryptCertificate
 
-        :param account_id: int
+        :param account:
             The account id
-        :param domain: int/str
+        :param domain:
             The domain name or id
-        :param certificate_id: int
-            The certificate id
-
-        :return: dnsimple.Response
-            The certificate issued
+        :param purchaseId:
+            The certificate purchase order id received by `purchaseLetsencryptCertificate`.
         """
-        response = self.client.post(f'/{account_id}/domains/{domain}/certificates/letsencrypt/{certificate_id}/issue')
-        return Response(response, Certificate)
+        response = self.client.post(
+            f"/{account}/domains/{domain}/certificates/letsencrypt/{purchaseId}/issue"
+        )
+        return Response(response, types.Certificate)
 
-    def purchase_letsencrypt_certificate_renewal(self, account_id, domain, certificate_id, certificate_renewal_input = LetsencryptCertificateRenewalInput()):
+    def purchase_letsencrypt_certificate_renewal(
+        self,
+        account: int,
+        domain: str,
+        certificate: int,
+        input: types.PurchaseLetsencryptCertificateRenewalInput,
+    ):
         """
-        Purchase a Let's Encrypt certificate renewal.
+        Renews a [Let's Encrypt](https://dnsimple.com/letsencrypt) certificate ordered with DNSimple.
 
         See https://developer.dnsimple.com/v2/certificates/#purchaseRenewalLetsencryptCertificate
 
-        :param account_id: int
+        :param account:
             The account id
-        :param domain: int/str
+        :param domain:
             The domain name or id
-        :param certificate_id: int
+        :param certificate:
             The certificate id
-
-        :return: dnsimple.Response
-            The certificate renewal
         """
-        response = self.client.post(f'/{account_id}/domains/{domain}/certificates/letsencrypt/{certificate_id}/renewals', data=certificate_renewal_input.to_json())
-        return Response(response, CertificateRenewal)
+        response = self.client.post(
+            f"/{account}/domains/{domain}/certificates/letsencrypt/{certificate}/renewals"
+        )
+        return Response(response, types.LetsencryptCertificateRenewal)
 
-    def issue_letsencrypt_certificate_renewal(self, account_id, domain, certificate_id, certificate_renewal_id):
+    def issue_letsencrypt_certificate_renewal(
+        self, account: int, domain: str, certificate: int, renewalId: int
+    ):
         """
-        Issue a pending Let's Encrypt certificate renewal order.
-
-        Note that the issuance process is async. A successful response means the issuance request has been
-        successfully acknowledged and queued for processing.
+        Issues a [Let's Encrypt](https://dnsimple.com/letsencrypt) certificate renewal ordered with DNSimple.
 
         See https://developer.dnsimple.com/v2/certificates/#issueRenewalLetsencryptCertificate
 
-        :param account_id: int
+        :param account:
             The account id
-        :param domain: int/str
+        :param domain:
             The domain name or id
-        :param certificate_id: int
+        :param certificate:
             The certificate id
-        :param certificate_renewal_id: int
-            The certificate renewal id
-
-        :return: dnsimple.Response
-            The certificate to be renewed
+        :param renewalId:
+            The certificate renewal order id received by `purchaseRenewalLetsencryptCertificate`.
         """
-        response = self.client.post(f'/{account_id}/domains/{domain}/certificates/letsencrypt/{certificate_id}/renewals/{certificate_renewal_id}/issue')
-        return Response(response, Certificate)
+        response = self.client.post(
+            f"/{account}/domains/{domain}/certificates/letsencrypt/{certificate}/renewals/{renewalId}/issue"
+        )
+        return Response(response, types.Certificate)

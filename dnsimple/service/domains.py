@@ -1,465 +1,366 @@
-import json
-
+from dataclasses import dataclass
+from dataclasses import field
+from dataclasses_json import config
+from dataclasses_json import dataclass_json
 from dnsimple.response import Response
-from dnsimple.struct import Domain, Dnssec, Collaborator, DelegationSignerRecord, EmailForward, DomainPush
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Literal
+from typing import Union
+import dnsimple.struct as types
 
 
 class Domains(object):
-    """
-    The Domains Service handles the domains endpoint of the DNSimple API.
-
-    See https://developer.dnsimple.com/v2/domains
-    """
-
     def __init__(self, client):
         self.client = client
 
-    def list_domains(self, account_id, sort=None, filter=None, page=None, per_page=None):
+    def list_domains(
+        self, account: int, *, name_like=None, registrant_id=None, sort=None
+    ):
         """
         Lists the domains in the account.
 
-        See https://developer.dnsimple.com/v2/domains/#list
+        See https://developer.dnsimple.com/v2/domains/#listDomains
 
-        :param account_id: int
-            The account ID
-        :param sort: str
-            Comma separated key-value pairs: the name of a field and the order criteria (asc for ascending and desc for
-            descending).
-
-            Possible sort criteria:
-                - id: Sort domains by ID (i.e. 'id:asc')
-                - name: Sort domains by name (alphabetical order) (i.e. 'name:desc')
-                - expiration: Sort domains by expiration date (i.e. 'expiration:asc')
-        :param filter: dict
-            Makes it possible to ask only for the exact subset of data that you you’re looking for.
-
-            Possible filters:
-                - name_like: Only include domains containing given string (i.e. {'name_like': 'example.com'} )
-                - registrant_id: Only include domains containing given registrant ID (i.e. {'registrant_id': 1010} )
-        :param page: int
-            The page to return (default: 1)
-        :param per_page: int
-            The number of entries to return per page (default: 30, maximum: 100)
-
-        :return: dnsimple.Response
-            A list of domains
+        :param account:
+            The account id
         """
-        response = self.client.get(f'/{account_id}/domains', sort=sort, filter=filter, page=page, per_page=per_page)
-        return Response(response, Domain)
+        response = self.client.get(f"/{account}/domains")
+        return Response(response, types.Domain)
 
-    def create_domain(self, account_id, domain_name):
+    def create_domain(self, account: int, input: types.CreateDomainInput):
         """
-        Creates a domain in the account.
+        Creates a domain and the corresponding zone into the account.
 
-        See https://developer.dnsimple.com/v2/domains/#create
+        When creating a domain using Solo or Teams subscription, the DNS services
+        for the zone will be automatically enabled and this will be charged on your
+        following subscription renewal invoices.
 
-        :param account_id: int
-            The account ID
-        :param domain_name: str
-            The name of the domain
-        :return: dnsimple.Response
-            The newly created domain
+        See https://developer.dnsimple.com/v2/domains/#createDomain
+
+        :param account:
+            The account id
         """
-        response = self.client.post(f'/{account_id}/domains', data=json.dumps({'name': domain_name}))
-        return Response(response, Domain)
+        response = self.client.post(f"/{account}/domains")
+        return Response(response, types.Domain)
 
-    def get_domain(self, account_id, domain):
+    def get_domain(self, account: int, domain: str):
         """
         Retrieves the details of an existing domain.
 
         See https://developer.dnsimple.com/v2/domains/#getDomain
 
-        :param account_id: int
-            The account ID
-        :param domain: int/str
-            The domain name or ID
-        :return: dnsimple.Response
-            The domain requested
+        :param account:
+            The account id
+        :param domain:
+            The domain name or id
         """
-        response = self.client.get(f'/{account_id}/domains/{domain}')
-        return Response(response, Domain)
+        response = self.client.get(f"/{account}/domains/{domain}")
+        return Response(response, types.Domain)
 
-    def delete_domain(self, account_id, domain):
+    def delete_domain(self, account: int, domain: str):
         """
         Permanently deletes a domain from the account.
 
-        For domains which are registered with DNSimple, this will not delete the domain from the registry,
-        nor perform a refund.
-
         See https://developer.dnsimple.com/v2/domains/#deleteDomain
 
-        :param account_id: int
-            The account ID
-        :param domain: int/str
-            The domain name or ID
-        :return: dnsimple.Response
-            An empty response
+        :param account:
+            The account id
+        :param domain:
+            The domain name or id
         """
-        response = self.client.delete(f'/{account_id}/domains/{domain}')
-        return Response(response)
+        response = self.client.delete(f"/{account}/domains/{domain}")
+        return Response(
+            response,
+        )
 
-    def list_collaborators(self, account_id, domain):
+    def list_collaborators(self, account: int, domain: str):
         """
-        List collaborators for the domain in the account.
+        Lists collaborators for the domain.
 
         See https://developer.dnsimple.com/v2/domains/collaborators/#listDomainCollaborators
 
-        :param account_id: int
-            The account ID
-        :param domain: int/str
+        :param account:
+            The account id
+        :param domain:
             The domain name or id
-        :return: dnsimple.Response
-            A list of collaborators for the domain in the account
         """
-        response = self.client.get(f'/{account_id}/domains/{domain}/collaborators')
-        return Response(response, Collaborator)
+        response = self.client.get(f"/{account}/domains/{domain}/collaborators")
+        return Response(response, types.Collaborator)
 
-    def add_collaborator(self, account_id, domain, email):
+    def add_collaborator(
+        self, account: int, domain: str, input: types.AddCollaboratorInput
+    ):
         """
-        Adds a collaborator for the domain in the account
+        Adds a collaborator to the domain.
 
-        At the time of the add, a collaborator may or may not have a DNSimple account.
-
-        In case the collaborator doesn't have a DNSimple account, the system will invite her/him to register to
-        DNSimple first and then to accept the collaboration invitation.
-
-        In the other case, she/he is automatically added to the domain as collaborator. She/he can decide to reject
-        the invitation later.
+        At the time of the add, a collaborator may or may not have a DNSimple account. In case the collaborator doesn't have a DNSimple account, the system will invite them to register to DNSimple first and then to accept the collaboration invitation. In the other case, they are automatically added to the domain as collaborator. They can decide to reject the invitation later.
 
         See https://developer.dnsimple.com/v2/domains/collaborators/#addDomainCollaborator
 
-        :param account_id: int
-            The account ID
-        :param domain: int/str
+        :param account:
+            The account id
+        :param domain:
             The domain name or id
-        :param email: str
-            The email of the collaborator to be added
-
-        :return: dnsimple.Response
-            The collaborator added to the domain in the account
         """
-        response = self.client.post(f'/{account_id}/domains/{domain}/collaborators', data=json.dumps({'email': email}))
-        return Response(response, Collaborator)
+        response = self.client.post(f"/{account}/domains/{domain}/collaborators")
+        return Response(response, types.Collaborator)
 
-    def remove_collaborator(self, account_id, domain, collaborator):
+    def remove_collaborator(self, account: int, domain: str, collaborator: int):
         """
-        Remove a collaborator from the domain in the account
+        Removes a collaborator from the domain.
 
         See https://developer.dnsimple.com/v2/domains/collaborators/#removeDomainCollaborator
 
-        :param account_id: int
-            The account ID
-        :param domain: int/str
+        :param account:
+            The account id
+        :param domain:
             The domain name or id
-        :param collaborator: int
+        :param collaborator:
             The collaborator id
-
-        :return: dnsimple.Response
-            An empty response
         """
-        response = self.client.delete(f'/{account_id}/domains/{domain}/collaborators/{collaborator}')
-        return Response(response)
+        response = self.client.delete(
+            f"/{account}/domains/{domain}/collaborators/{collaborator}"
+        )
+        return Response(
+            response,
+        )
 
-    def enable_dnssec(self, account_id, domain):
+    def get_dnssec(self, account: int, domain: str):
         """
-        Enable DNSSEC for the domain in the account. This will sign the zone. If the domain is registered it will also
-        add the DS record to the corresponding registry.
-
-        See https://developer.dnsimple.com/v2/domains/dnssec/#enableDomainDnssec
-
-        :param account_id: int
-            The account ID
-        :param domain: int/str
-            The domain name or id
-
-        :return: dnsimple.Response
-            The DNSSEC status
-        """
-        response = self.client.post(f'/{account_id}/domains/{domain}/dnssec')
-        return Response(response, Dnssec)
-
-    def disable_dnssec(self, account_id, domain):
-        """
-        Disable DNSSEC for the domain in the account.
-
-        See https://developer.dnsimple.com/v2/domains/dnssec/#disableDomainDnssec
-
-        :param account_id: int
-            The account ID
-        :param domain: int/str
-            The domain name or id
-
-        :return: dnsimple.Response
-            An empty response
-        """
-        response = self.client.delete(f'/{account_id}/domains/{domain}/dnssec')
-        return Response(response)
-
-    def get_dnssec(self, account_id, domain):
-        """
-        Get the status of DNSSEC, indicating whether it is currently enabled or disabled.
+        Gets the DNSSEC status for an existing domain.
 
         See https://developer.dnsimple.com/v2/domains/dnssec/#getDomainDnssec
 
-        :param account_id: int
-            The account ID
-        :param domain: int/str
+        :param account:
+            The account id
+        :param domain:
             The domain name or id
-
-        :return: dnsimple.Response
-            The DNSSEC status requested
         """
-        response = self.client.get(f'/{account_id}/domains/{domain}/dnssec')
-        return Response(response, Dnssec)
+        response = self.client.get(f"/{account}/domains/{domain}/dnssec")
+        return Response(response, types.DNSSEC)
 
-    def list_domain_delegation_signer_records(self, account_id, domain, sort=None, page=None, per_page=None):
+    def enable_dnssec(self, account: int, domain: str):
         """
-        List delegation signer records for the domain in the account.
+        Enables DNSSEC for the domain.
+
+        It will enable signing of the zone. If the domain is registered with DNSimple, it will also add the DS record to the corresponding registry.
+
+        See https://developer.dnsimple.com/v2/domains/dnssec/#enableDomainDnssec
+
+        :param account:
+            The account id
+        :param domain:
+            The domain name or id
+        """
+        response = self.client.post(f"/{account}/domains/{domain}/dnssec")
+        return Response(response, types.DNSSEC)
+
+    def disable_dnssec(self, account: int, domain: str):
+        """
+        Disables DNSSEC for the domain.
+
+        It will disable signing of the zone. If the domain is registered with DNSimple, it will also remove the DS record at the registry corresponding to the disabled DNSSEC signing.
+
+        See https://developer.dnsimple.com/v2/domains/dnssec/#disableDomainDnssec
+
+        :param account:
+            The account id
+        :param domain:
+            The domain name or id
+        """
+        response = self.client.delete(f"/{account}/domains/{domain}/dnssec")
+        return Response(
+            response,
+        )
+
+    def list_delegation_signer_records(self, account: int, domain: str, *, sort=None):
+        """
+        Lists the DS records for the domain.
 
         See https://developer.dnsimple.com/v2/domains/dnssec/#listDomainDelegationSignerRecords
 
-        :param account_id: int
-            The account ID
-        :param domain: int/str
+        :param account:
+            The account id
+        :param domain:
             The domain name or id
-
-        :param sort: str
-            Comma separated key-value pairs: the name of a field and the order criteria (asc for ascending and desc for
-            descending).
-
-            Possible sort criteria:
-                - id: Sort delegation signer records by ID (i.e. 'id:asc')
-                - created_at: Sort delegation signer records by creation date (i.e. 'created_at:asc')
-
-        :param page: int
-            The page to return (default: 1)
-        :param per_page: int
-            The number of entries to return per page (default: 30, maximum: 100)
-
-        :return: dnsimple.Response
-            A list of delegation signer records for the domain in the account
         """
-        response = self.client.get(f'/{account_id}/domains/{domain}/ds_records', sort=sort, page=page, per_page=per_page)
-        return Response(response, DelegationSignerRecord)
+        response = self.client.get(f"/{account}/domains/{domain}/ds_records")
+        return Response(response, types.DelegationSigner)
 
-    def create_domain_delegation_signer_record(self, account_id, domain, ds_input):
+    def create_delegation_signer_record(
+        self, account: int, domain: str, input: types.CreateDelegationSignerRecordInput
+    ):
         """
-        Create a delegation signer record
-
-        You only need to create a delegation signer record manually if your domain is registered with DNSimple but
-        hosted with another DNS provider that is signing your zone. To enable DNSSEC on a domain that is hosted with
-        DNSimple, use the DNSSEC enable endpoint.
+        Adds a DS record to the domain.
 
         See https://developer.dnsimple.com/v2/domains/dnssec/#createDomainDelegationSignerRecord
 
-        :param account_id: int
-            The account ID
-        :param domain: int/str
+        :param account:
+            The account id
+        :param domain:
             The domain name or id
-        :param ds_input: DelegationsSignerRecordInput
-            The delegation signer record input to create the delegation signer record
-
-        :return: dnsimple.Response
-            The newly created domain delegation signer record
         """
-        response = self.client.post(f'/{account_id}/domains/{domain}/ds_records', data=ds_input.to_json())
-        return Response(response, DelegationSignerRecord)
+        response = self.client.post(f"/{account}/domains/{domain}/ds_records")
+        return Response(response, types.DelegationSigner)
 
-    def get_delegation_signer_record(self, account_id, domain, ds_record_id):
+    def get_delegation_signer_record(self, account: int, domain: str, ds: int):
         """
-        Get the delegation signer record under the domain in the account
+        Retrieves the details of an existing DS record.
 
         See https://developer.dnsimple.com/v2/domains/dnssec/#getDomainDelegationSignerRecord
 
-        :param account_id: int
-            The account ID
-        :param domain: int/str
+        :param account:
+            The account id
+        :param domain:
             The domain name or id
-        :param ds_record_id: int
+        :param ds:
             The delegation signer record id
-
-        :return: dnsimple.Response
-            The domain delegation signer record requested
         """
-        response = self.client.get(f'/{account_id}/domains/{domain}/ds_records/{ds_record_id}')
-        return Response(response, DelegationSignerRecord)
+        response = self.client.get(f"/{account}/domains/{domain}/ds_records/{ds}")
+        return Response(response, types.DelegationSigner)
 
-    def delete_domain_delegation_signer_record(self, account_id, domain, ds_record_id):
+    def delete_delegation_signer_record(self, account: int, domain: str, ds: int):
         """
-        Delete the delegation signer record under the domain in the account
+        Removes a DS record from the domain.
 
         See https://developer.dnsimple.com/v2/domains/dnssec/#deleteDomainDelegationSignerRecord
 
-        :param account_id: int
-            The account ID
-        :param domain: int/str
+        :param account:
+            The account id
+        :param domain:
             The domain name or id
-        :param ds_record_id: int
+        :param ds:
             The delegation signer record id
-
-        :return: dnsimple.Response
-            An empty response
         """
-        response = self.client.delete(f'/{account_id}/domains/{domain}/ds_records/{ds_record_id}')
-        return Response(response)
+        response = self.client.delete(f"/{account}/domains/{domain}/ds_records/{ds}")
+        return Response(
+            response,
+        )
 
-    def list_email_forwards(self, account_id, domain, sort=None, page=None, per_page=None):
+    def list_email_forwards(self, account: int, domain: str, *, sort=None):
         """
-        List email forwards for the domain in the account.
+        Lists email forwards for the domain.
 
         See https://developer.dnsimple.com/v2/domains/email-forwards/#listEmailForwards
 
-        :param account_id: int
-            The account ID
-        :param domain: int/str
+        :param account:
+            The account id
+        :param domain:
             The domain name or id
-        :param sort: str
-            Comma separated key-value pairs: the name of a field and the order criteria (asc for ascending and desc for
-            descending).
-
-            Possible sort criteria:
-                - id: Sort email forwards by ID (i.e. 'id:asc')
-                - from: Sort email forwards by from_email (aka from in alphabetical order) (i.e. 'from:desc')
-                - to: Sort email forwards by to_email (aka to in alphabetical order) (i.e. 'to:asc')
-
-        :param page: int
-            The page to return (default: 1)
-        :param per_page: int
-            The number of entries to return per page (default: 30, maximum: 100)
-
-        :return: dnsimple.Response
-            The list of email forwards for the domain in the account
         """
-        response = self.client.get(f'/{account_id}/domains/{domain}/email_forwards', sort=sort, page=page, per_page=per_page)
-        return Response(response, EmailForward)
+        response = self.client.get(f"/{account}/domains/{domain}/email_forwards")
+        return Response(response, types.EmailForward)
 
-    def create_email_forward(self, account_id, domain, email_forwards_input):
+    def create_email_forward(
+        self, account: int, domain: str, input: types.CreateEmailForwardInput
+    ):
         """
-        Create an email forward under the domain in the account
+        Creates a new email forward for the domain.
 
         See https://developer.dnsimple.com/v2/domains/email-forwards/#createEmailForward
 
-        :param account_id: int
-            The account Id
-        :param domain: int/str
+        :param account:
+            The account id
+        :param domain:
             The domain name or id
-        :param email_forwards_input:
-            The email forwards input
-
-        :return: dnsimple.Response
-            The newly created email forward under the domain in the account
         """
-        response = self.client.post(f'/{account_id}/domains/{domain}/email_forwards', data=json.dumps({'alias_name': email_forwards_input.email_from, 'destination_email': email_forwards_input.email_to}))
-        return Response(response, EmailForward)
+        response = self.client.post(f"/{account}/domains/{domain}/email_forwards")
+        return Response(response, types.EmailForward)
 
-    def get_email_forward(self, account_id, domain, email_forward_id):
+    def get_email_forward(self, account: int, domain: str, emailforward: int):
         """
-        Get the email forward in the domain in the account
+        Retrieves the details of an existing email forward.
 
         See https://developer.dnsimple.com/v2/domains/email-forwards/#getEmailForward
 
-        :param account_id: int
-            The account ID
-        :param domain: int/str
+        :param account:
+            The account id
+        :param domain:
             The domain name or id
-        :param email_forward_id: int
+        :param emailforward:
             The email forward id
-
-        :return: dnsimple.Response
-            The email forward requested
         """
-        response = self.client.get(f'/{account_id}/domains/{domain}/email_forwards/{email_forward_id}')
-        return Response(response, EmailForward)
+        response = self.client.get(
+            f"/{account}/domains/{domain}/email_forwards/{emailforward}"
+        )
+        return Response(response, types.EmailForward)
 
-    def delete_email_forward(self, account_id, domain, email_forward_id):
+    def delete_email_forward(self, account: int, domain: str, emailforward: int):
         """
-        Delete the email forward from the domain.
+        Permanently deletes an email forward.
 
         See https://developer.dnsimple.com/v2/domains/email-forwards/#deleteEmailForward
 
-        :param account_id: int
-            The account ID
-        :param domain: int/str
+        :param account:
+            The account id
+        :param domain:
             The domain name or id
-        :param email_forward_id: int
+        :param emailforward:
             The email forward id
-
-        :return: dnsimple.Response
-            An empty response
         """
-        response = self.client.delete(f'/{account_id}/domains/{domain}/email_forwards/{email_forward_id}')
-        return Response(response)
+        response = self.client.delete(
+            f"/{account}/domains/{domain}/email_forwards/{emailforward}"
+        )
+        return Response(
+            response,
+        )
 
-    def initiate_push(self, account_id, domain, push_input):
+    def initiate_push(self, account: int, domain: str, input: types.InitiatePushInput):
         """
-        Initiate a push for the domain.
+        Initiates a pust of a domain to another DNSimple account.
 
-        See https://developer.dnsimple.com/v2/domains/pushes/#initiate
+        See https://developer.dnsimple.com/v2/domains/pushes/#initiateDomainPush
 
-        :param account_id: int
-            The account ID
-        :param domain: int/str
+        :param account:
+            The account id
+        :param domain:
             The domain name or id
-        :param push_input: dnsimple.struct.domain_push.DomainPushInput
-            The data to send to initiate the push
-
-        :return: dnsimple.Response
-            The newly created domain push
         """
-        response = self.client.post(f'/{account_id}/domains/{domain}/pushes', data=push_input.to_json())
-        return Response(response, DomainPush)
+        response = self.client.post(f"/{account}/domains/{domain}/pushes")
+        return Response(response, types.Push)
 
-    def list_pushes(self, account_id, page=None, per_page=None):
+    def list_pushes(self, account: int):
         """
-       List pending pushes for the target account..
+        List pending pushes for the target account.
 
         See https://developer.dnsimple.com/v2/domains/pushes/#listPushes
 
-        :param account_id: int
-            The account ID
-        :param page: int
-            The page to return (default: 1)
-        :param per_page: int
-            The number of entries to return per page (default: 30, maximum: 100)
-
-        :return: dnsimple.Response
-            The list of pushes for the domain
+        :param account:
+            The account id
         """
-        response = self.client.get(f'/{account_id}/pushes', page=page, per_page=per_page)
-        return Response(response, DomainPush)
+        response = self.client.get(f"/{account}/pushes")
+        return Response(response, types.Push)
 
-    def accept_push(self, account_id, push_id, push_input):
+    def accept_push(self, account: int, push: int, input: types.AcceptPushInput):
         """
-        Accept a push for the target account
+        Accepts a push to the target account.
 
         See https://developer.dnsimple.com/v2/domains/pushes/#acceptPush
 
-        :param account_id: int
-            The account ID
-        :param push_id: int
-            The push ID
-        :param push_input: dnsimple.struct.domain_push.DomainPushInput
-            The data to send to accept the push
-
-        :return: dnsimple.Response
-            An empty response
+        :param account:
+            The account id
+        :param push:
+            The push id
         """
-        response = self.client.post(f'/{account_id}/pushes/{push_id}', data=push_input.to_json())
-        return Response(response)
+        response = self.client.post(f"/{account}/pushes/{push}")
+        return Response(
+            response,
+        )
 
-    def reject_push(self, account_id, push_id):
+    def reject_push(self, account: int, push: int):
         """
-        Reject a push for the target account
+        Rejects a push to the target account.
 
-        See: https://developer.dnsimple.com/v2/domains/pushes/#rejectPush
+        See https://developer.dnsimple.com/v2/domains/pushes/#rejectPush
 
-        :param account_id: int
-            The account ID
-        :param push_id: int
-            Then push ID
-
-        :return: dnsimple.Response
-            An empty response
+        :param account:
+            The account id
+        :param push:
+            The push id
         """
-        response = self.client.delete(f'/{account_id}/pushes/{push_id}')
-        return Response(response)
+        response = self.client.delete(f"/{account}/pushes/{push}")
+        return Response(
+            response,
+        )

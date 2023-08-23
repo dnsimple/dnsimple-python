@@ -1,213 +1,172 @@
+from dataclasses import dataclass
+from dataclasses import field
+from dataclasses_json import config
+from dataclasses_json import dataclass_json
 from dnsimple.response import Response
-from dnsimple.struct import Template, TemplateRecord
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Literal
+from typing import Union
+import dnsimple.struct as types
 
 
 class Templates(object):
     def __init__(self, client):
         self.client = client
 
-    def list_templates(self, account_id, sort=None, page=None, per_page=None):
+    def list_templates(self, account: int, *, sort=None):
         """
-        Lists the templates in the account
+        Lists the templates in the account.
 
         See https://developer.dnsimple.com/v2/templates/#listTemplates
 
-        :param account_id: int
+        :param account:
             The account id
-        :param sort: str
-            Comma separated key-value pairs: the name of a field and the order criteria (asc for ascending and desc for
-            descending).
-
-            Possible sort criteria:
-                - id: Sort templates by ID (i.e. 'id:asc')
-                - name: Sort templates by name (alphabetical order) (i.e. 'name:desc')
-                - sid: Sort templates by sid (i.e. 'sid:asc')
-        :param page: int
-            The page to return (default: 1)
-        :param per_page: int
-            The number of entries to return per page (default: 30, maximum: 100)
-
-        :return: dnsimple.Response
-            The templates in the account
         """
-        response = self.client.get(f'/{account_id}/templates', sort=sort, page=page, per_page=per_page)
-        return Response(response, Template)
+        response = self.client.get(f"/{account}/templates")
+        return Response(response, types.Template)
 
-    def create_template(self, account_id, template_attributes):
+    def create_template(self, account: int, input: types.CreateTemplateInput):
         """
-        Creates a template in the account
+        Creates a template.
 
         See https://developer.dnsimple.com/v2/templates/#createTemplate
 
-        :param account_id: int
+        :param account:
             The account id
-        :param template_attributes: dnsimple.struct.Template
-            The template attributes
-        :return: dnsimple.Response
-            The newly created template
         """
-        response = self.client.post(f'/{account_id}/templates', data=template_attributes.to_json())
-        return Response(response, Template)
+        response = self.client.post(f"/{account}/templates")
+        return Response(response, types.Template)
 
-    def get_template(self, account_id, template):
+    def get_template(self, account: int, template: str):
         """
-        Gets the template with the specified id or sid
+        Retrieves the details of an existing template.
 
         See https://developer.dnsimple.com/v2/templates/#getTemplate
 
-        :param account_id: int
+        :param account:
             The account id
-        :param template: int/str
-            The template sid or id
-
-        :return: dnsimple.Response
-            The template requested
+        :param template:
+            The template id or short name
         """
-        response = self.client.get(f'/{account_id}/templates/{template}')
-        return Response(response, Template)
+        response = self.client.get(f"/{account}/templates/{template}")
+        return Response(response, types.Template)
 
-    def update_template(self, account_id, template, template_attributes):
+    def update_template(
+        self, account: int, template: str, input: types.UpdateTemplateInput
+    ):
         """
-        Updates a template with the provided data
+        Updates the template details.
 
         See https://developer.dnsimple.com/v2/templates/#updateTemplate
 
-        :param account_id: int
+        :param account:
             The account id
-        :param template: int/str
-            The template id or sid
-        :param template_attributes: dnsimple.struct.Template
-            The template attributes to update the template with
-
-        :return: dnsimple.Response
-            The updated template
+        :param template:
+            The template id or short name
         """
-        response = self.client.patch(f'/{account_id}/templates/{template}', data=template_attributes.to_json())
-        return Response(response, Template)
+        response = self.client.patch(f"/{account}/templates/{template}")
+        return Response(response, types.Template)
 
-    def delete_template(self, account_id, template):
+    def delete_template(self, account: int, template: str):
         """
-        Deletes a template from the account
-
-        WARNING: This cannot be undone
+        Permanently deletes a template.
 
         See https://developer.dnsimple.com/v2/templates/#deleteTemplate
 
-        :param account_id: int
+        :param account:
             The account id
-        :param template: int/str
-            The template id or sid
-
-        :return: dnsimple.Response
-            An empty response
+        :param template:
+            The template id or short name
         """
-        response = self.client.delete(f'/{account_id}/templates/{template}')
-        return Response(response)
+        response = self.client.delete(f"/{account}/templates/{template}")
+        return Response(
+            response,
+        )
 
-    def list_template_records(self, account_id, template, sort=None, page=None, per_page=None):
+    def list_template_records(self, account: int, template: str, *, sort=None):
         """
-        Lists the records in the template
+        Lists the records for a template.
 
-        See https://developer.dnsimple.com/v2/templates/records/#listTemplateRecords
+        See https://developer.dnsimple.com/v2/templates/#listTemplateRecords
 
-        :param account_id: int
+        :param account:
             The account id
-        :param template: int/str
-            The template id or sid
-        :param sort: str
-            Comma separated key-value pairs: the name of a field and the order criteria (asc for ascending and desc for
-            descending).
-
-            Possible sort criteria:
-                - id: Sort template records by ID (i.e. 'id:asc')
-                - name: Sort template records by name (i.e. 'name:desc')
-                - content: Sort template records by content (i.e. 'content:asc')
-                - type: Sort template records by type (i.e. 'type:desc')
-        :param page: int
-            The page to return (default: 1)
-        :param per_page: int
-            The number of entries to return per page (default: 30, maximum: 100)
-
-        :return: dnsimple.Response
-            The list of template records
+        :param template:
+            The template id or short name
         """
-        response = self.client.get(f'/{account_id}/templates/{template}/records', sort=sort, page=page, per_page=per_page)
-        return Response(response, TemplateRecord)
+        response = self.client.get(f"/{account}/templates/{template}/records")
+        return Response(response, types.TemplateRecord)
 
-    def create_template_record(self, account_id, template, template_record_attributes):
+    def create_template_record(
+        self, account: int, template: str, input: types.CreateTemplateRecordInput
+    ):
         """
-        Creates a record in the template
+        Creates a new template record.
 
-        See https://developer.dnsimple.com/v2/templates/records/#createTemplateRecord
+        See https://developer.dnsimple.com/v2/templates/#createTemplateRecord
 
-        :param account_id: int
+        :param account:
             The account id
-        :param template: int/str
-            The template id or sid
-        :param template_record_attributes: dnsimple.struct.TemplateRecord
-            The template record attributes
-
-        :return: dnsimple.Response
-            The newly created template record
+        :param template:
+            The template id or short name
         """
-        response = self.client.post(f'/{account_id}/templates/{template}/records', data=template_record_attributes.to_json())
-        return Response(response, TemplateRecord)
+        response = self.client.post(f"/{account}/templates/{template}/records")
+        return Response(response, types.TemplateRecord)
 
-    def get_template_record(self, account_id, template, record_id):
+    def get_template_record(self, account: int, template: str, templaterecord: int):
         """
-        Gets a record from the template
+        Retrieves the details of an existing template record.
 
-        See https://developer.dnsimple.com/v2/templates/records/#getTemplateRecord
+        See https://developer.dnsimple.com/v2/templates/#getTemplateRecord
 
-        :param account_id: int
+        :param account:
             The account id
-        :param template: int/str
-            The template id or sid
-        :param record_id: int
+        :param template:
+            The template id or short name
+        :param templaterecord:
             The template record id
-
-        :return: dnsimple.Response
-            The template record
         """
-        response = self.client.get(f'/{account_id}/templates/{template}/records/{record_id}')
-        return Response(response, TemplateRecord)
+        response = self.client.get(
+            f"/{account}/templates/{template}/records/{templaterecord}"
+        )
+        return Response(response, types.TemplateRecord)
 
-    def delete_template_record(self, account_id, template, record_id):
+    def delete_template_record(self, account: int, template: str, templaterecord: int):
         """
-        Deletes a record from the template.
+        Permanently deletes a template record.
 
-        WARNING: this cannot be undone.
+        See https://developer.dnsimple.com/v2/templates/#deleteTemplateRecord
 
-        See https://developer.dnsimple.com/v2/templates/records/#deleteTemplateRecord
-
-        :param account_id: int
+        :param account:
             The account id
-        :param template: int/str
-            The template id or sid
-        :param record_id: int
+        :param template:
+            The template id or short name
+        :param templaterecord:
             The template record id
-
-        :return: dnsimple.Response
-            An empty response
         """
-        response = self.client.delete(f'/{account_id}/templates/{template}/records/{record_id}')
-        return Response(response)
+        response = self.client.delete(
+            f"/{account}/templates/{template}/records/{templaterecord}"
+        )
+        return Response(
+            response,
+        )
 
-    def apply_template(self, account_id, domain, template):
+    def apply_template(self, account: int, domain: str, template: str):
         """
-        Applies a template to the domain
+        Applies a template to a domain.
 
-        See https://developer.dnsimple.com/v2/templates/domains/#applyTemplateToDomain
+        See https://developer.dnsimple.com/v2/templates/#applyTemplateToDomain
 
-        :param account_id: int
+        :param account:
             The account id
-        :param domain: int/str
+        :param domain:
             The domain name or id
-        :param template: int/str
-            The template id or sid
-
-        :return: dnsimple.Response
-            An empty response
+        :param template:
+            The template id or short name
         """
-        response = self.client.post(f'/{account_id}/domains/{domain}/templates/{template}')
-        return Response(response)
+        response = self.client.post(f"/{account}/domains/{domain}/templates/{template}")
+        return Response(
+            response,
+        )

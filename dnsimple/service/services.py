@@ -1,102 +1,90 @@
+from dataclasses import dataclass
+from dataclasses import field
+from dataclasses_json import config
+from dataclasses_json import dataclass_json
 from dnsimple.response import Response
-from dnsimple.struct import Service
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Literal
+from typing import Union
+import dnsimple.struct as types
 
 
 class Services(object):
     def __init__(self, client):
         self.client = client
 
-    def list_services(self, sort=None, page=None, per_page=None):
+    def list_services(self, *, sort=None):
         """
-        List the available one-click services.
+        List all available one-click services.
 
         See https://developer.dnsimple.com/v2/services/#listServices
 
-        :param sort: str
-            Comma separated key-value pairs: the name of a field and the order criteria (asc for ascending and desc for
-            descending).
-
-            Possible sort criteria:
-                - id: Sort services by ID (i.e. 'id:asc')
-                - sid: Sort services by sid (i.e. 'sid:desc')
-        :param page: int
-            The page to return (default: 1)
-        :param per_page: int
-            The number of entries to return per page (default: 30, maximum: 100)
-
-        :return: dnsimple.Response
-            The list of services in DNSimple
         """
-        response = self.client.get('/services', sort=sort, page=page, per_page=per_page)
-        return Response(response, Service)
+        response = self.client.get(f"/services")
+        return Response(response, types.Service)
 
-    def get_service(self, service_id):
+    def get_service(self, service: str):
         """
-        Gets the service with specified ID
+        Retrieves the details of a one-click service.
 
         See https://developer.dnsimple.com/v2/services/#getService
 
-        :param service_id: int
-            The service id
-
-        :return: dnsimple.Response
-            The service requested
+        :param service:
+            The service sid or id
         """
-        response = self.client.get(f'/services/{service_id}')
-        return Response(response, Service)
+        response = self.client.get(f"/services/{service}")
+        return Response(response, types.Service)
 
-    def applied_services(self, account_id, domain, page=None, per_page=None):
+    def apply_service(self, account: int, domain: str):
         """
-        List services applied to a domain
+        List services applied to a domain.
 
-        See https://developer.dnsimple.com/v2/services/domains/#listDomainAppliedServices
+        See https://developer.dnsimple.com/v2/services/#listDomainAppliedServices
 
-        :param account_id: int
+        :param account:
             The account id
-        :param domain: int/str
+        :param domain:
             The domain name or id
-        :param page: int
-            The page to return (default: 1)
-        :param per_page: int
-            The number of entries to return per page (default: 30, maximum: 100)
-        :return: dnsimple.Response
-            The list of services applied to the domain
         """
-        response = self.client.get(f'/{account_id}/domains/{domain}/services', page=page, per_page=per_page)
-        return Response(response, Service)
+        response = self.client.get(f"/{account}/domains/{domain}/services")
+        return Response(response, types.Service)
 
-    def apply_service(self, account_id, domain, service):
+    def applied_services(
+        self, account: int, domain: str, service: str, input: types.AppliedServicesInput
+    ):
         """
-        Applies a service to a domain
+        Applies a service to a domain.
 
-        See https://developer.dnsimple.com/v2/services/domains/#applyServiceToDomain
+        See https://developer.dnsimple.com/v2/services/#applyServiceToDomain
 
-        :param account_id: int
+        :param account:
             The account id
-        :param domain: int/str
+        :param domain:
             The domain name or id
-        :param service: int/str
-            The service name or id
-        :return: dnsimple.Response
-            An empty response
+        :param service:
+            The service sid or id
         """
-        response = self.client.post(f'/{account_id}/domains/{domain}/services/{service}')
-        return Response(response)
+        response = self.client.post(f"/{account}/domains/{domain}/services/{service}")
+        return Response(
+            response,
+        )
 
-    def unapply_service(self, account_id, domain, service):
+    def unapply_service(self, account: int, domain: str, service: str):
         """
-        Un-applies a service from a domain
+        Unapplies a service from a domain.
 
-        See https://developer.dnsimple.com/v2/services/domains/#unapplyServiceFromDomain
+        See https://developer.dnsimple.com/v2/services/#unapplyServiceFromDomain
 
-        :param account_id: int
+        :param account:
             The account id
-        :param domain: int/str
+        :param domain:
             The domain name or id
-        :param service: int/str
-            The service name or id
-        :return: dnsimple.Response
-            An empty response
+        :param service:
+            The service sid or id
         """
-        response = self.client.delete(f'/{account_id}/domains/{domain}/services/{service}')
-        return Response(response)
+        response = self.client.delete(f"/{account}/domains/{domain}/services/{service}")
+        return Response(
+            response,
+        )

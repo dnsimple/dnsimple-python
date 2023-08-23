@@ -1,5 +1,6 @@
 from dnsimple import DNSimpleException
-from dnsimple.extra import attach_attributes_to, return_list_of
+from dnsimple.extra import attach_attributes_to
+from dnsimple.extra import return_list_of
 
 
 class Response(object):
@@ -36,24 +37,35 @@ class Response(object):
             When the server responds with an error code
         """
         if int(http_response.status_code) in range(400, 504):
-            if http_response.text != '':
-                message = http_response.json().get('message')
-                attribute_errors = http_response.json().get('errors')
-                raise DNSimpleException(message=message, attribute_errors=attribute_errors, http_response=http_response)
+            if http_response.text != "":
+                message = http_response.json().get("message")
+                attribute_errors = http_response.json().get("errors")
+                raise DNSimpleException(
+                    message=message,
+                    attribute_errors=attribute_errors,
+                    http_response=http_response,
+                )
 
             raise DNSimpleException(http_response=http_response)
 
         self.__class__.http_response = http_response
         self.__class__.headers = self.__class__.http_response.headers
-        self.__class__.rate_limit = int(self.__class__.headers['X-RateLimit-Limit'])
-        self.__class__.rate_limit_remaining = int(self.__class__.headers['X-RateLimit-Remaining'])
-        self.__class__.rate_limit_reset = int(self.__class__.headers['X-RateLimit-Reset'])
+        self.__class__.rate_limit = int(self.__class__.headers["X-RateLimit-Limit"])
+        self.__class__.rate_limit_remaining = int(
+            self.__class__.headers["X-RateLimit-Remaining"]
+        )
+        self.__class__.rate_limit_reset = int(
+            self.__class__.headers["X-RateLimit-Reset"]
+        )
 
         self.add_data(obj, http_response)
 
         if http_response.status_code != 204:
-            self.__class__.pagination = None if http_response.json().get('pagination') is None else Pagination(
-                http_response.json().get('pagination'))
+            self.__class__.pagination = (
+                None
+                if http_response.json().get("pagination") is None
+                else Pagination(http_response.json().get("pagination"))
+            )
 
     def add_data(self, obj, http_response):
         raw_json = None
@@ -62,12 +74,12 @@ class Response(object):
             raw_json = http_response.json()
         if obj is None:
             self.__class__.data = None
-        elif 'data' not in raw_json:
+        elif "data" not in raw_json:
             self.__class__.data = obj(raw_json)
-        elif type(raw_json.get('data')) is list:
-            self.__class__.data = return_list_of(obj, raw_json.get('data'))
+        elif type(raw_json.get("data")) is list:
+            self.__class__.data = return_list_of(obj, raw_json.get("data"))
         else:
-            self.__class__.data = obj(raw_json.get('data'))
+            self.__class__.data = obj(raw_json.get("data"))
 
 
 class Pagination(object):

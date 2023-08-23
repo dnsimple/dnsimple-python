@@ -1,16 +1,16 @@
-from urllib.parse import urljoin
-
-import urllib.parse
-
 from dnsimple.response import Response
 from dnsimple.struct import AccessToken
+from urllib.parse import urljoin
+import urllib.parse
 
 
 class Oauth(object):
     def __init__(self, client):
         self.client = client
 
-    def exchange_authorization_for_token(self, code, client_id, client_secret, state, redirect_uri):
+    def exchange_authorization_for_token(
+        self, code, client_id, client_secret, state, redirect_uri
+    ):
         """
         Exchange the short-lived authorization code for an access token
         you can use to authenticate your API calls.
@@ -32,10 +32,17 @@ class Oauth(object):
         :return: OAuthToken
             The OAuthToken object containing the access token to be used in subsequent calls to the API
         """
-        response = self.client.post('/oauth/access_token', data={'code': code, 'client_id': client_id,
-                                                                 'client_secret': client_secret, 'state': state,
-                                                                 'redirect_uri': redirect_uri,
-                                                                 'grant_type': 'authorization_code'})
+        response = self.client.post(
+            "/oauth/access_token",
+            data={
+                "code": code,
+                "client_id": client_id,
+                "client_secret": client_secret,
+                "state": state,
+                "redirect_uri": redirect_uri,
+                "grant_type": "authorization_code",
+            },
+        )
         return Response(response, AccessToken)
 
     def authorize_url(self, client_id, redirect_uri=None, state=None, scope=None):
@@ -53,17 +60,17 @@ class Oauth(object):
         :return: str
             The URL to redirect the user to authorize.
         """
-        base_url = f'{self.client.base_url}/oauth/authorize?client_id={client_id}&response_type=code'
+        base_url = f"{self.client.base_url}/oauth/authorize?client_id={client_id}&response_type=code"
         query_params = {}
 
         if redirect_uri is not None:
-            query_params['redirect_url'] = redirect_uri
+            query_params["redirect_url"] = redirect_uri
         if state is not None:
-            query_params['state'] = state
+            query_params["state"] = state
         if scope is not None:
-            query_params['scope'] = scope
+            query_params["scope"] = scope
 
         if query_params:
-            return f'{base_url}&{urllib.parse.urlencode(query_params)}'
+            return f"{base_url}&{urllib.parse.urlencode(query_params)}"
 
         return base_url

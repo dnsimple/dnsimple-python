@@ -1,5 +1,6 @@
 import warnings
 
+
 class DNSimpleException(Exception):
     """
     Root Exception raised for errors in the client.
@@ -26,8 +27,7 @@ class DNSimpleException(Exception):
 
     def __str__(self):
         """Custom error messages for exception"""
-        error_message = "({0})\n"\
-                        "Reason: {1}\n".format(self.status, self.reason)
+        error_message = "({0})\n" "Reason: {1}\n".format(self.status, self.reason)
 
         if self.response is not None:
             error_message += "HTTP response body: {0}\n".format(self.response.text)
@@ -37,5 +37,7 @@ class DNSimpleException(Exception):
     @property
     def errors(self):
         """Return the attribute errors"""
-        warnings.warn("DEPRECATION WARNING: errors is deprecated, use attribute_errors instead.")
+        warnings.warn(
+            "DEPRECATION WARNING: errors is deprecated, use attribute_errors instead."
+        )
         return self.attribute_errors

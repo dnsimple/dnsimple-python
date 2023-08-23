@@ -42,7 +42,7 @@ def prepare_params(sort=None, filter=None, params=None):
     if params is None:
         params = {}
     if sort is not None:
-        params = {**params, **{'sort': sort}}
+        params = {**params, **{"sort": sort}}
     if filter is not None:
         params = {**params, **filter}
     return params

@@ -6,5 +6,5 @@ class TokenAuthentication(AuthBase):
         self.token = token
 
     def __call__(self, r):
-        r.headers['Authorization'] = 'Bearer {token}'.format(token=self.token)
+        r.headers["Authorization"] = "Bearer {token}".format(token=self.token)
         return r

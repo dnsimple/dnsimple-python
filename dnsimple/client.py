@@ -1,13 +1,23 @@
-from urllib.parse import urljoin
-
-from requests import Request, Session
-from requests.auth import HTTPBasicAuth
-
 from dnsimple.extra import prepare_params
-from dnsimple.service import Accounts, Domains, Identity, Oauth, Zones, Registrar, Certificates, Tlds, Contacts, \
-    Services, Templates, VanityNameServers, Webhooks
+from dnsimple.service import Accounts
+from dnsimple.service import Certificates
+from dnsimple.service import Contacts
+from dnsimple.service import Domains
+from dnsimple.service import Identity
+from dnsimple.service import Oauth
+from dnsimple.service import Registrar
+from dnsimple.service import Services
+from dnsimple.service import Templates
+from dnsimple.service import Tlds
+from dnsimple.service import VanityNameServers
+from dnsimple.service import Webhooks
+from dnsimple.service import Zones
 from dnsimple.token_authentication import TokenAuthentication
 from dnsimple.version import version
+from requests import Request
+from requests import Session
+from requests.auth import HTTPBasicAuth
+from urllib.parse import urljoin
 
 
 class Client(object):
@@ -29,24 +39,27 @@ class Client(object):
     to https://developer.dnsimple.com
     """
 
-    __base_url = 'https://api.dnsimple.com'
+    __base_url = "https://api.dnsimple.com"
     """URL to the production environment"""
 
-    __sandbox_base_url = 'https://api.sandbox.dnsimple.com'
+    __sandbox_base_url = "https://api.sandbox.dnsimple.com"
     """URL to the sandbox environment"""
 
-    __api_version = 'v2'
+    __api_version = "v2"
     """Current API version"""
 
-    __user_agent = 'dnsimple-python/{version}'
+    __user_agent = "dnsimple-python/{version}"
     """Default user agent for the dnsimple-python service"""
 
-    def __init__(self,
-                 email=None, password=None,
-                 access_token=None,
-                 base_url=None,
-                 sandbox=False,
-                 user_agent=None):
+    def __init__(
+        self,
+        email=None,
+        password=None,
+        access_token=None,
+        base_url=None,
+        sandbox=False,
+        user_agent=None,
+    ):
         """
         Initializes the service.
 
@@ -77,9 +90,9 @@ class Client(object):
         self.__attach_services()
 
         self.headers = {
-            'User-Agent': self.user_agent,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            "User-Agent": self.user_agent,
+            "Accept": "application/json",
+            "Content-Type": "application/json",
         }
 
         if user_agent is not None:
@@ -111,9 +124,14 @@ class Client(object):
         """
         if params is None:
             params = {}
-        params = {**params, **{'page': page, 'per_page': per_page}}
-        request = Request(method='GET', url=self.versioned(path), headers=self.headers, auth=self.auth,
-                          params=prepare_params(sort, filter, params))
+        params = {**params, **{"page": page, "per_page": per_page}}
+        request = Request(
+            method="GET",
+            url=self.versioned(path),
+            headers=self.headers,
+            auth=self.auth,
+            params=prepare_params(sort, filter, params),
+        )
         response = self.session.send(request.prepare())
         return response
 
@@ -128,7 +146,13 @@ class Client(object):
         :return: requests.Response
             The response object for the request sent
         """
-        request = Request(method='POST', url=self.versioned(path), headers=self.headers, auth=self.auth, data=data)
+        request = Request(
+            method="POST",
+            url=self.versioned(path),
+            headers=self.headers,
+            auth=self.auth,
+            data=data,
+        )
         return self.session.send(request.prepare())
 
     def put(self, path, data=None):
@@ -142,7 +166,13 @@ class Client(object):
         :return: requests.Response
             The response object for the request sent
         """
-        request = Request(method='PUT', url=self.versioned(path), headers=self.headers, auth=self.auth, data=data)
+        request = Request(
+            method="PUT",
+            url=self.versioned(path),
+            headers=self.headers,
+            auth=self.auth,
+            data=data,
+        )
         return self.session.send(request.prepare())
 
     def patch(self, path, data=None):
@@ -156,7 +186,13 @@ class Client(object):
         :return: requests.Response
             The response object for the request sent
         """
-        request = Request(method='PATCH', url=self.versioned(path), headers=self.headers, auth=self.auth, data=data)
+        request = Request(
+            method="PATCH",
+            url=self.versioned(path),
+            headers=self.headers,
+            auth=self.auth,
+            data=data,
+        )
         return self.session.send(request.prepare())
 
     def delete(self, path):
@@ -168,7 +204,12 @@ class Client(object):
         :return: request.Response
             The response object for the request sent
         """
-        request = Request(method='DELETE', url=self.versioned(path), headers=self.headers, auth=self.auth).prepare()
+        request = Request(
+            method="DELETE",
+            url=self.versioned(path),
+            headers=self.headers,
+            auth=self.auth,
+        ).prepare()
         return self.session.send(request)
 
     def versioned(self, path):
@@ -182,7 +223,9 @@ class Client(object):
             The URL to the API including the version
         """
         versioned_base_url = urljoin(self.base_url, self.api_version)
-        return '{url}/{path}'.format(url=versioned_base_url, path=path.replace('/', '', 1))
+        return "{url}/{path}".format(
+            url=versioned_base_url, path=path.replace("/", "", 1)
+        )
 
     def __change_user_agent(self, custom_user_agent_name):
         """
@@ -194,10 +237,11 @@ class Client(object):
         :param custom_user_agent_name: str
             The custom name you want to use as your user agent
         """
-        self.user_agent = '{custom_name} {user_agent}'.format(
+        self.user_agent = "{custom_name} {user_agent}".format(
             custom_name=custom_user_agent_name,
-            user_agent=self.__user_agent.format(version=version))
-        self.headers['User-Agent'] = self.user_agent
+            user_agent=self.__user_agent.format(version=version),
+        )
+        self.headers["User-Agent"] = self.user_agent
 
     def __modify_default_base_url(self, base_url):
         if base_url is not None:

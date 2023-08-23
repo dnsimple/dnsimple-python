@@ -1,17 +1,20 @@
-import unittest
-
-import responses
-
 from dnsimple.struct import TemplateRecord
-from tests.helpers import DNSimpleMockResponse, DNSimpleTest
+from tests.helpers import DNSimpleMockResponse
+from tests.helpers import DNSimpleTest
+import responses
+import unittest
 
 
 class TemplateRecordsTest(DNSimpleTest):
     @responses.activate
     def test_list_template_records(self):
-        responses.add(DNSimpleMockResponse(method=responses.GET,
-                                           path='/1010/templates/296/records',
-                                           fixture_name='listTemplateRecords/success'))
+        responses.add(
+            DNSimpleMockResponse(
+                method=responses.GET,
+                path="/1010/templates/296/records",
+                fixture_name="listTemplateRecords/success",
+            )
+        )
         records = self.templates.list_template_records(1010, 296).data
 
         self.assertEqual(2, len(records))
@@ -21,25 +24,39 @@ class TemplateRecordsTest(DNSimpleTest):
 
     @responses.activate
     def test_list_template_records_supports_pagination(self):
-        responses.add(DNSimpleMockResponse(method=responses.GET,
-                                           path='/1010/templates/296/records?page=1&per_page=2',
-                                           fixture_name='listTemplateRecords/success'))
+        responses.add(
+            DNSimpleMockResponse(
+                method=responses.GET,
+                path="/1010/templates/296/records?page=1&per_page=2",
+                fixture_name="listTemplateRecords/success",
+            )
+        )
         self.templates.list_template_records(1010, 296, page=1, per_page=2)
 
     @responses.activate
     def test_list_template_records_supports_sorting(self):
-        responses.add(DNSimpleMockResponse(method=responses.GET,
-                                           path='/1010/templates/296/records?sort=id:asc,name:desc,content:asc,'
-                                                'type:desc',
-                                           fixture_name='listTemplateRecords/success'))
-        self.templates.list_template_records(1010, 296, sort='id:asc,name:desc,content:asc,type:desc')
+        responses.add(
+            DNSimpleMockResponse(
+                method=responses.GET,
+                path="/1010/templates/296/records?sort=id:asc,name:desc,content:asc,"
+                "type:desc",
+                fixture_name="listTemplateRecords/success",
+            )
+        )
+        self.templates.list_template_records(
+            1010, 296, sort="id:asc,name:desc,content:asc,type:desc"
+        )
 
     @responses.activate
     def test_create_template_record(self):
-        responses.add(DNSimpleMockResponse(method=responses.POST,
-                                           path='/1010/templates/268/records',
-                                           fixture_name='createTemplateRecord/created'))
-        record = TemplateRecord.new('', 'MX', 'mx.example.com', ttl=600, priority=10)
+        responses.add(
+            DNSimpleMockResponse(
+                method=responses.POST,
+                path="/1010/templates/268/records",
+                fixture_name="createTemplateRecord/created",
+            )
+        )
+        record = TemplateRecord.new("", "MX", "mx.example.com", ttl=600, priority=10)
 
         new_record = self.templates.create_template_record(1010, 268, record).data
 
@@ -51,9 +68,13 @@ class TemplateRecordsTest(DNSimpleTest):
 
     @responses.activate
     def test_get_template_record(self):
-        responses.add(DNSimpleMockResponse(method=responses.GET,
-                                           path='/1010/templates/268/records/301',
-                                           fixture_name='getTemplateRecord/success'))
+        responses.add(
+            DNSimpleMockResponse(
+                method=responses.GET,
+                path="/1010/templates/268/records/301",
+                fixture_name="getTemplateRecord/success",
+            )
+        )
         record = self.templates.get_template_record(1010, 268, 301).data
 
         self.assertEqual(301, record.id)
@@ -62,11 +83,15 @@ class TemplateRecordsTest(DNSimpleTest):
 
     @responses.activate
     def test_delete_template_record(self):
-        responses.add(DNSimpleMockResponse(method=responses.DELETE,
-                                           path='/1010/templates/268/records/301',
-                                           fixture_name='deleteTemplateRecord/success'))
+        responses.add(
+            DNSimpleMockResponse(
+                method=responses.DELETE,
+                path="/1010/templates/268/records/301",
+                fixture_name="deleteTemplateRecord/success",
+            )
+        )
         self.templates.delete_template_record(1010, 268, 301)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

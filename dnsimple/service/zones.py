@@ -1,266 +1,239 @@
+from dataclasses import dataclass
+from dataclasses import field
+from dataclasses_json import config
+from dataclasses_json import dataclass_json
 from dnsimple.response import Response
-from dnsimple.struct import Zone, ZoneDistribution, ZoneFile, ZoneRecord
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Literal
+from typing import Union
+import dnsimple.struct as types
 
 
 class Zones(object):
-    """
-    The Zones Service handles the zones endpoint of the DNSimple API.
-
-    See https://developer.dnsimple.com/v2/zones
-    """
-
     def __init__(self, client):
         self.client = client
 
-    def activate_dns(self, account_id, zone_name):
-        """
-        Activates DNS resolution for the zone in the account.
-
-        See https://developer.dnsimple.com/v2/zones/#activateZoneService
-
-        :param account_id: int
-            The account ID
-        :param zone_name:
-            The zone name
-
-        :return: dnsimple.Response
-        """
-        response = self.client.put(f'/{account_id}/zones/{zone_name}/activation')
-        return Response(response, Zone)
-
-    def deactivate_dns(self, account_id, zone_name):
-        """
-        Deactivates DNS resolution for the zone in the account.
-
-        See https://developer.dnsimple.com/v2/zones/#deactivateZoneService
-
-        :param account_id: int
-            The account ID
-        :param zone_name:
-            The zone name
-
-        :return: dnsimple.Response
-        """
-        response = self.client.delete(f'/{account_id}/zones/{zone_name}/activation')
-        return Response(response, Zone)
-
-    def list_zones(self, account_id, filter=None, sort=None, page=None, per_page=None):
+    def list_zones(self, account: int, *, name_like=None, sort=None):
         """
         Lists the zones in the account.
 
         See https://developer.dnsimple.com/v2/zones/#listZones
 
-        :param account_id: int
-            The account ID
-        :param sort: str
-            Comma separated key-value pairs: the name of a field and the order criteria (asc for ascending and desc for
-            descending).
-
-            Possible sort criteria:
-                - id: Sort zones by ID (i.e. 'id:asc')
-                - name: Sort zones by name (alphabetical order) (i.e. 'name:desc')
-        :param filter: dict
-            Makes it possible to ask only for the exact subset of data that you you’re looking for.
-
-            Possible filters:
-                - name_like: Only include zones containing given string (i.e. {'name_like': 'example.com'} )
-        :param page: int
-            The page to return (default: 1)
-        :param per_page: int
-            The number of entries to return per page (default: 30, maximum: 100)
-
-        :return: dnsimple.Response
-            The list of zones requested
+        :param account:
+            The account id
         """
-        response = self.client.get(f'/{account_id}/zones', filter=filter, sort=sort, page=page, per_page=per_page)
-        return Response(response, Zone)
+        response = self.client.get(f"/{account}/zones")
+        return Response(response, types.Zone)
 
-    def get_zone(self, account_id, zone):
+    def get_zone(self, account: int, zone: str):
         """
-        Gets a zone from the account
+        Retrieves the details of an existing zone.
 
         See https://developer.dnsimple.com/v2/zones/#getZone
 
-        :param account_id: int
-            The account ID
-        :param zone: str
+        :param account:
+            The account id
+        :param zone:
             The zone name
-
-        :return: dnsimple.Response
-            The zone requested
         """
-        response = self.client.get(f'/{account_id}/zones/{zone}')
-        return Response(response, Zone)
+        response = self.client.get(f"/{account}/zones/{zone}")
+        return Response(response, types.Zone)
 
-    def get_zone_file(self, account_id, zone):
+    def get_zone_file(self, account: int, zone: str):
         """
-        Gets a zone file from the account
+        Download the zonefile for an existing zone.
 
         See https://developer.dnsimple.com/v2/zones/#getZoneFile
 
-        :param account_id: int
-            The account ID
-        :param zone: str
+        :param account:
+            The account id
+        :param zone:
             The zone name
-
-        :return: dnsimple.Response
-            The zone file requested
         """
-        response = self.client.get(f'/{account_id}/zones/{zone}/file')
-        return Response(response, ZoneFile)
+        response = self.client.get(f"/{account}/zones/{zone}/file")
+        return Response(response, types.ZoneFile)
 
-    def check_zone_distribution(self, account_id, zone):
+    def check_zone_distribution(self, account: int, zone: str):
         """
-        Checks if a zone change is fully distributed to all DNSimple name servers across the globe.
-
-        WARNING: This feature can’t be tested in our Sandbox environment.
+        Checks if a zone is fully distributed to all our name servers across the globe.
 
         See https://developer.dnsimple.com/v2/zones/#checkZoneDistribution
 
-        :param account_id: int
-            The account ID
-        :param zone: str
+        :param account:
+            The account id
+        :param zone:
             The zone name
-
-        :return: dnsimple.Response
-            The zone distribution
         """
-        response = self.client.get(f'/{account_id}/zones/{zone}/distribution')
-        return Response(response, ZoneDistribution)
+        response = self.client.get(f"/{account}/zones/{zone}/distribution")
+        return Response(response, types.ZoneDistribution)
 
-    def list_records(self, account_id, zone, filter=None, sort=None, page=None, per_page=None):
+    def update_zone_ns_records(
+        self, account: int, zone: str, input: types.UpdateZoneNsRecordsInput
+    ):
         """
-        Lists the zone records in the account
+        Updates the zone's NS records
 
-        See https://developer.dnsimple.com/v2/zones/records/#listZoneRecords
+        See https://developer.dnsimple.com/v2/zones/#updateZoneNsRecords
 
-        :param account_id: int
-            The account ID
-        :param zone: str
+        :param account:
+            The account id
+        :param zone:
             The zone name
-        :param sort: str
-            Comma separated key-value pairs: the name of a field and the order criteria (asc for ascending and desc for
-            descending).
-
-            Possible sort criteria:
-                - id: Sort records by ID (i.e. 'id:asc')
-                - name: Sort records by name (i.e. 'name:desc')
-                - content: Sort records by content (i.e. 'content:asc')
-                - type: Sort records by type (i.e. 'type:asc')
-        :param filter: dict
-            Makes it possible to ask only for the exact subset of data that you you’re looking for.
-
-            Possible filters:
-                - name_like: Only include records where the name contains the given string (i.e.{'name_like':'example'})
-                - name: Only include records with name equal to the given string (i.e. {'name': 'example.com'})
-                - type: Only include records with the record type equal to the given string (i.e. {'type': 'SOA'})
-        :param page: int
-            The page to return (default: 1)
-        :param per_page: int
-            The number of entries to return per page (default: 30, maximum: 100)
-
-        :return: dnsimple.Response
-            The list of zone records in the account
         """
-        response = self.client.get(f'/{account_id}/zones/{zone}/records', filter=filter, sort=sort, page=page,
-                                   per_page=per_page)
-        return Response(response, ZoneRecord)
+        response = self.client.put(f"/{account}/zones/{zone}/ns_records")
+        return Response(response, types.ZoneRecord)
 
-    def create_record(self, account_id, zone, record):
+    def list_zone_records(
+        self,
+        account: int,
+        zone: str,
+        *,
+        name_like=None,
+        name=None,
+        type=None,
+        sort=None,
+    ):
         """
-        Create a record for the zone in the account
+        Lists the records for a zone.
 
-        See https://developer.dnsimple.com/v2/zones/records/#createZoneRecord
+        See https://developer.dnsimple.com/v2/zones/#listZoneRecords
 
-        :param account_id: int
-            The account ID
-        :param zone: str
+        :param account:
+            The account id
+        :param zone:
             The zone name
-        :param record: dnsimple.struct.ZoneRecordInput
-            The data to send to create the zone record
-
-        :return: dnsimple.Response
-            The newly created zone record
         """
-        response = self.client.post(f'/{account_id}/zones/{zone}/records', data=record.to_json())
-        return Response(response, ZoneRecord)
+        response = self.client.get(f"/{account}/zones/{zone}/records")
+        return Response(response, types.ZoneRecord)
 
-    def get_record(self, account_id, zone, record_id):
+    def create_zone_record(
+        self, account: int, zone: str, input: types.CreateZoneRecordInput
+    ):
         """
-        Gets a zone record from the account
+        Creates a new zone record.
 
-        See https://developer.dnsimple.com/v2/zones/records/#getZoneRecord
+        See https://developer.dnsimple.com/v2/zones/#createZoneRecord
 
-        :param account_id: int
-            The account ID
-        :param zone: str
+        :param account:
+            The account id
+        :param zone:
             The zone name
-        :param record_id: int
-            The record ID
-
-        :return: dnsimple.Response
-            The zone record requested
         """
-        response = self.client.get(f'/{account_id}/zones/{zone}/records/{record_id}')
-        return Response(response, ZoneRecord)
+        response = self.client.post(f"/{account}/zones/{zone}/records")
+        return Response(response, types.ZoneRecord)
 
-    def update_record(self, account_id, zone, record_id, record):
+    def get_zone_record(self, account: int, zone: str, zonerecord: int):
         """
-        Updates a zone record in the account.
+        Retrieves the details of an existing zone record.
 
-        See https://developer.dnsimple.com/v2/zones/records/#updateZoneRecord
+        See https://developer.dnsimple.com/v2/zones/#getZoneRecord
 
-        :param account_id: int
-            The account ID
-        :param zone: str
+        :param account:
+            The account id
+        :param zone:
             The zone name
-        :param record_id: int
-            The record ID
-        :param record: dnsimple.struct.ZoneRecordUpdateInput
-            The data to send to update the zone record
-        :return: dnsimple.Response
-            The updated zone record
+        :param zonerecord:
+            The zone record id
         """
-        response = self.client.patch(f'/{account_id}/zones/{zone}/records/{record_id}', data=record.to_json())
-        return Response(response, ZoneRecord)
+        response = self.client.get(f"/{account}/zones/{zone}/records/{zonerecord}")
+        return Response(response, types.ZoneRecord)
 
-    def delete_record(self, account_id, zone, record_id):
+    def update_zone_record(
+        self,
+        account: int,
+        zone: str,
+        zonerecord: int,
+        input: types.UpdateZoneRecordInput,
+    ):
         """
-        Deletes a zone record from the account.
+        Updates the zone record details.
 
-        WARNING: this cannot be undone.
+        See https://developer.dnsimple.com/v2/zones/#updateZoneRecord
 
-        See https://developer.dnsimple.com/v2/zones/records/#deleteZoneRecord
-
-        :param account_id: int
-            The account ID
-        :param zone: str
+        :param account:
+            The account id
+        :param zone:
             The zone name
-        :param record_id: int
-            The record ID
-        :return: dnsimple.Response
-            An empty response
+        :param zonerecord:
+            The zone record id
         """
-        response = self.client.delete(f'/{account_id}/zones/{zone}/records/{record_id}')
-        return Response(response)
+        response = self.client.patch(f"/{account}/zones/{zone}/records/{zonerecord}")
+        return Response(response, types.ZoneRecord)
 
-    def check_zone_record_distribution(self, account_id, zone, record_id):
+    def delete_zone_record(
+        self,
+        account: int,
+        zone: str,
+        zonerecord: int,
+        input: types.DeleteZoneRecordInput,
+    ):
         """
-        Checks if a zone record is fully distributed to all DNSimple name servers across the globe.
+        Permanently deletes a zone record.
 
-        WARNING: This feature can’t be tested in our Sandbox environment.
+        See https://developer.dnsimple.com/v2/zones/#deleteZoneRecord
 
-        See https://developer.dnsimple.com/v2/zones/records/#checkZoneRecordDistribution
-
-        :param account_id: int
-            The account ID
-        :param zone: str
+        :param account:
+            The account id
+        :param zone:
             The zone name
-        :param record_id: int
-            The record ID
-
-        :return: dnsimple.Response
-            The zone record distribution
+        :param zonerecord:
+            The zone record id
         """
-        response = self.client.get(f'/{account_id}/zones/{zone}/records/{record_id}/distribution')
-        return Response(response, ZoneDistribution)
+        response = self.client.delete(f"/{account}/zones/{zone}/records/{zonerecord}")
+        return Response(
+            response,
+        )
+
+    def check_zone_record_distribution(self, account: int, zone: str, zonerecord: int):
+        """
+        Checks if a zone record is fully distributed to all our name servers across the globe.
+
+        See https://developer.dnsimple.com/v2/zones/#checkZoneRecordDistribution
+
+        :param account:
+            The account id
+        :param zone:
+            The zone name
+        :param zonerecord:
+            The zone record id
+        """
+        response = self.client.get(
+            f"/{account}/zones/{zone}/records/{zonerecord}/distribution"
+        )
+        return Response(response, types.ZoneDistribution)
+
+    def activate_dns(self, account: int, zone: str):
+        """
+        Activate DNS services for the zone.
+
+        Under Solo and Teams plans, active zones are charged when renewing your subscription to
+        DNSimple
+
+        See https://developer.dnsimple.com/v2/zones/#activateZoneService
+
+        :param account:
+            The account id
+        :param zone:
+            The zone name
+        """
+        response = self.client.put(f"/{account}/zones/{zone}/activation")
+        return Response(response, types.Zone)
+
+    def deactivate_dns(self, account: int, zone: str):
+        """
+        Deactivates DNS services for the zone.
+
+        Under Solo and Teams plans, active zones are charged when renewing your subscription to
+        DNSimple
+
+        See https://developer.dnsimple.com/v2/zones/#deactivateZoneService
+
+        :param account:
+            The account id
+        :param zone:
+            The zone name
+        """
+        response = self.client.delete(f"/{account}/zones/{zone}/activation")
+        return Response(response, types.Zone)

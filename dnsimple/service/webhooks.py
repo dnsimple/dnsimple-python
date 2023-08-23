@@ -1,79 +1,70 @@
+from dataclasses import dataclass
+from dataclasses import field
+from dataclasses_json import config
+from dataclasses_json import dataclass_json
 from dnsimple.response import Response
-from dnsimple.struct import Webhook
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Literal
+from typing import Union
+import dnsimple.struct as types
 
 
 class Webhooks(object):
     def __init__(self, client):
         self.client = client
 
-    def list_webhooks(self, account_id, sort=None):
+    def list_webhooks(self, account: int, *, sort=None):
         """
-        List the webhooks in the account
+        List the webhooks in the account.
 
-        See https://developer.dnsimple.com/v2/webhooks/#listWebhooks
+        See https://developer.dnsimple.com/v2/webhooks/webhooks/#listWebhooks
 
-        :param account_id: int
+        :param account:
             The account id
-        :param sort: str
-            Comma separated key-value pairs: the name of a field and the order criteria (asc for ascending and desc for
-            descending).
-
-            Possible sort criteria:
-                - id: Sort webhooks by ID (i.e. 'id:asc')
-
-        :return: dnsimple.Response
-            The list of webhooks
         """
-        response = self.client.get(f'/{account_id}/webhooks', sort=sort)
-        return Response(response, Webhook)
+        response = self.client.get(f"/{account}/webhooks")
+        return Response(response, types.Webhook)
 
-    def create_webhook(self, account_id, webhook):
+    def create_webhook(self, account: int, input: types.CreateWebhookInput):
         """
-        Creates a webhook in the account
+        Registers a webhook endpoint.
 
-        See https://developer.dnsimple.com/v2/webhooks/#createWebhook
+        See https://developer.dnsimple.com/v2/webhooks/webhooks/#createWebhook
 
-        :param account_id: int
+        :param account:
             The account id
-        :param webhook: dnsimple.struct.Webhook
-            Then webhook attributes
-
-        :return: dnsimple.Response
-            The newly created webhook
         """
-        response = self.client.post(f'/{account_id}/webhooks', data=webhook.to_json())
-        return Response(response, Webhook)
+        response = self.client.post(f"/{account}/webhooks")
+        return Response(response, types.Webhook)
 
-    def get_webhook(self, account_id, webhook):
+    def get_webhook(self, account: int, webhook: int):
         """
-        Gets a webhook from the account
+        Retrieves the details of a registered webhook.
 
-        See https://developer.dnsimple.com/v2/webhooks/#getWebhook
+        See https://developer.dnsimple.com/v2/webhooks/webhooks/#getWebhook
 
-        :param account_id: int
+        :param account:
             The account id
-        :param webhook: int/str
-            The webhook id
-
-        :return: dnsimple.Response
-            The webhook
+        :param webhook:
+            The webhoook id
         """
-        response = self.client.get(f'/{account_id}/webhooks/{webhook}')
-        return Response(response, Webhook)
+        response = self.client.get(f"/{account}/webhooks/{webhook}")
+        return Response(response, types.Webhook)
 
-    def delete_webhook(self, account_id, webhook):
+    def delete_webhook(self, account: int, webhook: int):
         """
-        Deletes a webhook from the account
+        De-registers a webhook endpoint.
 
-        See https://developer.dnsimple.com/v2/webhooks/#deleteWebhook
+        See https://developer.dnsimple.com/v2/webhooks/webhooks/#deleteWebhook
 
-        :param account_id: int
+        :param account:
             The account id
-        :param webhook: int/str
-            The webhook id
-
-        :return: dnsimple.Response
-            An empty response
+        :param webhook:
+            The webhoook id
         """
-        response = self.client.delete(f'/{account_id}/webhooks/{webhook}')
-        return Response(response)
+        response = self.client.delete(f"/{account}/webhooks/{webhook}")
+        return Response(
+            response,
+        )
