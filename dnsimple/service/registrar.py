@@ -419,7 +419,7 @@ class Registrar(object):
         return Response(response, WhoisPrivacyRenewal)
 
 
-    def list_registrant_changes(self, account: int):
+    def list_registrant_changes(self, account: int, options=None):
         """
         List registrant changes in the account.
 
@@ -427,8 +427,10 @@ class Registrar(object):
 
         :param account:
             The account id
+        :param options:
+            Optional query parameters to filter and sort the results.
         """
-        response = self.client.get(f"/{account}/registrar/registrant_changes")
+        response = self.client.get(f"/{account}/registrar/registrant_changes", params=options)
         return Response(response, RegistrantChange)
 
     def create_registrant_change(
