@@ -4,6 +4,12 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 
 ## main
 
+## 2.11.0 (Unreleased)
+
+FEATURES:
+
+- NEW: Added `get_domain_transfer_lock`, `enable_domain_transfer_lock`, and `disable_domain_transfer_lock` APIs to manage domain transfer locks. (dnsimple/dnsimple-python#435)
+
 ## 2.10.1
 
 FEATURES:
