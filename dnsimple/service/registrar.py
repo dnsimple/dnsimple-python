@@ -3,7 +3,7 @@ import warnings
 
 from dnsimple.response import Response
 from dnsimple.struct import DomainCheck, DomainPremiumPrice, DomainRegistration, DomainTransfer, DomainRenewal, \
-    VanityNameServer, WhoisPrivacy, WhoisPrivacyRenewal, DomainPrice
+    VanityNameServer, WhoisPrivacy, WhoisPrivacyRenewal, DomainPrice, DomainTransferLock
 
 
 class Registrar(object):
@@ -418,3 +418,45 @@ class Registrar(object):
         """
         response = self.client.post(f'/{account_id}/registrar/domains/{domain}/whois_privacy')
         return Response(response, WhoisPrivacyRenewal)
+
+    def get_domain_transfer_lock(self, account: int, domain: str):
+        """
+        Gets the transfer lock status for a domain.
+
+        See https://developer.dnsimple.com/v2/registrar/#getDomainTransferLock
+
+        :param account:
+            The account id
+        :param domain:
+            The domain name or id
+        """
+        response = self.client.get(f'/{account}/registrar/domains/{domain}/transfer_lock')
+        return Response(response, DomainTransferLock)
+
+    def enable_domain_transfer_lock(self, account: int, domain: str):
+        """
+        Locks the domain to prevent unauthorized transfers.
+
+        See https://developer.dnsimple.com/v2/registrar/#enableDomainTransferLock
+
+        :param account:
+            The account id
+        :param domain:
+            The domain name or id
+        """
+        response = self.client.post(f'/{account}/registrar/domains/{domain}/transfer_lock')
+        return Response(response, DomainTransferLock)
+
+    def disable_domain_transfer_lock(self, account: int, domain: str):
+        """
+        Unlocks the domain to allow domain transfers.
+
+        See https://developer.dnsimple.com/v2/registrar/#disableDomainTransferLock
+
+        :param account:
+            The account id
+        :param domain:
+            The domain name or id
+        """
+        response = self.client.delete(f'/{account}/registrar/domains/{domain}/transfer_lock')
+        return Response(response, DomainTransferLock)
