@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Run markdownlint-cli
         uses: nosborn/github-action-markdown-cli@v3.3.0
         with:
@@ -36,7 +36,7 @@ jobs:
           - '3.10'
           - 'pypy-3.8'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
