@@ -2,7 +2,7 @@ import json
 import warnings
 
 from dnsimple.response import Response
-from dnsimple.struct import DomainCheck, DomainPremiumPrice, DomainRegistration, DomainTransfer, DomainRenewal, RegistrantChange, VanityNameServer, WhoisPrivacy, WhoisPrivacyRenewal, DomainPrice, CheckRegistrantChangeInput, CreateRegistrantChangeInput, RegistrantChangeCheck
+from dnsimple.struct import DomainCheck, DomainPremiumPrice, DomainRegistration, DomainTransfer, DomainRenewal, RegistrantChange, VanityNameServer, WhoisPrivacy, WhoisPrivacyRenewal, DomainPrice, CheckRegistrantChangeInput, CreateRegistrantChangeInput, RegistrantChangeCheck, DomainTransferLock
 
 
 class Registrar(object):
@@ -418,7 +418,6 @@ class Registrar(object):
         response = self.client.post(f'/{account_id}/registrar/domains/{domain}/whois_privacy')
         return Response(response, WhoisPrivacyRenewal)
 
-
     def list_registrant_changes(self, account: int, options=None):
         """
         List registrant changes in the account.
@@ -494,3 +493,45 @@ class Registrar(object):
         return Response(
             response,
         )
+
+    def get_domain_transfer_lock(self, account, domain):
+        """
+        Gets the transfer lock status for a domain.
+
+        See https://developer.dnsimple.com/v2/registrar/#getDomainTransferLock
+
+        :param account:
+            The account id
+        :param domain:
+            The domain name or id
+        """
+        response = self.client.get(f'/{account}/registrar/domains/{domain}/transfer_lock')
+        return Response(response, DomainTransferLock)
+
+    def enable_domain_transfer_lock(self, account, domain):
+        """
+        Locks the domain to prevent unauthorized transfers.
+
+        See https://developer.dnsimple.com/v2/registrar/#enableDomainTransferLock
+
+        :param account:
+            The account id
+        :param domain:
+            The domain name or id
+        """
+        response = self.client.post(f'/{account}/registrar/domains/{domain}/transfer_lock')
+        return Response(response, DomainTransferLock)
+
+    def disable_domain_transfer_lock(self, account, domain):
+        """
+        Unlocks the domain to allow domain transfers.
+
+        See https://developer.dnsimple.com/v2/registrar/#disableDomainTransferLock
+
+        :param account:
+            The account id
+        :param domain:
+            The domain name or id
+        """
+        response = self.client.delete(f'/{account}/registrar/domains/{domain}/transfer_lock')
+        return Response(response, DomainTransferLock)
