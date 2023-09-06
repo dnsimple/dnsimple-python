@@ -419,7 +419,7 @@ class Registrar(object):
         response = self.client.post(f'/{account_id}/registrar/domains/{domain}/whois_privacy')
         return Response(response, WhoisPrivacyRenewal)
 
-    def get_domain_transfer_lock(self, account: int, domain: str):
+    def get_domain_transfer_lock(self, account, domain):
         """
         Gets the transfer lock status for a domain.
 
@@ -433,7 +433,7 @@ class Registrar(object):
         response = self.client.get(f'/{account}/registrar/domains/{domain}/transfer_lock')
         return Response(response, DomainTransferLock)
 
-    def enable_domain_transfer_lock(self, account: int, domain: str):
+    def enable_domain_transfer_lock(self, account, domain):
         """
         Locks the domain to prevent unauthorized transfers.
 
@@ -447,7 +447,7 @@ class Registrar(object):
         response = self.client.post(f'/{account}/registrar/domains/{domain}/transfer_lock')
         return Response(response, DomainTransferLock)
 
-    def disable_domain_transfer_lock(self, account: int, domain: str):
+    def disable_domain_transfer_lock(self, account, domain):
         """
         Unlocks the domain to allow domain transfers.
 

@@ -3,7 +3,7 @@ from dnsimple.struct.struct import Struct
 
 @dataclass
 class DomainTransferLock(Struct):
-    enabled: bool
+    enabled = None
 
     def __init__(self, data):
         super().__init__(data)
