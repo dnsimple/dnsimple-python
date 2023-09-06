@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dnsimple"
-version = "2.10.1"
+version = "2.11.0"
 description = "DNSimple API service for python"
 authors = ["DNSimple External Integrations Team <support@dnsimple.com>"]
 license = "MIT"
