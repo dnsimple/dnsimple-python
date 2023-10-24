@@ -2,6 +2,7 @@ from dnsimple.struct.struct import Struct
 from dnsimple.struct.access_token import AccessToken
 from dnsimple.struct.account import Account
 from dnsimple.struct.certificate import Certificate, CertificateBundle, LetsencryptCertificateInput, LetsencryptCertificateRenewalInput, CertificatePurchase, CertificateRenewal
+from dnsimple.struct.charge import Charge, ChargeItem
 from dnsimple.struct.collaborator import Collaborator
 from dnsimple.struct.contact import Contact
 from dnsimple.struct.dnssec import Dnssec
