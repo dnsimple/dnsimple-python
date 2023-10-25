@@ -14,5 +14,5 @@ class Billing(object):
         :param account:
             The account id
         """
-        response = self.client.get(f'/{account}/billing/charges', params={ "start_date": start_date, "end_date": end_date, "sort": sort})
+        response = self.client.get(f'/{account}/billing/charges', params={"start_date": start_date, "end_date": end_date, "sort": sort})
         return Response(response, Charge)
