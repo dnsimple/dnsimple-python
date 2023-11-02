@@ -14,6 +14,10 @@ class Charge(Struct):
 
     def __init__(self, data):
         super().__init__(data)
+        if self.total_amount is not None:
+            self.total_amount = float(self.total_amount)
+        if self.balance_amount is not None:
+            self.balance_amount = float(self.balance_amount)
 
 
 @dataclass
@@ -26,3 +30,5 @@ class ChargeItem(Struct):
 
     def __init__(self, data):
         super().__init__(data)
+        if self.amount is not None:
+            self.amount = float(self.amount)

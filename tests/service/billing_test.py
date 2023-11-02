@@ -3,7 +3,7 @@ import unittest
 import responses
 
 from dnsimple import DNSimpleException
-from dnsimple.struct import Charge
+from dnsimple.struct import Charge, ChargeItem
 from tests.helpers import DNSimpleMockResponse, DNSimpleTest
 
 
@@ -42,3 +42,26 @@ class BillingTest(DNSimpleTest):
             assert False
         except DNSimpleException as e:
             self.assertEqual(e.message, "Permission Denied. Required Scope: billing:*:read")
+
+class TestCharge(unittest.TestCase):
+    def test_total_amount_parsing(self):
+        charge = Charge({'total_amount': '100.50', 'balance_amount': None})
+        self.assertEqual(charge.total_amount, 100.5)
+
+    def test_balance_amount_parsing(self):
+        charge = Charge({'total_amount': None, 'balance_amount': '50.25'})
+        self.assertEqual(charge.balance_amount, 50.25)
+
+    def test_none_values(self):
+        charge = Charge({'total_amount': None, 'balance_amount': None})
+        self.assertIsNone(charge.total_amount)
+        self.assertIsNone(charge.balance_amount)
+
+class TestChargeItem(unittest.TestCase):
+    def test_amount_parsing(self):
+        charge = ChargeItem({'amount': '100.50'})
+        self.assertEqual(charge.amount, 100.5)
+
+    def test_none_values(self):
+        charge = ChargeItem({'amount': None})
+        self.assertIsNone(charge.amount)
