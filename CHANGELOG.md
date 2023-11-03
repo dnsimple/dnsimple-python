@@ -8,7 +8,7 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 
 FEATURES:
 
-- NEW: Added `billing.list_charges` to list charges for the account https://developer.dnsimple.com/v2/billing-charges/. (dnsimple/dnsimple-python#437)
+- NEW: Added `billing.list_charges` to list charges for the account [learn more](https://developer.dnsimple.com/v2/billing-charges/). (dnsimple/dnsimple-python#437)
 
 ## 2.11.0
 
