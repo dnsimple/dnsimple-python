@@ -4,7 +4,7 @@ from requests import Request, Session
 from requests.auth import HTTPBasicAuth
 
 from dnsimple.extra import prepare_params
-from dnsimple.service import Accounts, Domains, Identity, Oauth, Zones, Registrar, Certificates, Tlds, Contacts, \
+from dnsimple.service import Accounts, Billing, Domains, Identity, Oauth, Zones, Registrar, Certificates, Tlds, Contacts, \
     Services, Templates, VanityNameServers, Webhooks
 from dnsimple.token_authentication import TokenAuthentication
 from dnsimple.version import version
@@ -211,6 +211,7 @@ class Client(object):
 
     def __attach_services(self):
         self.accounts = Accounts(self)
+        self.billing = Billing(self)
         self.certificates = Certificates(self)
         self.contacts = Contacts(self)
         self.domains = Domains(self)

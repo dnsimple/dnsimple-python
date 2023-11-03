@@ -34,6 +34,7 @@ class DNSimpleTest(unittest.TestCase):
     def setUp(self) -> None:
         self.client = Client(access_token='SomeMagicToken', sandbox=True)
         self.accounts = self.client.accounts
+        self.billing = self.client.billing
         self.certificates = self.client.certificates
         self.contacts = self.client.contacts
         self.domains = self.client.domains

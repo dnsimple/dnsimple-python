@@ -1,4 +1,5 @@
 from dnsimple.service.accounts import Accounts
+from dnsimple.service.billing import Billing
 from dnsimple.service.certificates import Certificates
 from dnsimple.service.contacts import Contacts
 from dnsimple.service.domains import Domains
