@@ -19,6 +19,12 @@ class Zone(Struct):
     """The zone name"""
     reverse = None
     """True if the zone is a reverse zone"""
+    secondary = None
+    """True if the zone is a secondary zone"""
+    last_transferred_at = None
+    """When the zone was last transferred"""
+    active = None
+    """True if the zone is active"""
     created_at = None
     """When the zone was created in DNSimple"""
     updated_at = None
