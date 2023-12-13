@@ -19,6 +19,7 @@ class ZonesTest(DNSimpleTest):
         self.assertEqual(1010, zone.account_id)
         self.assertEqual('example.com', zone.name)
         self.assertFalse(zone.reverse)
+        self.assertTrue(zone.active)
         self.assertEqual('2015-04-23T07:40:03Z', zone.created_at)
         self.assertEqual('2015-04-23T07:40:03Z', zone.updated_at)
 
@@ -33,6 +34,7 @@ class ZonesTest(DNSimpleTest):
         self.assertEqual(1010, zone.account_id)
         self.assertEqual('example.com', zone.name)
         self.assertFalse(zone.reverse)
+        self.assertFalse(zone.active)
         self.assertEqual('2015-04-23T07:40:03Z', zone.created_at)
         self.assertEqual('2015-04-23T07:40:03Z', zone.updated_at)
 
@@ -77,6 +79,9 @@ class ZonesTest(DNSimpleTest):
         self.assertEqual(1010, zone.account_id)
         self.assertEqual('example-alpha.com', zone.name)
         self.assertFalse(zone.reverse)
+        self.assertFalse(zone.secondary)
+        self.assertEqual(None, zone.last_transferred_at)
+        self.assertTrue(zone.active)
         self.assertEqual('2015-04-23T07:40:03Z', zone.created_at)
         self.assertEqual('2015-04-23T07:40:03Z', zone.updated_at)
 
