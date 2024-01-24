@@ -3,6 +3,7 @@ from dnsimple.service.billing import Billing
 from dnsimple.service.certificates import Certificates
 from dnsimple.service.contacts import Contacts
 from dnsimple.service.domains import Domains
+from dnsimple.service.dns_analytics import DnsAnalytics
 from dnsimple.service.identity import Identity
 from dnsimple.service.oauth import Oauth
 from dnsimple.service.registrar import Registrar

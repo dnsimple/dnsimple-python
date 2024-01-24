@@ -1,5 +1,5 @@
 from dnsimple import DNSimpleException
-from dnsimple.extra import attach_attributes_to, return_list_of
+from dnsimple.extra import attach_attributes_to, return_list_of, return_list_with_headers_of
 
 
 class Response(object):
@@ -65,6 +65,8 @@ class Response(object):
             self.__class__.data = None
         elif 'data' not in raw_json:
             self.__class__.data = obj(raw_json)
+        elif type(raw_json.get('headers')) is list:
+            self.__class__.data = return_list_with_headers_of(obj, raw_json.get('data'), raw_json.get('headers'))
         elif type(raw_json.get('data')) is list:
             self.__class__.data = return_list_of(obj, raw_json.get('data'))
         else:

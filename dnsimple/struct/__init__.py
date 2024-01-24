@@ -16,6 +16,7 @@ from dnsimple.struct.domain_renewal import DomainRenewal, DomainRenewRequest
 from dnsimple.struct.domain_transfer import DomainTransfer, DomainTransferRequest
 from dnsimple.struct.domain_transfer_lock import DomainTransferLock
 from dnsimple.struct.domain_push import DomainPush
+from dnsimple.struct.dns_analytics import DnsAnalytics
 from dnsimple.struct.email_forward import EmailForward, EmailForwardInput
 from dnsimple.struct.registrant import RegistrantChange, CheckRegistrantChangeInput, CreateRegistrantChangeInput, RegistrantChangeCheck
 from dnsimple.struct.service import Service
