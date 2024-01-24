@@ -32,7 +32,8 @@ class DnsAnalytics(object):
             Makes it change the shape of the obtained results
 
             Possible params:
-                - groupings: Group results by the provided list of attributes separated by a comma. Possible attributes are: date, zone. (i.e. {'groupings': 'date,zone'} )
+                - groupings: Group results by the provided list of attributes separated by a comma. Possible attributes
+                             are: date, zone. (i.e. {'groupings': 'date,zone'} )
         :param sort: str
             Comma separated key-value pairs: the name of a field and the order criteria (asc for ascending and desc for
             descending).
