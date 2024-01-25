@@ -65,11 +65,11 @@ class Response(object):
             self.__class__.data = None
         elif 'data' not in raw_json:
             self.__class__.data = obj(raw_json)
-        elif type(raw_json.get('data').get('rows')) is list and type(raw_json.get('data').get('headers')) is list:
-            self.__class__.data = return_list_with_headers_of(obj, raw_json.get('data').get('rows'),
-                                                              raw_json.get('data').get('headers'))
         elif type(raw_json.get('data')) is list:
             self.__class__.data = return_list_of(obj, raw_json.get('data'))
+        elif type(raw_json.get('data')) is dict and type(raw_json.get('data').get('rows')) is list and type(raw_json.get('data').get('headers')) is list:
+            self.__class__.data = return_list_with_headers_of(obj, raw_json.get('data').get('rows'),
+                                                              raw_json.get('data').get('headers'))
         else:
             self.__class__.data = obj(raw_json.get('data'))
 
