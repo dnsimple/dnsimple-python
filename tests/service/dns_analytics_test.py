@@ -16,6 +16,8 @@ class DnsAnalyticsTest(DNSimpleTest):
         response = client.dns_analytics.query(1)
         self.assertEqual(12, len(response.data))
         self.assertEqual('2023-12-08', response.data[0].date)
+        self.assertEqual('bar.com', response.data[0].zone_name)
+        self.assertEqual(1200, response.data[0].volume)
 
     @responses.activate
     def test_supports_filtering(self):

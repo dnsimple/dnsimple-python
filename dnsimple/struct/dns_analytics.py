@@ -13,7 +13,7 @@ class DnsAnalytics(Struct):
 
     volume = None
     """The volume"""
-    zone = None
+    zone_name = None
     """The zone name"""
     date = None
     """The date"""
