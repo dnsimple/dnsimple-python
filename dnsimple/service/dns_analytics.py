@@ -33,14 +33,14 @@ class DnsAnalytics(object):
 
             Possible params:
                 - groupings: Group results by the provided list of attributes separated by a comma. Possible attributes
-                             are: date, zone. (i.e. {'groupings': 'date,zone'} )
+                             are: date, zone_name. (i.e. {'groupings': 'date,zone_name'} )
         :param sort: str
             Comma separated key-value pairs: the name of a field and the order criteria (asc for ascending and desc for
             descending).
 
             Possible sort criteria:
                 - date: Sort results by date (i.e. 'date:asc')
-                - zone: Sort results by zone name (alphabetical order) (i.e. 'zone:desc')
+                - zone_name: Sort results by zone name (alphabetical order) (i.e. 'zone_name:desc')
                 - volume: Sort results by volume (i.e. 'volume:asc')
         :param page: int
             The page to return (default: 1)

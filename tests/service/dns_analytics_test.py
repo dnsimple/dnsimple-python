@@ -34,9 +34,9 @@ class DnsAnalyticsTest(DNSimpleTest):
                                            path='/1/dns_analytics',
                                            fixture_name='dnsAnalytics/success'))
         client = Client(email='tester@example.com', password='secret', base_url='https://api.sandbox.dnsimple.com')
-        client.dns_analytics.query(1, sort="date:desc,zone:desc")
+        client.dns_analytics.query(1, sort="date:desc,zone_name:desc")
         self.assertEqual(len(responses.calls), 1)
-        self.assertEqual(responses.calls[0].request.path_url, '/v2/1/dns_analytics?sort=date%3Adesc%2Czone%3Adesc')
+        self.assertEqual(responses.calls[0].request.path_url, '/v2/1/dns_analytics?sort=date%3Adesc%2Czone_name%3Adesc')
 
     @responses.activate
     def test_supports_grouping(self):
@@ -44,9 +44,9 @@ class DnsAnalyticsTest(DNSimpleTest):
                                            path='/1/dns_analytics',
                                            fixture_name='dnsAnalytics/success'))
         client = Client(email='tester@example.com', password='secret', base_url='https://api.sandbox.dnsimple.com')
-        client.dns_analytics.query(1, params={'groupings': "date,zone"})
+        client.dns_analytics.query(1, params={'groupings': "date,zone_name"})
         self.assertEqual(len(responses.calls), 1)
-        self.assertEqual(responses.calls[0].request.path_url, '/v2/1/dns_analytics?groupings=date%2Czone')
+        self.assertEqual(responses.calls[0].request.path_url, '/v2/1/dns_analytics?groupings=date%2Czone_name')
 
     @responses.activate
     def test_supports_pagination(self):
