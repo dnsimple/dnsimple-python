@@ -12,20 +12,20 @@ def return_list_of(cls, data):
     return [cls(x) for x in data]
 
 
-def return_list_with_headers_of(cls, data, headers):
+def return_list_with_headers_of(cls, rows, headers):
     """
     Returns a list of instances of the class type found in the response.
 
     :param cls: class
         The class type we want to instantiate
-    :param data: list
-        The data containing the list of values we want to return as objects
+    :param rows: list
+        The rows of with values we want to return as objects
     :param headers: list
-        The data containing the attribute names of each value array
+        The name of the attributes in order expected in each row
     :return:
         A list of objects of the type specified found in the response
     """
-    return [cls(dict(zip(headers, x))) for x in data]
+    return [cls(dict(zip(headers, row))) for row in rows]
 
 
 def attach_attributes_to(obj: object, data: object) -> object:
