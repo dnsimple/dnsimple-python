@@ -1,7 +1,6 @@
 import unittest
 
 import responses
-import urllib.parse
 
 from dnsimple.client import Client
 from tests.helpers import DNSimpleMockResponse, DNSimpleTest
@@ -37,8 +36,7 @@ class DnsAnalyticsTest(DNSimpleTest):
         client = Client(email='tester@example.com', password='secret', base_url='https://api.sandbox.dnsimple.com')
         client.dns_analytics.query(1, sort="date:desc,zone:desc")
         self.assertEqual(len(responses.calls), 1)
-        self.assertEqual(responses.calls[0].request.path_url,
-                         f'/v2/1/dns_analytics?sort={urllib.parse.quote_plus('date:desc,zone:desc')}')
+        self.assertEqual(responses.calls[0].request.path_url, '/v2/1/dns_analytics?sort=date%3Adesc%2Czone%3Adesc')
 
     @responses.activate
     def test_supports_grouping(self):
@@ -48,8 +46,7 @@ class DnsAnalyticsTest(DNSimpleTest):
         client = Client(email='tester@example.com', password='secret', base_url='https://api.sandbox.dnsimple.com')
         client.dns_analytics.query(1, params={'groupings': "date,zone"})
         self.assertEqual(len(responses.calls), 1)
-        self.assertEqual(responses.calls[0].request.path_url,
-                         f'/v2/1/dns_analytics?groupings={urllib.parse.quote_plus('date,zone')}')
+        self.assertEqual(responses.calls[0].request.path_url, '/v2/1/dns_analytics?groupings=date%2Czone')
 
     @responses.activate
     def test_supports_pagination(self):
@@ -59,9 +56,7 @@ class DnsAnalyticsTest(DNSimpleTest):
         client = Client(email='tester@example.com', password='secret', base_url='https://api.sandbox.dnsimple.com')
         client.dns_analytics.query(1, page=33, per_page=200)
         self.assertEqual(len(responses.calls), 1)
-        self.assertEqual(responses.calls[0].request.path_url,
-                         f'/v2/1/dns_analytics?page=33&per_page=200')
+        self.assertEqual(responses.calls[0].request.path_url, '/v2/1/dns_analytics?page=33&per_page=200')
 
-
-if __name__ == '__main__':
-    unittest.main()
+        if __name__ == '__main__':
+            unittest.main()
