@@ -45,7 +45,7 @@ class DnsAnalytics(object):
         :param page: int
             The page to return (default: 1)
         :param per_page: int
-            The number of entries to return per page (default: 30, maximum: 100)
+            The number of entries to return per page (default: 1000, maximum: 10000)
 
         :return: dnsimple.Response
             A list of domains
