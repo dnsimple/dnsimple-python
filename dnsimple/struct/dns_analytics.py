@@ -8,7 +8,7 @@ class DnsAnalytics(Struct):
     """
     Represents DNS Analytics information.
 
-    See https://developer.dnsimple.com/v2/dns_analytics/
+    See https://developer.dnsimple.com/v2/dns-analytics/
     """
 
     volume = None

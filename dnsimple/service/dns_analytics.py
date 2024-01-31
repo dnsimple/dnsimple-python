@@ -6,7 +6,7 @@ class DnsAnalytics(object):
     """
     The DnsAnalytics Service handles the dns_analitycs endpoint of the DNSimple API.
 
-    See http://developer.dnsimple.com/v2/dns_analytics
+    See http://developer.dnsimple.com/v2/dns-analytics
     """
 
     def __init__(self, client):
@@ -16,7 +16,7 @@ class DnsAnalytics(object):
         """
         Retrieves the DNS analytics of the provided account.
 
-        See https://developer.dnsimple.com/v2/dns_analytics/#query
+        See https://developer.dnsimple.com/v2/dns-analytics/#query
 
         :param account_id: int
             The account ID
