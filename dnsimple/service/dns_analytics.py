@@ -24,8 +24,8 @@ class DnsAnalytics(object):
             Makes it possible to ask only for the exact subset of data that you’re looking for.
 
             Possible filters:
-                - date_from: Only include results starting from the provided date in ISO8601 format. (i.e. {'date_from': '2024-02-01'} )
-                - date_to: Only include results up to the provided date in ISO8601 format (i.e. {'date_to': '2024-03-01'} )
+                - start_date: Only include results starting from the provided date in ISO8601 format. (i.e. {'start_date': '2024-02-01'} )
+                - end_date: Only include results up to the provided date in ISO8601 format (i.e. {'end_date': '2024-03-01'} )
 
             These filters are optional and should be used together.
         :param params: dict
