@@ -38,6 +38,7 @@ class DNSimpleTest(unittest.TestCase):
         self.certificates = self.client.certificates
         self.contacts = self.client.contacts
         self.domains = self.client.domains
+        self.dns_analytics = self.client.dns_analytics
         self.identity = self.client.identity
         self.oauth = self.client.oauth
         self.registrar = self.client.registrar
