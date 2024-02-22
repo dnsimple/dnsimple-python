@@ -2,7 +2,7 @@ import json
 import warnings
 
 from dnsimple.response import Response
-from dnsimple.struct import DomainCheck, DomainPremiumPrice, DomainRegistration, DomainTransfer, DomainRenewal, RegistrantChange, VanityNameServer, WhoisPrivacy, WhoisPrivacyRenewal, DomainPrice, CheckRegistrantChangeInput, CreateRegistrantChangeInput, RegistrantChangeCheck, DomainTransferLock
+from dnsimple.struct import DomainCheck, DomainPremiumPrice, DomainRegistration, DomainTransfer, DomainRenewal, DomainRestore, RegistrantChange, VanityNameServer, WhoisPrivacy, WhoisPrivacyRenewal, DomainPrice, CheckRegistrantChangeInput, CreateRegistrantChangeInput, RegistrantChangeCheck, DomainTransferLock
 
 
 class Registrar(object):
@@ -535,3 +535,44 @@ class Registrar(object):
         """
         response = self.client.delete(f'/{account}/registrar/domains/{domain}/transfer_lock')
         return Response(response, DomainTransferLock)
+
+    def restore_domain(self, account_id, domain, request):
+        """
+        Restores an expired domain name registered with DNSimple.
+
+        Your account must be active for this command to complete successfully. You will be automatically charged the
+        restore fee upon successful renewal, so please be careful with this command.
+
+        See https://developer.dnsimple.com/v2/registrar/#restoreDomain
+
+        :param account_id: int
+            The account ID
+        :param domain: str
+            The domain name
+        :param request: dnsimple.struct.DomainRestoreRequest
+            The restore options
+
+        :return: dnsimple.Request
+            The domain restore
+        """
+        response = self.client.post(f'/{account_id}/registrar/domains/{domain}/restores', request.to_json())
+        return Response(response, DomainRestore)
+
+    def get_domain_restore(self, account_id, domain, domain_restore):
+        """
+        Get the details of an existing domain restore.
+
+        https://developer.dnsimple.com/v2/registrar/#getDomainRestore
+
+        :param account_id: int
+            The account ID
+        :param domain: str
+            The domain name
+        :param domain_restore: int
+            The domain restore ID
+
+        :return: dnsimple.Response
+            The domain restore
+        """
+        response = self.client.get(f'/{account_id}/registrar/domains/{domain}/restores/{domain_restore}')
+        return Response(response, DomainRestore)

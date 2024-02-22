@@ -3,7 +3,7 @@ import unittest
 import responses
 
 from dnsimple import DNSimpleException
-from dnsimple.struct import DomainPremiumPriceOptions, DomainTransferRequest, DomainRenewRequest
+from dnsimple.struct import DomainPremiumPriceOptions, DomainTransferRequest, DomainRenewRequest, DomainRestoreRequest
 from dnsimple.struct.domain_registration import DomainRegistrationRequest
 from tests.helpers import DNSimpleMockResponse, DNSimpleTest
 
@@ -205,6 +205,31 @@ class RegistrarTest(DNSimpleTest):
                                            fixture_name='authorizeDomainTransferOut/success'))
         self.registrar.transfer_domain_out(1010, 'example.com')
 
+    @responses.activate
+    def test_restore_domain(self):
+        responses.add(DNSimpleMockResponse(method=responses.POST,
+                                           path='/1010/registrar/domains/ruby.codes/restores',
+                                           fixture_name='restoreDomain/success'))
+        domain_restore = self.registrar.restore_domain(1010, 'ruby.codes', DomainRestoreRequest()).data
+
+        self.assertEqual(1, domain_restore.id)
+        self.assertEqual(999, domain_restore.domain_id)
+        self.assertEqual('new', domain_restore.state)
+        self.assertEqual('2016-12-09T19:46:45Z', domain_restore.created_at)
+        self.assertEqual('2016-12-09T19:46:45Z', domain_restore.updated_at)
+
+    @responses.activate
+    def test_get_domain_restore(self):
+        responses.add(DNSimpleMockResponse(method=responses.GET,
+                                           path='/1010/registrar/domains/bingo.pizza/restores/1',
+                                           fixture_name='getDomainRestore/success'))
+        domain_restore = self.registrar.get_domain_restore(1010, 'bingo.pizza', 1).data
+
+        self.assertEqual(domain_restore.id, 1)
+        self.assertEqual(domain_restore.domain_id, 999)
+        self.assertEqual(domain_restore.state, "restored")
+        self.assertEqual(domain_restore.created_at, "2016-12-09T19:46:45Z")
+        self.assertEqual(domain_restore.updated_at, "2016-12-12T19:46:45Z")
 
 if __name__ == '__main__':
     unittest.main()
