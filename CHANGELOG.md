@@ -4,6 +4,10 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 
 ## main
 
+## 2.15.0
+
+- NEW: Added `get_domain_restore`, `restore_domain` APIs to restore domains. (dnsimple/dnsimple-python#447)
+
 ## 2.14.0
 
 - NEW: Added `DnsAnalytics.query` to query and pull data from the DNS Analytics API endpoint(dnsimple/dnsimple-python#445)
