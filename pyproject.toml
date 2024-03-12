@@ -16,7 +16,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.12"
 requests = "^2.28.2"
 omitempty = "^0.1.1"
 
