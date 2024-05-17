@@ -28,6 +28,7 @@ class EmailForward(Struct):
 
 @dataclass
 class EmailForwardInput(object):
-    def __init__(self, email_from, email_to):
-        self.email_from = email_from
-        self.email_to = email_to
+    def __init__(self, alias_name, destination_email):
+        self.alias_name = alias_name
+        self.destination_email = destination_email
+
