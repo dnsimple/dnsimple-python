@@ -13,6 +13,8 @@ class EmailForward(Struct):
     """The "local part" of the originating email address. Anything to the left of the @ symbol"""
     email_to = None
     """The full email address to forward to"""
+    alias_email = None
+    destination_email = None
     created_at = None
     """When the email forward was created in DNSimple"""
     updated_at = None
