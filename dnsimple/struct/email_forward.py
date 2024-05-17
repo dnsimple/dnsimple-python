@@ -10,9 +10,9 @@ class EmailForward(Struct):
     domain_id = None
     """The associated domain ID"""
     email_from = None
-    """The "local part" of the originating email address. Anything to the left of the @ symbol"""
+    """DEPRECATED: The "local part" of the originating email address. Anything to the left of the @ symbol"""
     email_to = None
-    """The full email address to forward to"""
+    """DEPRECATED: The full email address to forward to"""
     alias_email = None
     destination_email = None
     created_at = None
@@ -22,8 +22,8 @@ class EmailForward(Struct):
 
     def __init__(self, data):
         super().__init__(data)
-        setattr(self, 'email_from', data['from'])
-        setattr(self, 'email_to', self.to)
+        setattr(self, 'email_from', data['alias_email'])
+        setattr(self, 'email_to', data['destination_email'])
 
 
 @dataclass
