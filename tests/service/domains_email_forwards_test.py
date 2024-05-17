@@ -15,7 +15,7 @@ class DomainsEmailForwardsTest(DNSimpleTest):
                                            fixture_name='listEmailForwards/success'))
         email_forwards = self.domains.list_email_forwards(1010, 'example.com').data
 
-        self.assertEqual(2, len(email_forwards))
+        self.assertEqual(1, len(email_forwards))
         self.assertIsInstance(email_forwards[0], EmailForward)
         self.assertEqual('.*@a-domain.com', email_forwards[0].email_from)
 
