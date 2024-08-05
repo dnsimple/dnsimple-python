@@ -16,7 +16,7 @@ class DnsAnalytics(object):
         """
         Retrieves the DNS analytics of the provided account.
 
-        See https://developer.dnsimple.com/v2/dns-analytics/#query
+        See https://developer.dnsimple.com/v2/dns-analytics/#queryDnsAnalytics
 
         :param account_id: int
             The account ID
