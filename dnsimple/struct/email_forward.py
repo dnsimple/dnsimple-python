@@ -15,6 +15,7 @@ class EmailForward(Struct):
     """DEPRECATED: The full email address to forward to"""
     alias_email = None
     destination_email = None
+    active = None
     created_at = None
     """When the email forward was created in DNSimple"""
     updated_at = None
