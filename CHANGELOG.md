@@ -8,6 +8,7 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 - CHANGED: Deprecated `email_from` and `email_to` fields in `EmailForward`
 - CHANGED: Aligned `EmailForwardInput` constructor param names with current endpoint definition
 - CHANGED: `DomainCollaborators` have been deprecated and will be removed in the next major version. Please use our Domain Access Control feature.
+- NEW: Add support for python 3.13
 
 ## 3.0.0
 
