@@ -1,4 +1,5 @@
 import json
+import warnings
 
 from dnsimple.response import Response
 from dnsimple.struct import Domain, Dnssec, Collaborator, DelegationSignerRecord, EmailForward, DomainPush
@@ -111,6 +112,7 @@ class Domains(object):
         :return: dnsimple.Response
             A list of collaborators for the domain in the account
         """
+        warnings.warn("DEPRECATION WARNING: `DomainCollaborators` have been deprecated and will be removed in the next major version. Please use our Domain Access Control feature.")
         response = self.client.get(f'/{account_id}/domains/{domain}/collaborators')
         return Response(response, Collaborator)
 
@@ -138,6 +140,7 @@ class Domains(object):
         :return: dnsimple.Response
             The collaborator added to the domain in the account
         """
+        warnings.warn("DEPRECATION WARNING: `DomainCollaborators` have been deprecated and will be removed in the next major version. Please use our Domain Access Control feature.")
         response = self.client.post(f'/{account_id}/domains/{domain}/collaborators', data=json.dumps({'email': email}))
         return Response(response, Collaborator)
 
@@ -157,6 +160,7 @@ class Domains(object):
         :return: dnsimple.Response
             An empty response
         """
+        warnings.warn("DEPRECATION WARNING: `DomainCollaborators` have been deprecated and will be removed in the next major version. Please use our Domain Access Control feature.")
         response = self.client.delete(f'/{account_id}/domains/{domain}/collaborators/{collaborator}')
         return Response(response)
 
