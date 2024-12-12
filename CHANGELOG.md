@@ -4,6 +4,8 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 
 ## main
 
+## 4.0.0
+
 - NEW: Added `alias_email` and `destination_email` to `EmailForward`
 - CHANGED: Deprecated `email_from` and `email_to` fields in `EmailForward`
 - CHANGED: Aligned `EmailForwardInput` constructor param names with current endpoint definition
