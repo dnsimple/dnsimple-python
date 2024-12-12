@@ -13,7 +13,7 @@ A Python client for the [DNSimple API v2](https://developer.dnsimple.com/v2/).
 
 ## Requirements
 
-- Python 3.12 - Note later versions of Python may be supported, but we make no guarantees as they are not tracked in our CI.
+- Python 3.12+ - Note later versions of Python may be supported, but we make no guarantees as they are not tracked in our CI.
 
 ## Installation
 
@@ -143,4 +143,4 @@ Contibutions are welcomed. Please open an issue to discuss the changes before op
 
 ## License
 
-Copyright (c) 2022 DNSimple Corporation. This is Free Software distributed under the MIT license.
+Copyright (c) 2024 DNSimple Corporation. This is Free Software distributed under the MIT license.
