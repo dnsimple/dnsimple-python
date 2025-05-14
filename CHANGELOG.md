@@ -4,6 +4,8 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 
 ## main
 
+## 5.0.0
+
 - CHANGED: Dependency updates
 - REMOVED: `DomainCollaborators` have been removed. Please use our Domain Access Control feature.
 
