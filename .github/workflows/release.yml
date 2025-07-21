@@ -8,7 +8,7 @@ on:
 jobs:
   publish:
     name: Publish to PyPI
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Wait for tests to succeed
         uses: lewagon/wait-on-check-action@v1.4.0
