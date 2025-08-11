@@ -14,7 +14,12 @@ class ZoneRecordUpdateInput(dict):
         dict.__init__(self, name=name, content=content, ttl=ttl, priority=priority, regions=regions)
 
     def to_json(self):
-        return json.dumps(omitempty(self))
+        omitted = omitempty(self)
+
+        if self['name'] == '':
+            omitted['name'] = ''
+
+        return json.dumps(omitted)
 
 
 @dataclass
@@ -25,8 +30,12 @@ class ZoneRecordInput(dict):
         dict.__init__(self, name=name, type=type, content=content, ttl=ttl, priority=priority, regions=regions)
 
     def to_json(self):
-        return json.dumps(omitempty(self))
+        omitted = omitempty(self)
 
+        if self['name'] == '':
+            omitted['name'] = ''
+
+        return json.dumps(omitted)
 
 @dataclass
 class ZoneRecord(Struct):
