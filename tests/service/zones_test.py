@@ -20,8 +20,8 @@ class ZonesTest(DNSimpleTest):
         self.assertEqual('example.com', zone.name)
         self.assertFalse(zone.reverse)
         self.assertTrue(zone.active)
-        self.assertEqual('2015-04-23T07:40:03Z', zone.created_at)
-        self.assertEqual('2015-04-23T07:40:03Z', zone.updated_at)
+        self.assertEqual('2022-09-28T04:45:24Z', zone.created_at)
+        self.assertEqual('2023-07-06T11:19:48Z', zone.updated_at)
 
     @responses.activate
     def test_deactivate_zone(self):
@@ -35,8 +35,8 @@ class ZonesTest(DNSimpleTest):
         self.assertEqual('example.com', zone.name)
         self.assertFalse(zone.reverse)
         self.assertFalse(zone.active)
-        self.assertEqual('2015-04-23T07:40:03Z', zone.created_at)
-        self.assertEqual('2015-04-23T07:40:03Z', zone.updated_at)
+        self.assertEqual('2022-09-28T04:45:24Z', zone.created_at)
+        self.assertEqual('2023-08-08T04:19:52Z', zone.updated_at)
 
     @responses.activate
     def test_list_zones(self):

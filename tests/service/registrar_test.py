@@ -212,11 +212,11 @@ class RegistrarTest(DNSimpleTest):
                                            fixture_name='restoreDomain/success'))
         domain_restore = self.registrar.restore_domain(1010, 'ruby.codes', DomainRestoreRequest()).data
 
-        self.assertEqual(1, domain_restore.id)
-        self.assertEqual(999, domain_restore.domain_id)
+        self.assertEqual(43, domain_restore.id)
+        self.assertEqual(214, domain_restore.domain_id)
         self.assertEqual('new', domain_restore.state)
-        self.assertEqual('2016-12-09T19:46:45Z', domain_restore.created_at)
-        self.assertEqual('2016-12-09T19:46:45Z', domain_restore.updated_at)
+        self.assertEqual('2024-02-14T14:40:42Z', domain_restore.created_at)
+        self.assertEqual('2024-02-14T14:40:42Z', domain_restore.updated_at)
 
     @responses.activate
     def test_get_domain_restore(self):
@@ -225,11 +225,11 @@ class RegistrarTest(DNSimpleTest):
                                            fixture_name='getDomainRestore/success'))
         domain_restore = self.registrar.get_domain_restore(1010, 'bingo.pizza', 1).data
 
-        self.assertEqual(domain_restore.id, 1)
-        self.assertEqual(domain_restore.domain_id, 999)
-        self.assertEqual(domain_restore.state, "restored")
-        self.assertEqual(domain_restore.created_at, "2016-12-09T19:46:45Z")
-        self.assertEqual(domain_restore.updated_at, "2016-12-12T19:46:45Z")
+        self.assertEqual(domain_restore.id, 43)
+        self.assertEqual(domain_restore.domain_id, 214)
+        self.assertEqual(domain_restore.state, "new")
+        self.assertEqual(domain_restore.created_at, "2024-02-14T14:40:42Z")
+        self.assertEqual(domain_restore.updated_at, "2024-02-14T14:40:42Z")
 
 if __name__ == '__main__':
     unittest.main()

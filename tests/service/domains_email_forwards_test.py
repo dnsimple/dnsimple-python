@@ -15,19 +15,13 @@ class DomainsEmailForwardsTest(DNSimpleTest):
                                            fixture_name='listEmailForwards/success'))
         email_forwards = self.domains.list_email_forwards(1010, 'example.com').data
 
-        self.assertEqual(2, len(email_forwards))
+        self.assertEqual(1, len(email_forwards))
         self.assertIsInstance(email_forwards[0], EmailForward)
         self.assertEqual(24809, email_forwards[0].id)
         self.assertEqual(235146, email_forwards[0].domain_id)
-        self.assertEqual('foo@a-domain.com', email_forwards[0].alias_email)
+        self.assertEqual('.*@a-domain.com', email_forwards[0].alias_email)
         self.assertEqual("jane.smith@example.com", email_forwards[0].destination_email)
         self.assertEqual(True, email_forwards[0].active)
-        self.assertIsInstance(email_forwards[1], EmailForward)
-        self.assertEqual(24810, email_forwards[1].id)
-        self.assertEqual(235146, email_forwards[1].domain_id)
-        self.assertEqual('bar@a-domain.com', email_forwards[1].alias_email)
-        self.assertEqual("john.doe@example.com", email_forwards[1].destination_email)
-        self.assertEqual(False, email_forwards[1].active)
 
     @responses.activate
     def test_list_email_forwards_supports_sorting(self):
