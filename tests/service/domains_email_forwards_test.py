@@ -54,8 +54,6 @@ class DomainsEmailForwardsTest(DNSimpleTest):
                                                           EmailForwardInput('example@dnsimple.xyz', 'example@example.com')).data
         self.assertIsInstance(email_forward.id, int)
         self.assertIsInstance(email_forward.domain_id, int)
-        self.assertEqual('example@dnsimple.xyz', email_forward.email_from)
-        self.assertEqual('example@example.com', email_forward.email_to)
         self.assertEqual('example@dnsimple.xyz', email_forward.alias_email)
         self.assertEqual('example@example.com', email_forward.destination_email)
         self.assertIsInstance(datetime.datetime.strptime(email_forward.created_at, '%Y-%m-%dT%H:%M:%SZ'), datetime.datetime)

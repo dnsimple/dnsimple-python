@@ -9,10 +9,6 @@ class EmailForward(Struct):
     """The email forward ID in DNSimple"""
     domain_id = None
     """The associated domain ID"""
-    email_from = None
-    """DEPRECATED: The "local part" of the originating email address. Anything to the left of the @ symbol"""
-    email_to = None
-    """DEPRECATED: The full email address to forward to"""
     alias_email = None
     destination_email = None
     active = None
