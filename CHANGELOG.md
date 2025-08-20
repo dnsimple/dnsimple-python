@@ -4,6 +4,12 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 
 ## main
 
+## 6.0.0
+
+- REMOVED: Removed `email_from` and `email_to` fields in `EmailForward`. Please use `alias_email` and `destination_email` instead.
+- NEW: Added `active` to `EmailForward`
+- FIXED: ZoneRecordInput omits empty name when serialized to json (dnsimple/dnsimple-python#451)
+
 ## 5.0.0
 
 - CHANGED: Dependency updates
