@@ -15,6 +15,14 @@ class BatchChangeZoneRecordsCreateInput(dict):
     def __init__(self, name: str, type: str, content: str, ttl: Optional[int] = None, priority: Optional[int] = None, regions: Optional[List[str]] = None):
         dict.__init__(self, name=name, type=type, content=content, ttl=ttl, priority=priority, regions=regions)
 
+    def to_json(self):
+        omitted = omitempty(self)
+
+        if self['name'] == '':
+            omitted['name'] = ''
+
+        return json.dumps(omitted)
+
 
 @dataclass
 class BatchChangeZoneRecordsUpdateInput(dict):
@@ -22,6 +30,14 @@ class BatchChangeZoneRecordsUpdateInput(dict):
 
     def __init__(self, id: int, name: Optional[str] = None, content: Optional[str] = None, ttl: Optional[int] = None, priority: Optional[int] = None, regions: Optional[List[str]] = None):
         dict.__init__(self, id=id, name=name, content=content, ttl=ttl, priority=priority, regions=regions)
+
+    def to_json(self):
+        omitted = omitempty(self)
+
+        if self['name'] == '':
+            omitted['name'] = ''
+
+        return json.dumps(omitted)
 
 
 @dataclass
@@ -49,7 +65,18 @@ class BatchChangeZoneRecordsInput(dict):
         dict.__init__(self, **data)
 
     def to_json(self):
-        return json.dumps(omitempty(self))
+        result = {}
+
+        if 'creates' in self and self['creates'] is not None:
+            result['creates'] = [json.loads(item.to_json()) for item in self['creates']]
+
+        if 'updates' in self and self['updates'] is not None:
+            result['updates'] = [json.loads(item.to_json()) for item in self['updates']]
+
+        if 'deletes' in self and self['deletes'] is not None:
+            result['deletes'] = [omitempty(item) for item in self['deletes']]
+
+        return json.dumps(result)
 
 
 @dataclass
