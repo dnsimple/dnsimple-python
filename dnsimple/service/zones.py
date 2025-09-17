@@ -1,5 +1,5 @@
 from dnsimple.response import Response
-from dnsimple.struct import Zone, ZoneDistribution, ZoneFile, ZoneRecord
+from dnsimple.struct import Zone, ZoneDistribution, ZoneFile, ZoneRecord, BatchChangeZoneRecordsResponse
 
 
 class Zones(object):
@@ -264,3 +264,22 @@ class Zones(object):
         """
         response = self.client.get(f'/{account_id}/zones/{zone}/records/{record_id}/distribution')
         return Response(response, ZoneDistribution)
+
+    def batch_change_records(self, account_id, zone, batch_change):
+        """
+        Batch change zone records in the account.
+
+        See https://developer.dnsimple.com/v2/zones/records/#batchChangeZoneRecords
+
+        :param account_id: int
+            The account ID
+        :param zone: str
+            The zone name
+        :param batch_change: dnsimple.struct.BatchChangeZoneRecordsInput
+            The data to send to batch change zone records
+
+        :return: dnsimple.Response
+            The batch change zone records response
+        """
+        response = self.client.post(f'/{account_id}/zones/{zone}/batch', data=batch_change.to_json())
+        return Response(response, BatchChangeZoneRecordsResponse)
