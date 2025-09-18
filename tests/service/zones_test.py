@@ -160,7 +160,6 @@ class ZonesTest(DNSimpleTest):
 
         self.assertIsInstance(result, BatchChangeZoneRecordsResponse)
 
-        # Check creates
         self.assertEqual(2, len(result.creates))
         self.assertIsInstance(result.creates[0], ZoneRecord)
         self.assertEqual(67623409, result.creates[0].id)
@@ -168,13 +167,11 @@ class ZonesTest(DNSimpleTest):
         self.assertEqual('3.2.3.4', result.creates[0].content)
         self.assertEqual('A', result.creates[0].type)
 
-        # Check updates
         self.assertEqual(2, len(result.updates))
         self.assertIsInstance(result.updates[0], ZoneRecord)
         self.assertEqual(67622534, result.updates[0].id)
         self.assertEqual('3.2.3.40', result.updates[0].content)
 
-        # Check deletes
         self.assertEqual(2, len(result.deletes))
         self.assertEqual(67622509, result.deletes[0].id)
         self.assertEqual(67622527, result.deletes[1].id)

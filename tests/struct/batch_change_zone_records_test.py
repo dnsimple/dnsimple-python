@@ -11,7 +11,6 @@ from tests.helpers import DNSimpleTest
 
 
 class BatchChangeZoneRecordsTest(DNSimpleTest):
-    # Tests for BatchChangeZoneRecordsUpdateInput
     def test_batch_change_zone_records_update_input_json_allows_empty_string_apex(self):
         update_input = BatchChangeZoneRecordsUpdateInput(12345, name='', content='127.0.0.1', ttl=3600)
 
@@ -30,7 +29,6 @@ class BatchChangeZoneRecordsTest(DNSimpleTest):
         json = update_input.to_json()
         self.assertEqual('{"id": 12345, "name": "", "content": "10 mail.example.com", "ttl": 7200, "priority": 5, "regions": ["us-east", "us-west"]}', json)
 
-    # Tests for BatchChangeZoneRecordsInput container class
     def test_batch_change_zone_records_input_creates_only(self):
         creates = [
             ZoneRecordInput('www', 'A', '127.0.0.1'),
@@ -50,8 +48,8 @@ class BatchChangeZoneRecordsTest(DNSimpleTest):
 
     def test_batch_change_zone_records_input_updates_only(self):
         updates = [
-            BatchChangeZoneRecordsUpdateInput(12345, content='127.0.0.1'),  # Partial update
-            BatchChangeZoneRecordsUpdateInput(12346, name='', content='127.0.0.2')  # Apex update
+            BatchChangeZoneRecordsUpdateInput(12345, content='127.0.0.1'),
+            BatchChangeZoneRecordsUpdateInput(12346, name='', content='127.0.0.2')
         ]
         batch_input = BatchChangeZoneRecordsInput(updates=updates)
 
@@ -60,10 +58,10 @@ class BatchChangeZoneRecordsTest(DNSimpleTest):
 
         self.assertIn('updates', parsed)
         self.assertEqual(2, len(parsed['updates']))
-        # Test that partial update omits name field
+        # Test that the name field is omitted
         self.assertNotIn('name', parsed['updates'][0])
         self.assertEqual('127.0.0.1', parsed['updates'][0]['content'])
-        # Test that apex update includes empty name
+        # Test that name is empty
         self.assertIn('name', parsed['updates'][1])
         self.assertEqual('', parsed['updates'][1]['name'])
         self.assertNotIn('creates', parsed)
@@ -96,27 +94,24 @@ class BatchChangeZoneRecordsTest(DNSimpleTest):
         json_str = batch_input.to_json()
         parsed = json.loads(json_str)
 
-        # Verify all three operation types are present
         self.assertIn('creates', parsed)
         self.assertIn('updates', parsed)
         self.assertIn('deletes', parsed)
 
-        # Verify content
         self.assertEqual(1, len(parsed['creates']))
         self.assertEqual('ftp', parsed['creates'][0]['name'])
 
         self.assertEqual(1, len(parsed['updates']))
-        self.assertNotIn('name', parsed['updates'][0])  # Partial update should omit name
-
+        self.assertNotIn('name', parsed['updates'][0])
         self.assertEqual(1, len(parsed['deletes']))
         self.assertEqual(12346, parsed['deletes'][0]['id'])
 
     def test_batch_change_zone_records_input_no_null_values_in_nested_objects(self):
         creates = [
-            ZoneRecordInput('www', 'A', '127.0.0.1'),  # Only required fields
+            ZoneRecordInput('www', 'A', '127.0.0.1'),
         ]
         updates = [
-            BatchChangeZoneRecordsUpdateInput(12345, content='127.0.0.2'),  # Partial update with name=None
+            BatchChangeZoneRecordsUpdateInput(12345, content='127.0.0.2'),
         ]
 
         batch_input = BatchChangeZoneRecordsInput(creates=creates, updates=updates)
@@ -134,14 +129,13 @@ class BatchChangeZoneRecordsTest(DNSimpleTest):
         for key, value in update.items():
             self.assertIsNotNone(value, f"Update field '{key}' should not be None")
 
-        # Specifically verify that name field is omitted in partial update
         self.assertNotIn('name', update)
 
     def test_batch_change_zone_records_input_apex_record_name_preservation(self):
         updates = [
-            BatchChangeZoneRecordsUpdateInput(12345, name='', content='127.0.0.1'),  # Explicit apex
-            BatchChangeZoneRecordsUpdateInput(12346, content='127.0.0.2'),  # Partial (name=None)
-            BatchChangeZoneRecordsUpdateInput(12347, name='mail', content='127.0.0.3'),  # Named record
+            BatchChangeZoneRecordsUpdateInput(12345, name='', content='127.0.0.1'),
+            BatchChangeZoneRecordsUpdateInput(12346, content='127.0.0.2'),
+            BatchChangeZoneRecordsUpdateInput(12347, name='mail', content='127.0.0.3'),
         ]
 
         batch_input = BatchChangeZoneRecordsInput(updates=updates)
@@ -150,17 +144,11 @@ class BatchChangeZoneRecordsTest(DNSimpleTest):
 
         updates_data = parsed['updates']
 
-        # Explicit apex: name field present with empty string
         self.assertIn('name', updates_data[0])
         self.assertEqual('', updates_data[0]['name'])
-
-        # Partial update: name field completely absent
         self.assertNotIn('name', updates_data[1])
-
-        # Named record: name field present with value
         self.assertIn('name', updates_data[2])
         self.assertEqual('mail', updates_data[2]['name'])
-
 
 if __name__ == '__main__':
     unittest.main()
