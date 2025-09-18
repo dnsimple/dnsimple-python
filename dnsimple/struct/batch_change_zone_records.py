@@ -1,6 +1,5 @@
 import json
 from dataclasses import dataclass
-from typing import List, Optional
 
 import omitempty
 
@@ -10,9 +9,9 @@ from dnsimple.struct.zone_record import ZoneRecord
 
 @dataclass
 class BatchChangeZoneRecordsCreateInput(dict):
-    """Represents a zone record creation input for batch change"""
+    """Represents a zone record creation input for a batch operation"""
 
-    def __init__(self, name: str, type: str, content: str, ttl: Optional[int] = None, priority: Optional[int] = None, regions: Optional[List[str]] = None):
+    def __init__(self, name, type, content, ttl=None, priority=None, regions=None):
         dict.__init__(self, name=name, type=type, content=content, ttl=ttl, priority=priority, regions=regions)
 
     def to_json(self):
@@ -26,9 +25,9 @@ class BatchChangeZoneRecordsCreateInput(dict):
 
 @dataclass
 class BatchChangeZoneRecordsUpdateInput(dict):
-    """Represents a zone record update input for batch change"""
+    """Represents a zone record update input for a batch operation"""
 
-    def __init__(self, id: int, name: Optional[str] = None, content: Optional[str] = None, ttl: Optional[int] = None, priority: Optional[int] = None, regions: Optional[List[str]] = None):
+    def __init__(self, id, name=None, content=None, ttl=None, priority=None, regions=None):
         dict.__init__(self, id=id, name=name, content=content, ttl=ttl, priority=priority, regions=regions)
 
     def to_json(self):
@@ -42,19 +41,17 @@ class BatchChangeZoneRecordsUpdateInput(dict):
 
 @dataclass
 class BatchChangeZoneRecordsDeleteInput(dict):
-    """Represents a zone record deletion input for batch change"""
+    """Represents a zone record deletion input for a batch operation"""
 
-    def __init__(self, id: int):
+    def __init__(self, id):
         dict.__init__(self, id=id)
 
 
 @dataclass
 class BatchChangeZoneRecordsInput(dict):
-    """Represents the data to send to the DNSimple API to batch change zone records"""
+    """Represents the data to send to the DNSimple API to make a batch change on the records of a zone"""
 
-    def __init__(self, creates: Optional[List[BatchChangeZoneRecordsCreateInput]] = None,
-                 updates: Optional[List[BatchChangeZoneRecordsUpdateInput]] = None,
-                 deletes: Optional[List[BatchChangeZoneRecordsDeleteInput]] = None):
+    def __init__(self, creates=None, updates=None, deletes=None):
         data = {}
         if creates is not None:
             data['creates'] = creates
