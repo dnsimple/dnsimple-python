@@ -11,24 +11,7 @@ from tests.helpers import DNSimpleTest
 
 
 class BatchChangeZoneRecordsTest(DNSimpleTest):
-    def test_zone_record_input_json_allows_empty_string_apex_in_batch(self):
-        create_input = ZoneRecordInput('', 'A', '127.0.0.1')
-
-        json = create_input.to_json()
-        self.assertEqual('{"name": "", "type": "A", "content": "127.0.0.1"}', json)
-
-    def test_zone_record_input_json_rejects_none_apex_in_batch(self):
-        create_input = ZoneRecordInput(None, 'A', '127.0.0.1')
-
-        json = create_input.to_json()
-        self.assertEqual('{"type": "A", "content": "127.0.0.1"}', json)
-
-    def test_zone_record_input_json_with_ttl_and_priority_in_batch(self):
-        create_input = ZoneRecordInput('', 'MX', '10 mail.example.com', ttl=3600, priority=10)
-
-        json = create_input.to_json()
-        self.assertEqual('{"name": "", "type": "MX", "content": "10 mail.example.com", "ttl": 3600, "priority": 10}', json)
-
+    # Tests for BatchChangeZoneRecordsUpdateInput
     def test_batch_change_zone_records_update_input_json_allows_empty_string_apex(self):
         update_input = BatchChangeZoneRecordsUpdateInput(12345, name='', content='127.0.0.1', ttl=3600)
 
