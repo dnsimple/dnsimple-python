@@ -6,11 +6,11 @@ from dnsimple import DNSimpleException
 from dnsimple.struct.zone import Zone
 from dnsimple.struct.batch_change_zone_records import (
     BatchChangeZoneRecordsInput,
-    BatchChangeZoneRecordsCreateInput,
     BatchChangeZoneRecordsUpdateInput,
     BatchChangeZoneRecordsDeleteInput,
     BatchChangeZoneRecordsResponse
 )
+from dnsimple.struct.zone_record import ZoneRecordInput
 from dnsimple.struct.zone_record import ZoneRecord
 from tests.helpers import DNSimpleTest, DNSimpleMockResponse
 
@@ -142,8 +142,8 @@ class ZonesTest(DNSimpleTest):
 
         batch_change = BatchChangeZoneRecordsInput(
             creates=[
-                BatchChangeZoneRecordsCreateInput('ab', 'A', '3.2.3.4'),
-                BatchChangeZoneRecordsCreateInput('ab', 'A', '4.2.3.4')
+                ZoneRecordInput('ab', 'A', '3.2.3.4'),
+                ZoneRecordInput('ab', 'A', '4.2.3.4')
             ],
             updates=[
                 BatchChangeZoneRecordsUpdateInput(67622534, content='3.2.3.40'),
@@ -187,7 +187,7 @@ class ZonesTest(DNSimpleTest):
 
         batch_change = BatchChangeZoneRecordsInput(
             creates=[
-                BatchChangeZoneRecordsCreateInput('test', 'SPF', 'v=spf1 -all')
+                ZoneRecordInput('test', 'SPF', 'v=spf1 -all')
             ]
         )
 

@@ -35,7 +35,6 @@ from dnsimple.struct.zone_file import ZoneFile
 from dnsimple.struct.zone_record import ZoneRecord, ZoneRecordInput, ZoneRecordUpdateInput
 from dnsimple.struct.batch_change_zone_records import (
     BatchChangeZoneRecordsInput,
-    BatchChangeZoneRecordsCreateInput,
     BatchChangeZoneRecordsUpdateInput,
     BatchChangeZoneRecordsDeleteInput,
     BatchChangeZoneRecordsResponse,

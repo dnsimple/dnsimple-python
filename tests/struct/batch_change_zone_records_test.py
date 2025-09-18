@@ -2,29 +2,29 @@ import unittest
 import json
 
 from dnsimple.struct.batch_change_zone_records import (
-    BatchChangeZoneRecordsCreateInput,
     BatchChangeZoneRecordsUpdateInput,
     BatchChangeZoneRecordsDeleteInput,
     BatchChangeZoneRecordsInput
 )
+from dnsimple.struct.zone_record import ZoneRecordInput
 from tests.helpers import DNSimpleTest
 
 
 class BatchChangeZoneRecordsTest(DNSimpleTest):
-    def test_batch_change_zone_records_create_input_json_allows_empty_string_apex(self):
-        create_input = BatchChangeZoneRecordsCreateInput('', 'A', '127.0.0.1')
+    def test_zone_record_input_json_allows_empty_string_apex_in_batch(self):
+        create_input = ZoneRecordInput('', 'A', '127.0.0.1')
 
         json = create_input.to_json()
         self.assertEqual('{"name": "", "type": "A", "content": "127.0.0.1"}', json)
 
-    def test_batch_change_zone_records_create_input_json_rejects_none_apex(self):
-        create_input = BatchChangeZoneRecordsCreateInput(None, 'A', '127.0.0.1')
+    def test_zone_record_input_json_rejects_none_apex_in_batch(self):
+        create_input = ZoneRecordInput(None, 'A', '127.0.0.1')
 
         json = create_input.to_json()
         self.assertEqual('{"type": "A", "content": "127.0.0.1"}', json)
 
-    def test_batch_change_zone_records_create_input_json_with_ttl_and_priority(self):
-        create_input = BatchChangeZoneRecordsCreateInput('', 'MX', '10 mail.example.com', ttl=3600, priority=10)
+    def test_zone_record_input_json_with_ttl_and_priority_in_batch(self):
+        create_input = ZoneRecordInput('', 'MX', '10 mail.example.com', ttl=3600, priority=10)
 
         json = create_input.to_json()
         self.assertEqual('{"name": "", "type": "MX", "content": "10 mail.example.com", "ttl": 3600, "priority": 10}', json)
@@ -50,8 +50,8 @@ class BatchChangeZoneRecordsTest(DNSimpleTest):
     # Tests for BatchChangeZoneRecordsInput container class
     def test_batch_change_zone_records_input_creates_only(self):
         creates = [
-            BatchChangeZoneRecordsCreateInput('www', 'A', '127.0.0.1'),
-            BatchChangeZoneRecordsCreateInput('', 'A', '127.0.0.2')
+            ZoneRecordInput('www', 'A', '127.0.0.1'),
+            ZoneRecordInput('', 'A', '127.0.0.2')
         ]
         batch_input = BatchChangeZoneRecordsInput(creates=creates)
 
@@ -104,7 +104,7 @@ class BatchChangeZoneRecordsTest(DNSimpleTest):
         self.assertNotIn('updates', parsed)
 
     def test_batch_change_zone_records_input_combined_operations(self):
-        creates = [BatchChangeZoneRecordsCreateInput('ftp', 'A', '127.0.0.1')]
+        creates = [ZoneRecordInput('ftp', 'A', '127.0.0.1')]
         updates = [BatchChangeZoneRecordsUpdateInput(12345, content='127.0.0.2')]
         deletes = [BatchChangeZoneRecordsDeleteInput(12346)]
 
@@ -138,7 +138,7 @@ class BatchChangeZoneRecordsTest(DNSimpleTest):
 
     def test_batch_change_zone_records_input_no_null_values_in_nested_objects(self):
         creates = [
-            BatchChangeZoneRecordsCreateInput('www', 'A', '127.0.0.1'),  # Only required fields
+            ZoneRecordInput('www', 'A', '127.0.0.1'),  # Only required fields
         ]
         updates = [
             BatchChangeZoneRecordsUpdateInput(12345, content='127.0.0.2'),  # Partial update with name=None

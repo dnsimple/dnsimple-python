@@ -8,22 +8,6 @@ from dnsimple.struct.zone_record import ZoneRecord
 
 
 @dataclass
-class BatchChangeZoneRecordsCreateInput(dict):
-    """Represents a zone record creation input for a batch operation"""
-
-    def __init__(self, name, type, content, ttl=None, priority=None, regions=None):
-        dict.__init__(self, name=name, type=type, content=content, ttl=ttl, priority=priority, regions=regions)
-
-    def to_json(self):
-        omitted = omitempty(self)
-
-        if self['name'] == '':
-            omitted['name'] = ''
-
-        return json.dumps(omitted)
-
-
-@dataclass
 class BatchChangeZoneRecordsUpdateInput(dict):
     """Represents a zone record update input for a batch operation"""
 
@@ -49,7 +33,15 @@ class BatchChangeZoneRecordsDeleteInput(dict):
 
 @dataclass
 class BatchChangeZoneRecordsInput(dict):
-    """Represents the data to send to the DNSimple API to make a batch change on the records of a zone"""
+    """Represents the data to send to the DNSimple API to make a batch change on the records of a zone
+
+    All parameters are optional - you can perform creates only, updates only, deletes only,
+    or any combination of the three operations.
+
+    :param creates: List[ZoneRecordInput] - Records to create (optional)
+    :param updates: List[BatchChangeZoneRecordsUpdateInput] - Records to update (optional)
+    :param deletes: List[BatchChangeZoneRecordsDeleteInput] - Records to delete (optional)
+    """
 
     def __init__(self, creates=None, updates=None, deletes=None):
         data = {}
