@@ -17,7 +17,7 @@ class BatchChangeZoneRecordsTest(DNSimpleTest):
         json = update_input.to_json()
         self.assertEqual('{"id": 12345, "name": "", "content": "127.0.0.1", "ttl": 3600}', json)
 
-    def test_batch_change_zone_records_update_input_json_rejects_none_apex(self):
+    def test_batch_change_zone_records_update_input_json_ignores_empty_names(self):
         update_input = BatchChangeZoneRecordsUpdateInput(12345, name=None, content='127.0.0.1', ttl=3600)
 
         json = update_input.to_json()
