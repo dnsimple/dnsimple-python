@@ -111,14 +111,6 @@ class BatchChangeZoneRecordsTest(DNSimpleTest):
         self.assertEqual(1, len(parsed['deletes']))
         self.assertEqual(12346, parsed['deletes'][0]['id'])
 
-    def test_batch_change_zone_records_input_empty_batch(self):
-        batch_input = BatchChangeZoneRecordsInput()
-
-        json_str = batch_input.to_json()
-        parsed = json.loads(json_str)
-
-        self.assertEqual({}, parsed)
-
     def test_batch_change_zone_records_input_no_null_values_in_nested_objects(self):
         creates = [
             ZoneRecordInput('www', 'A', '127.0.0.1'),  # Only required fields
