@@ -4,7 +4,9 @@ from dataclasses import dataclass
 import omitempty
 
 from dnsimple.struct import Struct
-from dnsimple.struct.zone_record import ZoneRecord
+from dnsimple.struct.zone_record import ZoneRecord, ZoneRecordInput
+
+BatchChangeZoneRecordsCreateInput = ZoneRecordInput
 
 
 @dataclass
@@ -38,7 +40,7 @@ class BatchChangeZoneRecordsInput(dict):
     All parameters are optional - you can perform creates only, updates only, deletes only,
     or any combination of the three operations.
 
-    :param creates: List[ZoneRecordInput] - Records to create (optional)
+    :param creates: List[BatchChangeZoneRecordsCreateInput] - Records to create (optional)
     :param updates: List[BatchChangeZoneRecordsUpdateInput] - Records to update (optional)
     :param deletes: List[BatchChangeZoneRecordsDeleteInput] - Records to delete (optional)
     """

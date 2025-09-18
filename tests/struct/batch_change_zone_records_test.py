@@ -2,11 +2,11 @@ import unittest
 import json
 
 from dnsimple.struct.batch_change_zone_records import (
+    BatchChangeZoneRecordsCreateInput,
     BatchChangeZoneRecordsUpdateInput,
     BatchChangeZoneRecordsDeleteInput,
     BatchChangeZoneRecordsInput
 )
-from dnsimple.struct.zone_record import ZoneRecordInput
 from tests.helpers import DNSimpleTest
 
 
@@ -31,8 +31,8 @@ class BatchChangeZoneRecordsTest(DNSimpleTest):
 
     def test_batch_change_zone_records_input_creates_only(self):
         creates = [
-            ZoneRecordInput('www', 'A', '127.0.0.1'),
-            ZoneRecordInput('', 'A', '127.0.0.2')
+            BatchChangeZoneRecordsCreateInput('www', 'A', '127.0.0.1'),
+            BatchChangeZoneRecordsCreateInput('', 'A', '127.0.0.2')
         ]
         batch_input = BatchChangeZoneRecordsInput(creates=creates)
 
@@ -85,7 +85,7 @@ class BatchChangeZoneRecordsTest(DNSimpleTest):
         self.assertNotIn('updates', parsed)
 
     def test_batch_change_zone_records_input_combined_operations(self):
-        creates = [ZoneRecordInput('ftp', 'A', '127.0.0.1')]
+        creates = [BatchChangeZoneRecordsCreateInput('ftp', 'A', '127.0.0.1')]
         updates = [BatchChangeZoneRecordsUpdateInput(12345, content='127.0.0.2')]
         deletes = [BatchChangeZoneRecordsDeleteInput(12346)]
 
@@ -108,7 +108,7 @@ class BatchChangeZoneRecordsTest(DNSimpleTest):
 
     def test_batch_change_zone_records_input_no_null_values_in_nested_objects(self):
         creates = [
-            ZoneRecordInput('www', 'A', '127.0.0.1'),
+            BatchChangeZoneRecordsCreateInput('www', 'A', '127.0.0.1'),
         ]
         updates = [
             BatchChangeZoneRecordsUpdateInput(12345, content='127.0.0.2'),
