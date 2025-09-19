@@ -4,6 +4,14 @@ import responses
 
 from dnsimple import DNSimpleException
 from dnsimple.struct.zone import Zone
+from dnsimple.struct.batch_change_zone_records import (
+    BatchChangeZoneRecordsInput,
+    BatchChangeZoneRecordsUpdateInput,
+    BatchChangeZoneRecordsDeleteInput,
+    BatchChangeZoneRecordsResponse
+)
+from dnsimple.struct.zone_record import ZoneRecordInput
+from dnsimple.struct.zone_record import ZoneRecord
 from tests.helpers import DNSimpleTest, DNSimpleMockResponse
 
 
@@ -125,6 +133,105 @@ class ZonesTest(DNSimpleTest):
         except DNSimpleException as dnse:
             self.assertEqual('Could not query zone, connection time out', dnse.message)
             self.assertIsInstance(dnse, DNSimpleException)
+
+    @responses.activate
+    def test_batch_change_records_success(self):
+        responses.add(DNSimpleMockResponse(method=responses.POST,
+                                           path='/1010/zones/example.com/batch',
+                                           fixture_name='batchChangeZoneRecords/success'))
+
+        batch_change = BatchChangeZoneRecordsInput(
+            creates=[
+                ZoneRecordInput('ab', 'A', '3.2.3.4'),
+                ZoneRecordInput('ab', 'A', '4.2.3.4')
+            ],
+            updates=[
+                BatchChangeZoneRecordsUpdateInput(67622534, content='3.2.3.40'),
+                BatchChangeZoneRecordsUpdateInput(67622537, content='5.2.3.40')
+            ],
+            deletes=[
+                BatchChangeZoneRecordsDeleteInput(67622509),
+                BatchChangeZoneRecordsDeleteInput(67622527)
+            ]
+        )
+
+        response = self.zones.batch_change_records(1010, 'example.com', batch_change)
+        result = response.data
+
+        self.assertIsInstance(result, BatchChangeZoneRecordsResponse)
+
+        self.assertEqual(2, len(result.creates))
+        self.assertIsInstance(result.creates[0], ZoneRecord)
+        self.assertEqual(67623409, result.creates[0].id)
+        self.assertEqual('ab', result.creates[0].name)
+        self.assertEqual('3.2.3.4', result.creates[0].content)
+        self.assertEqual('A', result.creates[0].type)
+
+        self.assertEqual(2, len(result.updates))
+        self.assertIsInstance(result.updates[0], ZoneRecord)
+        self.assertEqual(67622534, result.updates[0].id)
+        self.assertEqual('3.2.3.40', result.updates[0].content)
+
+        self.assertEqual(2, len(result.deletes))
+        self.assertEqual(67622509, result.deletes[0].id)
+        self.assertEqual(67622527, result.deletes[1].id)
+
+    @responses.activate
+    def test_batch_change_records_create_validation_failed(self):
+        responses.add(DNSimpleMockResponse(method=responses.POST,
+                                           path='/1010/zones/example.com/batch',
+                                           fixture_name='batchChangeZoneRecords/error_400_create_validation_failed'))
+
+        batch_change = BatchChangeZoneRecordsInput(
+            creates=[
+                ZoneRecordInput('test', 'SPF', 'v=spf1 -all')
+            ]
+        )
+
+        try:
+            self.zones.batch_change_records(1010, 'example.com', batch_change)
+        except DNSimpleException as dnse:
+            self.assertEqual('Validation failed', dnse.message)
+            self.assertIsInstance(dnse, DNSimpleException)
+            self.assertEqual('The SPF record type has been discontinued', dnse.attribute_errors['creates'][0]['message'])
+
+    @responses.activate
+    def test_batch_change_records_update_validation_failed(self):
+        responses.add(DNSimpleMockResponse(method=responses.POST,
+                                           path='/1010/zones/example.com/batch',
+                                           fixture_name='batchChangeZoneRecords/error_400_update_validation_failed'))
+
+        batch_change = BatchChangeZoneRecordsInput(
+            updates=[
+                BatchChangeZoneRecordsUpdateInput(99999999, content='1.2.3.4')
+            ]
+        )
+
+        try:
+            self.zones.batch_change_records(1010, 'example.com', batch_change)
+        except DNSimpleException as dnse:
+            self.assertEqual('Validation failed', dnse.message)
+            self.assertIsInstance(dnse, DNSimpleException)
+            self.assertEqual('Record not found ID=99999999', dnse.attribute_errors['updates'][0]['message'])
+
+    @responses.activate
+    def test_batch_change_records_delete_validation_failed(self):
+        responses.add(DNSimpleMockResponse(method=responses.POST,
+                                           path='/1010/zones/example.com/batch',
+                                           fixture_name='batchChangeZoneRecords/error_400_delete_validation_failed'))
+
+        batch_change = BatchChangeZoneRecordsInput(
+            deletes=[
+                BatchChangeZoneRecordsDeleteInput(67622509)
+            ]
+        )
+
+        try:
+            self.zones.batch_change_records(1010, 'example.com', batch_change)
+        except DNSimpleException as dnse:
+            self.assertEqual('Validation failed', dnse.message)
+            self.assertIsInstance(dnse, DNSimpleException)
+            self.assertEqual('Record not found ID=67622509', dnse.attribute_errors['deletes'][0]['message'])
 
 
 if __name__ == '__main__':
