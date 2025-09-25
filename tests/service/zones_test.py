@@ -193,7 +193,8 @@ class ZonesTest(DNSimpleTest):
         except DNSimpleException as dnse:
             self.assertEqual('Validation failed', dnse.message)
             self.assertIsInstance(dnse, DNSimpleException)
-            self.assertEqual('The SPF record type has been discontinued', dnse.attribute_errors['creates'][0]['message'])
+            self.assertEqual('Validation failed', dnse.attribute_errors['creates'][0]['message'])
+            self.assertEqual({'record_type': ['unsupported']}, dnse.attribute_errors['creates'][0]['errors'])
 
     @responses.activate
     def test_batch_change_records_update_validation_failed(self):
