@@ -4,6 +4,10 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 
 ## main
 
+## 6.1.0
+
+- NEW: Added `Zones.batch_change_records` to make changes to zone records in a batch. (dnsimple/dnsimple-python#477)
+
 ## 6.0.0
 
 - REMOVED: Removed `email_from` and `email_to` fields in `EmailForward`. Please use `alias_email` and `destination_email` instead.
