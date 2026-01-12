@@ -4,16 +4,10 @@ A Python client for the [DNSimple API v2](https://developer.dnsimple.com/v2/).
 
 [![CI](https://github.com/dnsimple/dnsimple-python/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/dnsimple/dnsimple-python/actions/workflows/ci.yml)
 
-## Documentation
-
-- [dnsimple PyPI](https://pypi.org/project/dnsimple/)
-- [DNSimple API documentation](https://developer.dnsimple.com/)
-- [DNSimple API examples repository](https://github.com/dnsimple/dnsimple-api-examples)
-- [DNSimple support documentation](https://support.dnsimple.com/)
-
 ## Requirements
 
 - Python 3.12+ - Note later versions of Python may be supported, but we make no guarantees as they are not tracked in our CI.
+- An activated DNSimple account
 
 ## Installation
 
@@ -46,32 +40,6 @@ response = client.identity.whoami()             # execute the call
 data = response.data                            # extract the relevant data from the response or
 account = client.identity.whoami().data.account # execute the call and get the data in one line
 ```
-
-### Sandbox Environment
-
-We highly recommend testing against our [sandbox environment](https://developer.dnsimple.com/sandbox/) before using our
-production environment. This will allow you to avoid real purchases, live charges on your credit card, and reduce the
-chance of your running up against rate limits.
-
-The client supports both the production and sandbox environment. To switch to sandbox pass the sandbox API host using
-the `base_url` option when you construct the client:
-
-```python
-from dnsimple import Client
-
-client = Client(base_url='https://api.sandbox.dnsimple.com', access_token="a1b2c3")
-```
-
-You can also set the sandbox environment like so:
-
-```python
-from dnsimple import Client
-
-client = Client(sandbox=True, access_token='a1b2c3')
-```
-
-You will need to ensure that you are using an access token created in the sandbox environment.
-Production tokens will *not* work in the sandbox environment.
 
 ### Define an account ID
 
@@ -124,7 +92,35 @@ domain_id = client.domains.list_domains(account_id).data[0].id
 domain = client.domains.get_domain(account_id, domain_id).data # The domain you are looking for
 ```
 
-## Setting a custom `User-Agent` header
+## Configuration
+
+### Sandbox Environment
+
+We highly recommend testing against our [sandbox environment](https://developer.dnsimple.com/sandbox/) before using our
+production environment. This will allow you to avoid real purchases, live charges on your credit card, and reduce the
+chance of your running up against rate limits.
+
+The client supports both the production and sandbox environment. To switch to sandbox pass the sandbox API host using
+the `base_url` option when you construct the client:
+
+```python
+from dnsimple import Client
+
+client = Client(base_url='https://api.sandbox.dnsimple.com', access_token="a1b2c3")
+```
+
+You can also set the sandbox environment like so:
+
+```python
+from dnsimple import Client
+
+client = Client(sandbox=True, access_token='a1b2c3')
+```
+
+You will need to ensure that you are using an access token created in the sandbox environment.
+Production tokens will *not* work in the sandbox environment.
+
+### Setting a custom `User-Agent` header
 
 You customize the `User-Agent` header for the calls made to the DNSimple API:
 
@@ -136,6 +132,13 @@ client = Client(user_agent="my-app")
 
 The value you provide will be appended to the default `User-Agent` the client uses.
 For example, if you use `my-app`, the final header value will be `my-app dnsimple-python/0.1.0` (note that it will vary depending on the client version).
+
+## Documentation
+
+- [dnsimple PyPI](https://pypi.org/project/dnsimple/)
+- [DNSimple API documentation](https://developer.dnsimple.com/)
+- [DNSimple API examples repository](https://github.com/dnsimple/dnsimple-api-examples)
+- [DNSimple support documentation](https://support.dnsimple.com/)
 
 ## Contributing
 
