@@ -147,4 +147,4 @@ See [CHANGELOG.md](CHANGELOG.md) for details.
 
 ## License
 
-Copyright (c) 2024 DNSimple Corporation. This is Free Software distributed under the MIT license.
+Copyright (c) 2024-2026 DNSimple Corporation. This is Free Software distributed under the [MIT License](LICENSE.txt).
