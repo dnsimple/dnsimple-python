@@ -40,38 +40,12 @@ To run the test suite:
 make test
 ```
 
-## Releasing
+## Changelog
 
-The following instructions uses `$VERSION` as a placeholder, where `$VERSION` is a `MAJOR.MINOR.BUGFIX` release such as `1.2.0`.
-
-1. Set the version in `./dnsimple/version.py` and `pyproject.toml`.
-
-    ```python
-    version = "$VERSION"
-    ```
-
-2. Run the test suite and ensure all tests pass: `make test`
-
-3. Finalize the `## main` section in `CHANGELOG.md` assigning the version.
-
-4. Commit and push the changes
-
-    ```shell
-    git commit -s -a -m "Release $VERSION"
-    git push origin main
-    ```
-
-5. Wait for CI to complete.
-
-6. Create a signed tag.
-
-    ```shell
-    git tag -a v$VERSION -s -m "Release $VERSION"
-    git push origin --tags
-    ```
+We follow the [Common Changelog](https://common-changelog.org/) format for changelog entries.
 
 ## Testing
 
 Submit unit tests for your changes. You can test your changes on your machine by [running the test suite](#testing).
 
-When you submit a PR, tests will also be run on the [continuous integration environment via Travis](https://travis-ci.com/dnsimple/dnsimple-python).
+When you submit a PR, tests will also be run on the [continuous integration environment via GitHub Actions](https://github.com/dnsimple/dnsimple-python/actions).
