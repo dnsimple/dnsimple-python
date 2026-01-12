@@ -4,6 +4,8 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 
 ## main
 
+- REMOVED: Removed deprecated `get_domain_premium_price`. Use `get_domain_prices` instead.
+
 ## 6.1.0
 
 - NEW: Added `Zones.batch_change_records` to make changes to zone records in a batch. (dnsimple/dnsimple-python#477)

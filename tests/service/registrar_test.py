@@ -3,7 +3,7 @@ import unittest
 import responses
 
 from dnsimple import DNSimpleException
-from dnsimple.struct import DomainPremiumPriceOptions, DomainTransferRequest, DomainRenewRequest, DomainRestoreRequest
+from dnsimple.struct import DomainTransferRequest, DomainRenewRequest, DomainRestoreRequest
 from dnsimple.struct.domain_registration import DomainRegistrationRequest
 from tests.helpers import DNSimpleMockResponse, DNSimpleTest
 
@@ -19,16 +19,6 @@ class RegistrarTest(DNSimpleTest):
         self.assertEqual('ruby.codes', domain_check.domain)
         self.assertTrue(domain_check.available)
         self.assertTrue(domain_check.premium)
-
-    @responses.activate
-    def test_check_domain_premium_price(self):
-        responses.add(DNSimpleMockResponse(method=responses.GET,
-                                           path='/1010/registrar/domains/ruby.codes/premium_price',
-                                           fixture_name='getDomainPremiumPrice/success'))
-        domain_premium_price = self.registrar.get_domain_premium_price(1010, 'ruby.codes').data
-
-        self.assertEqual('109.00', domain_premium_price.premium_price)
-        self.assertEqual('registration', domain_premium_price.action)
 
     @responses.activate
     def test_get_domain_prices(self):
@@ -83,23 +73,6 @@ class RegistrarTest(DNSimpleTest):
         self.assertEqual(domain_renewal.state, "renewed")
         self.assertEqual(domain_renewal.created_at, "2016-12-09T19:46:45Z")
         self.assertEqual(domain_renewal.updated_at, "2016-12-12T19:46:45Z")
-
-    @responses.activate
-    def test_check_domain_premium_price_passing_action(self):
-        responses.add(DNSimpleMockResponse(method=responses.GET,
-                                           path='/1010/registrar/domains/ruby.codes/premium_price?action=registration',
-                                           fixture_name='getDomainPremiumPrice/success'))
-        self.registrar.get_domain_premium_price(1010, 'ruby.codes', DomainPremiumPriceOptions(action='registration'))
-
-    @responses.activate
-    def test_check_domain_premium_price(self):
-        responses.add(DNSimpleMockResponse(method=responses.GET,
-                                           path='/1010/registrar/domains/example.com/premium_price',
-                                           fixture_name='getDomainPremiumPrice/failure'))
-        try:
-            self.registrar.get_domain_premium_price(1010, 'example.com')
-        except DNSimpleException as dnse:
-            self.assertEqual('`example.com` is not a premium domain for registration', dnse.message)
 
     @responses.activate
     def test_register_domain(self):

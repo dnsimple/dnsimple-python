@@ -9,7 +9,6 @@ from dnsimple.struct.dnssec import Dnssec
 from dnsimple.struct.delegation_signer_record import DelegationSignerRecord, DelegationSignerRecordInput
 from dnsimple.struct.domain import Domain
 from dnsimple.struct.domain_check import DomainCheck
-from dnsimple.struct.domain_premium_price import DomainPremiumPrice, DomainPremiumPriceOptions
 from dnsimple.struct.domain_price import DomainPrice
 from dnsimple.struct.domain_registration import DomainRegistration, DomainRegistrationRequest
 from dnsimple.struct.domain_renewal import DomainRenewal, DomainRenewRequest
