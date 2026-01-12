@@ -76,30 +76,30 @@ FEATURES:
   - Added `reason`, `status` and `response` fields to exceptions
   - Updates the exception string serialization format
 
-## 2.6.0
+## 2.6.0 - 2022-08-17
 
 - CHANGED:
   - Exceptions error messages are displayed correctly ([dnsimple/dnsimple-python#340](https://github.com/dnsimple/dnsimple-python/pull/340))
   - Dependency updates
 
-## 2.5.0
+## 2.5.0 - 2022-07-20
 
 - CHANGED:
   - Deprecate Certificate's `contact_id` (dnsimple/dnsimple-python#314)
   - Dependency updates
 
-## 2.4.0
+## 2.4.0 - 2022-02-16
 
 - CHANGED:
   - Dropped support of Python 3.6
   - Dependency updates
 
-## 2.3.1
+## 2.3.1 - 2022-02-10
 
 - CHANGED:
   - Dependency updates
 
-## 2.3.0
+## 2.3.0 - 2021-10-29
 
 - CHANGED:
   - Dependency updates
@@ -108,37 +108,37 @@ FEATURES:
 - REMOVED:
   - Developer warning in README.md
 
-## 2.2.1
+## 2.2.1 - 2021-07-01
 
 - CHANGED:
   Dependency updates
 
-## 2.2.0
+## 2.2.0 - 2021-05-19
 
 - CHANGED:
   - Feature: Added `registrar.get_domain_prices` to retrieve whether a domain is premium and the prices to register, transfer, and renew. (dnsimple/dnsimple-python#174)
   - Deprecated: get_domain_premium_price, use get_domain_prices instead.
   - Dependency updates
 
-## 2.1.2
+## 2.1.2 - 2021-05-10
 
 - CHANGED:
   Dependencies updates with a security update for urllib3
 
-## 2.1.1
+## 2.1.1 - 2021-02-24
 
 - CHANGED:
   Dependencies update
   Fixed #98
 
-## 2.1.0
+## 2.1.0 - 2020-12-31
 
 - CHANGED: Dependencies update
 
-## 2.0.1
+## 2.0.1 - 2020-11-12
 
 - CHANGED: Dependencies update
 
-## 2.0.0
+## 2.0.0 - 2020-09-28
 
 Adopted public release.
