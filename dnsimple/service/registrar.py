@@ -2,7 +2,7 @@ import json
 import warnings
 
 from dnsimple.response import Response
-from dnsimple.struct import DomainCheck, DomainPremiumPrice, DomainRegistration, DomainTransfer, DomainRenewal, DomainRestore, RegistrantChange, VanityNameServer, WhoisPrivacy, WhoisPrivacyRenewal, DomainPrice, CheckRegistrantChangeInput, CreateRegistrantChangeInput, RegistrantChangeCheck, DomainTransferLock
+from dnsimple.struct import DomainCheck, DomainPremiumPrice, DomainRegistration, DomainTransfer, DomainRenewal, DomainRestore, RegistrantChange, VanityNameServer, WhoisPrivacy, DomainPrice, CheckRegistrantChangeInput, CreateRegistrantChangeInput, RegistrantChangeCheck, DomainTransferLock
 
 
 class Registrar(object):
@@ -341,23 +341,6 @@ class Registrar(object):
         response = self.client.delete(f'/{account_id}/registrar/domains/{domain}/auto_renewal')
         return Response(response)
 
-    def get_whois_privacy(self, account_id, domain):
-        """
-        Get the WHOIS privacy details for a domain
-
-        See https://developer.dnsimple.com/v2/registrar/whois-privacy/#getWhoisPrivacy
-
-        :param account_id: int
-            The account ID
-        :param domain: int/str
-            The domain name or id
-
-        :return: dnsimple.Response
-            The whois privacy
-        """
-        response = self.client.get(f'/{account_id}/registrar/domains/{domain}/whois_privacy')
-        return Response(response, WhoisPrivacy)
-
     def enable_whois_privacy(self, account_id, domain):
         """
         Enable WHOIS privacy
@@ -400,23 +383,6 @@ class Registrar(object):
         """
         response = self.client.delete(f'/{account_id}/registrar/domains/{domain}/whois_privacy')
         return Response(response, WhoisPrivacy)
-
-    def renew_whois_privacy(self, account_id, domain):
-        """
-        Renew WHOIS privacy
-
-        See https://developer.dnsimple.com/v2/registrar/whois-privacy/#renewWhoisPrivacy
-
-        :param account_id: int
-            The account ID
-        :param domain: int/str
-            The domain name or id
-
-        :return: dnsimple.Response
-            The whois privacy renewal
-        """
-        response = self.client.post(f'/{account_id}/registrar/domains/{domain}/whois_privacy')
-        return Response(response, WhoisPrivacyRenewal)
 
     def list_registrant_changes(self, account: int, options=None):
         """

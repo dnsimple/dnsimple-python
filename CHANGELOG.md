@@ -4,6 +4,9 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/).
 
 ## main
 
+- REMOVED: Removed deprecated `get_whois_privacy` (dnsimple/dnsimple-developer#919)
+- REMOVED: Removed deprecated `renew_whois_privacy` (dnsimple/dnsimple-developer#919)
+
 ## 6.1.0
 
 - NEW: Added `Zones.batch_change_records` to make changes to zone records in a batch. (dnsimple/dnsimple-python#477)

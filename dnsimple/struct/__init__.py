@@ -28,7 +28,7 @@ from dnsimple.struct.user import User
 from dnsimple.struct.vanity_name_server import VanityNameServer
 from dnsimple.struct.webhook import Webhook
 from dnsimple.struct.whoami import Whoami
-from dnsimple.struct.whois_privacy import WhoisPrivacy, WhoisPrivacyRenewal
+from dnsimple.struct.whois_privacy import WhoisPrivacy
 from dnsimple.struct.zone import Zone
 from dnsimple.struct.zone_distribution import ZoneDistribution
 from dnsimple.struct.zone_file import ZoneFile
