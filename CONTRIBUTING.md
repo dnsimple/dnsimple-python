@@ -2,16 +2,12 @@
 
 ## Getting Started
 
-### 1. Clone the repository
-
 Clone the repository and move into it:
 
 ```shell
 git clone git@github.com:dnsimple/dnsimple-python.git
 cd dnsimple-python
 ```
-
-### 2. Install dependencies
 
 [Poetry](https://python-poetry.org/) is used by this library, so ensure you have it installed.
 
@@ -29,10 +25,9 @@ To start a shell in the virtual environment:
 poetry shell
 ```
 
-### 3. Testing
+## Testing
 
-[Run the test suite](#testing) to check everything is working as expected and to install the project specific
-dependencies (the first time you'll run the script all the dependencies will be installed for you).
+Submit unit tests for your changes. You can test your changes on your machine by running the test suite.
 
 To run the test suite:
 
@@ -40,12 +35,8 @@ To run the test suite:
 make test
 ```
 
+When you submit a PR, tests will also be run on the [continuous integration environment via GitHub Actions](https://github.com/dnsimple/dnsimple-python/actions).
+
 ## Changelog
 
 We follow the [Common Changelog](https://common-changelog.org/) format for changelog entries.
-
-## Testing
-
-Submit unit tests for your changes. You can test your changes on your machine by [running the test suite](#testing).
-
-When you submit a PR, tests will also be run on the [continuous integration environment via GitHub Actions](https://github.com/dnsimple/dnsimple-python/actions).
