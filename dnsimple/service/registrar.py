@@ -1,8 +1,7 @@
 import json
-import warnings
 
 from dnsimple.response import Response
-from dnsimple.struct import DomainCheck, DomainPremiumPrice, DomainRegistration, DomainTransfer, DomainRenewal, DomainRestore, RegistrantChange, VanityNameServer, WhoisPrivacy, DomainPrice, CheckRegistrantChangeInput, CreateRegistrantChangeInput, RegistrantChangeCheck, DomainTransferLock
+from dnsimple.struct import DomainCheck, DomainRegistration, DomainTransfer, DomainRenewal, DomainRestore, RegistrantChange, VanityNameServer, WhoisPrivacy, DomainPrice, CheckRegistrantChangeInput, CreateRegistrantChangeInput, RegistrantChangeCheck, DomainTransferLock
 
 
 class Registrar(object):
@@ -31,32 +30,6 @@ class Registrar(object):
         """
         response = self.client.get(f'/{account_id}/registrar/domains/{domain}/check')
         return Response(response, DomainCheck)
-
-    def get_domain_premium_price(self, account_id, domain, options=None):
-        """
-        DEPERECATED: Get the premium price for a domain.
-        Use get_domain_prices
-
-        See https://developer.dnsimple.com/v2/registrar/#getDomainPremiumPrice
-
-        :param account_id: int
-            The account ID
-        :param domain: str
-            The domain name
-        :param options: dnsimple.struct.DomainPremiumPriceOptions
-            Optional action between "registration", "renewal", and "transfer".
-            If omitted, it defaults to "registration".
-
-        :return: dnsimple.Response
-            The domain premium price requested
-        """
-
-        warnings.warn("DEPRECATION WARNING: get_domain_premium_price is deprecated, use get_domain_prices instead.")
-
-        if options is None:
-            options = {}
-        response = self.client.get(f'/{account_id}/registrar/domains/{domain}/premium_price', params=options)
-        return Response(response, DomainPremiumPrice)
 
     def get_domain_prices(self, account_id, domain):
         """
