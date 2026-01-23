@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "dnsimple"
-version = "6.1.0"
+version = "7.0.0"
 description = "DNSimple API service for python"
-authors = ["DNSimple External Integrations Team <support@dnsimple.com>"]
+authors = ["DNSimple <support@dnsimple.com>"]
 license = "MIT"
 readme = "README.md"
 packages = [{ include = "dnsimple" }]
