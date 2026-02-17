@@ -14,7 +14,7 @@ class Domains(DomainsResearch):
     """
 
     def __init__(self, client):
-        super().__init__(client)
+        self.client = client
 
     def list_domains(self, account_id, sort=None, filter=None, page=None, per_page=None):
         """
