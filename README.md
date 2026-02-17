@@ -92,6 +92,26 @@ domain_id = client.domains.list_domains(account_id).data[0].id
 domain = client.domains.get_domain(account_id, domain_id).data # The domain you are looking for
 ```
 
+### Research a domain
+
+> **Note:** This endpoint is part of a Private Beta. During the beta period, changes to the endpoint may occur at any time. If interested in using this endpoint, reach out to support@dnsimple.com.
+
+Research a domain name for availability and registration status information:
+
+```python
+from dnsimple import Client
+
+client = Client(access_token='a1b2c3')
+
+account_id = client.identity.whoami().data.account.id
+response = client.domains.domain_research_status(account_id, 'example.com')
+research = response.data
+print(research.domain)          # "example.com"
+print(research.availability)    # "unavailable"
+print(research.request_id)      # "f453dabc-a27e-4bf1-a93e-f263577ffaae"
+print(research.errors)          # []
+```
+
 ## Configuration
 
 ### Sandbox Environment

@@ -12,6 +12,7 @@ from dnsimple.struct.domain_check import DomainCheck
 from dnsimple.struct.domain_price import DomainPrice
 from dnsimple.struct.domain_registration import DomainRegistration, DomainRegistrationRequest
 from dnsimple.struct.domain_renewal import DomainRenewal, DomainRenewRequest
+from dnsimple.struct.domain_research_status import DomainResearchStatus
 from dnsimple.struct.domain_restore import DomainRestore, DomainRestoreRequest
 from dnsimple.struct.domain_transfer import DomainTransfer, DomainTransferRequest
 from dnsimple.struct.domain_transfer_lock import DomainTransferLock
