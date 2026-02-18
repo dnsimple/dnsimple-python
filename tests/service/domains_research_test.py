@@ -11,13 +11,13 @@ class DomainsResearchTest(DNSimpleTest):
     @responses.activate
     def test_domain_research_status(self):
         responses.add(DNSimpleMockResponse(method=responses.GET,
-                                           path='/1010/domains/research/status?domain=example.com',
-                                           fixture_name='domainResearchStatus/success'))
-        research = self.domains.domain_research_status(1010, 'example.com').data
+                                           path='/1010/domains/research/status?domain=taken.com',
+                                           fixture_name='getDomainsResearchStatus/success-unavailable.http'))
+        research = self.domains.domain_research_status(1010, 'taken.com').data
 
         self.assertIsInstance(research, DomainResearchStatus)
-        self.assertEqual('f453dabc-a27e-4bf1-a93e-f263577ffaae', research.request_id)
-        self.assertEqual('example.com', research.domain)
+        self.assertEqual('25dd77cb-2f71-48b9-b6be-1dacd2881418', research.request_id)
+        self.assertEqual('taken.com', research.domain)
         self.assertEqual('unavailable', research.availability)
         self.assertEqual([], research.errors)
 
