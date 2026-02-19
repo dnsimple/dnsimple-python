@@ -3,9 +3,10 @@ import warnings
 
 from dnsimple.response import Response
 from dnsimple.struct import Domain, Dnssec, Collaborator, DelegationSignerRecord, EmailForward, DomainPush
+from dnsimple.service.domains_research import DomainsResearch
 
 
-class Domains(object):
+class Domains(DomainsResearch):
     """
     The Domains Service handles the domains endpoint of the DNSimple API.
 
