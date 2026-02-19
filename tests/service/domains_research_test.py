@@ -12,7 +12,7 @@ class DomainsResearchTest(DNSimpleTest):
     def test_domain_research_status(self):
         responses.add(DNSimpleMockResponse(method=responses.GET,
                                            path='/1010/domains/research/status?domain=taken.com',
-                                           fixture_name='getDomainsResearchStatus/success-unavailable.http'))
+                                           fixture_name='getDomainsResearchStatus/success-unavailable'))
         research = self.domains.domain_research_status(1010, 'taken.com').data
 
         self.assertIsInstance(research, DomainResearchStatus)
