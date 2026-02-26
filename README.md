@@ -104,7 +104,7 @@ from dnsimple import Client
 client = Client(access_token='a1b2c3')
 
 account_id = client.identity.whoami().data.account.id
-response = client.domains.domain_research_status(account_id, 'example.com')
+response = client.domains.get_domain_research_status(account_id, 'example.com')
 research = response.data
 print(research.domain)          # "example.com"
 print(research.availability)    # "unavailable"

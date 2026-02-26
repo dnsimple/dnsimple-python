@@ -10,7 +10,7 @@ class DomainsResearch(object):
     The DomainsResearch Service handles the domain research endpoint of the DNSimple API.
     """
 
-    def domain_research_status(self, account_id, domain):
+    def get_domain_research_status(self, account_id, domain):
         """
         Research a domain name for availability and registration status information.
 
