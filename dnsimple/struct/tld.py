@@ -25,6 +25,10 @@ class Tld(Struct):
     """True if DNSimple supports renewals for this TLD"""
     transfer_enabled = None
     """True if DNSimple supports inbound transfers for this TLD"""
+    trustee_service_enabled = None
+    """True if Trustee service is available for this TLD"""
+    trustee_service_required = None
+    """True if Trustee service is required for this TLD"""
     dnssec_interface_type = None
     """Type of data interface required for DNSSEC for this TLD"""
 

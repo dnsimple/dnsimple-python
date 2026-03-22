@@ -32,6 +32,7 @@ class RegistrarTest(DNSimpleTest):
         self.assertEqual(20.0, domain_prices.registration_price)
         self.assertEqual(20.0, domain_prices.renewal_price)
         self.assertEqual(20.0, domain_prices.transfer_price)
+        self.assertEqual(20.0, domain_prices.trustee_service_price)
 
     @responses.activate
     def test_get_domain_prices_for_unsupported_tld(self):
@@ -57,6 +58,7 @@ class RegistrarTest(DNSimpleTest):
         self.assertEqual(domain_registration.state, "registering")
         self.assertEqual(domain_registration.auto_renew, False)
         self.assertEqual(domain_registration.whois_privacy, False)
+        self.assertEqual(domain_registration.trustee_service, False)
         self.assertEqual(domain_registration.created_at, "2023-01-27T17:44:32Z")
         self.assertEqual(domain_registration.updated_at, "2023-01-27T17:44:40Z")
 
@@ -88,6 +90,7 @@ class RegistrarTest(DNSimpleTest):
         self.assertEqual('new', domain_registration.state)
         self.assertFalse(domain_registration.auto_renew)
         self.assertFalse(domain_registration.whois_privacy)
+        self.assertFalse(domain_registration.trustee_service)
         self.assertEqual('2016-12-09T19:35:31Z', domain_registration.created_at)
         self.assertEqual('2016-12-09T19:35:31Z', domain_registration.updated_at)
 

@@ -13,11 +13,13 @@ class DomainPrice(Struct):
     """The domain name"""
     premium = None
     """If the domain name is premium return True"""
-    registartion_price = None
-    """The domain's registation price"""
+    registration_price = None
+    """The domain's registration price"""
     renewal_price = None
     """The domain's renewal price"""
     transfer_price = None
     """The domain's transfer price"""
+    trustee_service_price = None
+    """The domain's Trustee service price"""
     def __init__(self, data):
         super().__init__(data)

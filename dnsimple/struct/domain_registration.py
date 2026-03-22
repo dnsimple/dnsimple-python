@@ -9,10 +9,24 @@ from dnsimple.struct import Struct
 class DomainRegistrationRequest(dict):
     """DomainRegisterRequest represents the attributes you can pass to a register API request."""
 
-    def __init__(self, registrant_id, whois_privacy=False, auto_renew=False, extended_attributes=None,
-                 premium_price=None):
-        dict.__init__(self, registrant_id=registrant_id, whois_privacy=whois_privacy, auto_renew=auto_renew,
-                      extended_attributes=extended_attributes, premium_price=premium_price)
+    def __init__(
+        self,
+        registrant_id,
+        whois_privacy=False,
+        auto_renew=False,
+        extended_attributes=None,
+        premium_price=None,
+        trustee_service=None,
+    ):
+        dict.__init__(
+            self,
+            registrant_id=registrant_id,
+            whois_privacy=whois_privacy,
+            auto_renew=auto_renew,
+            extended_attributes=extended_attributes,
+            premium_price=premium_price,
+            trustee_service=trustee_service,
+        )
 
     def to_json(self):
         return json.dumps(omitempty(self))
@@ -35,6 +49,8 @@ class DomainRegistration(Struct):
     """True if the domain auto-renew was requested"""
     whois_privacy = False
     """True if the domain WHOIS privacy was requested"""
+    trustee_service = False
+    """True if the domain Trustee service was requested"""
     created_at = None
     """When the domain renewal was created in DNSimple"""
     updated_at = None
