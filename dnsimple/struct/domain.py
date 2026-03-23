@@ -27,6 +27,8 @@ class Domain(Struct):
     """True if the domain is set to auto-renew, false otherwise"""
     private_whois = False
     """True if the domain WHOIS privacy is enabled, false otherwise"""
+    trustee_service = False
+    """True if the domain Trustee service is enabled, false otherwise"""
     expires_at = None
     """The date the domain will expire"""
     created_at = None
