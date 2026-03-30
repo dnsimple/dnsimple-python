@@ -16,6 +16,7 @@ class AccountsTest(DNSimpleTest):
         accounts = self.accounts.list_accounts().data
         self.assertEqual(1, len(accounts))
         self.assertIsInstance(accounts[0], Account)
+        self.assertEqual('John', accounts[0].name)
 
     @responses.activate
     def test_list_users(self):
