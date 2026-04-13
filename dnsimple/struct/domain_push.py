@@ -10,20 +10,20 @@ from dnsimple.struct import Struct
 class DomainPushInput(dict):
     """Represents the data to send to the DNSimple API to initiate a push"""
 
-    def __init__(self, new_account_email=None, new_domain_push_identifier=None, contact_id=None):
+    def __init__(self, new_account_email=None, new_account_identifier=None, contact_id=None):
         """
         Creates a new DomainPushInput
 
         :param new_account_email: str
-            Deprecated: Use new_domain_push_identifier instead.
+            Deprecated: Use new_account_identifier instead.
             The target account email address
-        :param new_domain_push_identifier: str
+        :param new_account_identifier: str
             The target domain push identifier (Required when initiating a push)
         :param contact_id: int
             A contact that belongs to the target DNSimple account. The contact will be used as new registrant for the
             domain, if the domain is registered with DNSimple (Required when accepting a push)
         """
-        dict.__init__(self, new_account_email=new_account_email, new_domain_push_identifier=new_domain_push_identifier, contact_id=contact_id)
+        dict.__init__(self, new_account_email=new_account_email, new_account_identifier=new_account_identifier, contact_id=contact_id)
 
     def to_json(self):
         return json.dumps(omitempty(self))

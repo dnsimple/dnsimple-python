@@ -23,11 +23,11 @@ class DomainsPushesTest(DNSimpleTest):
         self.assertIsNone(push.accepted_at)
 
     @responses.activate
-    def test_initiate_push_with_domain_push_identifier(self):
+    def test_initiate_push_with_account_identifier(self):
         responses.add(DNSimpleMockResponse(method=responses.POST,
                                            path='/2020/domains/1/pushes',
                                            fixture_name='initiatePush/success'))
-        push = self.domains.initiate_push(2020, 1, DomainPushInput(new_domain_push_identifier='abc123')).data
+        push = self.domains.initiate_push(2020, 1, DomainPushInput(new_account_identifier='abc123')).data
 
         self.assertEqual(1, push.id)
         self.assertEqual(2020, push.account_id)
