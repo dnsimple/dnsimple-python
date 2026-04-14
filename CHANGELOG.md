@@ -2,6 +2,17 @@
 
 This project uses [Semantic Versioning 2.0.0](http://semver.org/), the format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## Unreleased
+
+### Added
+
+- Added `new_account_identifier` to `DomainPushInput` for initiating domain pushes by account identifier.
+- Added `name` to `Account`.
+
+### Deprecated
+
+- Deprecated `new_account_email` in `DomainPushInput`. Use `new_account_identifier` instead.
+
 ## 7.2.0 - 2026-03-23
 
 ### Added
