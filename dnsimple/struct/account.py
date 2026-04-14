@@ -15,6 +15,8 @@ class Account(Struct):
     """The account ID in DNSimple"""
     email = None
     """The account email"""
+    name = None
+    """The account name"""
     plan_identifier = None
     """The identifier of the plan the account is subscribed to"""
     created_at = None
