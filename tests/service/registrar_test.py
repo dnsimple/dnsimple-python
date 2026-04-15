@@ -108,6 +108,7 @@ class RegistrarTest(DNSimpleTest):
         self.assertEqual('transferring', domain_transfer.state)
         self.assertFalse(domain_transfer.auto_renew)
         self.assertFalse(domain_transfer.whois_privacy)
+        self.assertFalse(domain_transfer.trustee_service)
         self.assertEqual('2016-12-09T19:43:41Z', domain_transfer.created_at)
         self.assertEqual('2016-12-09T19:43:43Z', domain_transfer.updated_at)
 
@@ -140,6 +141,7 @@ class RegistrarTest(DNSimpleTest):
         domain_transfer = self.registrar.get_domain_transfer(1010, 'ruby.codes', 358).data
 
         self.assertEqual('cancelled', domain_transfer.state)
+        self.assertFalse(domain_transfer.trustee_service)
 
     @responses.activate
     def test_cancel_domain_transfer(self):
@@ -149,6 +151,7 @@ class RegistrarTest(DNSimpleTest):
         domain_transfer = self.registrar.cancel_domain_transfer(1010, 'ruby.codes', 358).data
 
         self.assertEqual('transferring', domain_transfer.state)
+        self.assertFalse(domain_transfer.trustee_service)
 
     @responses.activate
     def test_renew_domain(self):
