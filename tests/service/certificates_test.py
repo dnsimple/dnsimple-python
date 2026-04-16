@@ -37,7 +37,6 @@ class CertificatesTest(DNSimpleTest):
 
         self.assertIsInstance(certificate.id, int)
         self.assertIsInstance(certificate.domain_id, int)
-        self.assertIsInstance(certificate.contact_id, int)
         self.assertEqual('www', certificate.name)
         self.assertEqual('www.bingo.pizza', certificate.common_name)
         self.assertEqual(1, certificate.years)
@@ -150,7 +149,7 @@ class CertificatesTest(DNSimpleTest):
                                            path='/1010/domains/example.com/certificates/letsencrypt',
                                            fixture_name='purchaseLetsencryptCertificate/success'))
         certificate_purchase = self.certificates.purchase_letsencrypt_certificate(1010, 'example.com',
-                                                                                  LetsencryptCertificateInput(42)).data
+                                                                                  LetsencryptCertificateInput()).data
 
         self.assertEqual(101967, certificate_purchase.id)
         self.assertEqual(101967, certificate_purchase.certificate_id)
