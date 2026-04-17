@@ -19,6 +19,7 @@ class BillingTest(DNSimpleTest):
             Charge({"invoiced_at": "2023-08-17T05:53:36Z","total_amount": "14.50","balance_amount": "0.00","reference": "1-2","state": "collected","items":[{"description": "Register bubble-registered.com","amount": "14.50","product_id": 1,"product_type": "domain-registration","product_reference": "bubble-registered.com"}]}),
             Charge({"invoiced_at": "2023-08-17T05:57:53Z","total_amount": "14.50","balance_amount": "0.00","reference": "2-2","state": "refunded","items":[{"description": "Register example.com","amount": "14.50","product_id": 2,"product_type": "domain-registration","product_reference": "example.com"}]}),
             Charge({"invoiced_at": "2023-10-24T07:49:05Z","total_amount": "1099999.99","balance_amount": "0.00","reference": "4-2","state": "collected","items":[{"description": "Test Line Item 1","amount": "99999.99","product_id": None,"product_type": "manual","product_reference":None},{"description": "Test Line Item 2","amount": "1000000.00","product_id": None,"product_type": "manual","product_reference":None}]}),
+            Charge({"invoiced_at": "2023-10-24T09:00:00Z","total_amount": "20.00","balance_amount": "0.00","reference": "5-2","state": "collected","items":[{"description": "Purchase Certificate www.bubble-registered.com","amount": "20.00","product_id": 42,"product_type": "certificate-purchase","product_reference": "42"}]}),
         ])
 
     @responses.activate
