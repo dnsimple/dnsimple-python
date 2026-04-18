@@ -4,6 +4,10 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/), the format is
 
 ## main
 
+### Changed
+
+- Updated the `listCharges` test fixture to include a certificate purchase entry demonstrating that `product_reference` is a string even when it represents a numeric ID. (#502)
+
 ### Removed
 
 - **BREAKING**: Removed the deprecated `contact_id` field from the `Certificate` struct and from `LetsencryptCertificateInput`. The field was deprecated on 2022-05-17 and is no longer required for certificate operations.
