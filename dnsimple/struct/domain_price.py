@@ -19,7 +19,7 @@ class DomainPrice(Struct):
     """The domain's renewal price"""
     transfer_price = None
     """The domain's transfer price"""
-    trustee_service_price = None
-    """The domain's Trustee service price"""
+    trustee_price = None
+    """The domain's trustee price"""
     def __init__(self, data):
         super().__init__(data)

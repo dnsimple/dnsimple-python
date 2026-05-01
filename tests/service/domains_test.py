@@ -56,7 +56,7 @@ class DomainsTest(DNSimpleTest):
         domain = self.domains.get_domain(1010, 1).data
 
         self.assertEqual('example-alpha.com', domain.name)
-        self.assertFalse(domain.trustee_service)
+        self.assertFalse(domain.trustee)
 
     @responses.activate
     def test_deletes_a_domain(self):
