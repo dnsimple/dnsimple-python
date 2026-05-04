@@ -17,7 +17,7 @@ class DomainTransferRequest(dict):
         auto_renew=False,
         extended_attributes=None,
         premium_price=None,
-        trustee_service=None,
+        trustee=None,
     ):
         dict.__init__(
             self,
@@ -27,7 +27,7 @@ class DomainTransferRequest(dict):
             auto_renew=auto_renew,
             extended_attributes=extended_attributes,
             premium_price=premium_price,
-            trustee_service=trustee_service,
+            trustee=trustee,
         )
 
     def to_json(self):
@@ -49,8 +49,8 @@ class DomainTransfer(Struct):
     """True if the domain auto-renew was requested"""
     whois_privacy = False
     """True if the domain WHOIS privacy was requested"""
-    trustee_service = False
-    """True if the domain Trustee service was requested"""
+    trustee = False
+    """True if trustee was requested"""
     created_at = None
     """When the domain transfer was created in DNSimple"""
     updated_at = None
