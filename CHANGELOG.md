@@ -2,6 +2,13 @@
 
 This project uses [Semantic Versioning 2.0.0](http://semver.org/), the format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## Unreleased
+
+### Security
+
+- Raised the minimum `urllib3` version to `>=2.7.0` to address CVE-2026-44431 and CVE-2026-44432.
+- Raised the minimum `idna` version to `>=3.15` to address CVE-2026-45409.
+
 ## 8.0.0 - 2026-05-05
 
 ### Changed
