@@ -4,6 +4,10 @@ This project uses [Semantic Versioning 2.0.0](http://semver.org/), the format is
 
 ## Unreleased
 
+### Deprecated
+
+- Deprecated `parent_id` in `ZoneRecord`. The value is always `None`, and the attribute will be removed in the next major version. (#517)
+
 ### Security
 
 - Raised the minimum `urllib3` version to `>=2.7.0` to address CVE-2026-44431 and CVE-2026-44432.

@@ -45,7 +45,7 @@ class ZoneRecord(Struct):
     zone_id = None
     """The associated zone ID in DNSimple"""
     parent_id = None
-    """The ID of the parent record, if this record is dependent on another record."""
+    """DEPRECATED: The value is always None, and the attribute will be removed in the next major version."""
     type = None
     """The type of record, in uppercase."""
     name = None
