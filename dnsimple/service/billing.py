@@ -9,7 +9,7 @@ class Billing(object):
         """
         Lists the billing charges for the account.
 
-        See https://developer.dnsimple.com/v2/billing/#listCharges
+        See https://developer.dnsimple.com/v2/billing-charges/#listCharges
 
         :param account:
             The account id

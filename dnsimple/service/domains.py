@@ -20,7 +20,7 @@ class Domains(DomainsResearch):
         """
         Lists the domains in the account.
 
-        See https://developer.dnsimple.com/v2/domains/#list
+        See https://developer.dnsimple.com/v2/domains/#listDomains
 
         :param account_id: int
             The account ID
@@ -53,7 +53,7 @@ class Domains(DomainsResearch):
         """
         Creates a domain in the account.
 
-        See https://developer.dnsimple.com/v2/domains/#create
+        See https://developer.dnsimple.com/v2/domains/#createDomain
 
         :param account_id: int
             The account ID
@@ -334,7 +334,7 @@ class Domains(DomainsResearch):
         """
         Initiate a push for the domain.
 
-        See https://developer.dnsimple.com/v2/domains/pushes/#initiate
+        See https://developer.dnsimple.com/v2/domains/pushes/#initiateDomainPush
 
         :param account_id: int
             The account ID

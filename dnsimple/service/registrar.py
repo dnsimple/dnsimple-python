@@ -361,7 +361,7 @@ class Registrar(object):
         """
         List registrant changes in the account.
 
-        See https://developer.dnsimple.com/v2/registrar/#listRegistrantChanges
+        See https://developer.dnsimple.com/v2/registrar/registrant-changes/#listRegistrantChanges
 
         :param account:
             The account id
@@ -377,7 +377,7 @@ class Registrar(object):
         """
         Start registrant change.
 
-        See https://developer.dnsimple.com/v2/registrar/#createRegistrantChange
+        See https://developer.dnsimple.com/v2/registrar/registrant-changes/#createRegistrantChange
 
         :param account:
             The account id
@@ -391,7 +391,7 @@ class Registrar(object):
         """
         Retrieves the requirements of a registrant change.
 
-        See https://developer.dnsimple.com/v2/registrar/#checkRegistrantChange
+        See https://developer.dnsimple.com/v2/registrar/registrant-changes/#checkRegistrantChange
 
         :param account:
             The account id
@@ -403,7 +403,7 @@ class Registrar(object):
         """
         Retrieves the details of an existing registrant change.
 
-        See https://developer.dnsimple.com/v2/registrar/#getRegistrantChange
+        See https://developer.dnsimple.com/v2/registrar/registrant-changes/#getRegistrantChange
 
         :param account:
             The account id
@@ -419,7 +419,7 @@ class Registrar(object):
         """
         Cancel an ongoing registrant change from the account.
 
-        See https://developer.dnsimple.com/v2/registrar/#deleteRegistrantChange
+        See https://developer.dnsimple.com/v2/registrar/registrant-changes/#deleteRegistrantChange
 
         :param account:
             The account id
@@ -437,7 +437,7 @@ class Registrar(object):
         """
         Gets the transfer lock status for a domain.
 
-        See https://developer.dnsimple.com/v2/registrar/#getDomainTransferLock
+        See https://developer.dnsimple.com/v2/registrar/transfer-lock/#getDomainTransferLock
 
         :param account:
             The account id
@@ -451,7 +451,7 @@ class Registrar(object):
         """
         Locks the domain to prevent unauthorized transfers.
 
-        See https://developer.dnsimple.com/v2/registrar/#enableDomainTransferLock
+        See https://developer.dnsimple.com/v2/registrar/transfer-lock/#enableDomainTransferLock
 
         :param account:
             The account id
@@ -465,7 +465,7 @@ class Registrar(object):
         """
         Unlocks the domain to allow domain transfers.
 
-        See https://developer.dnsimple.com/v2/registrar/#disableDomainTransferLock
+        See https://developer.dnsimple.com/v2/registrar/transfer-lock/#disableDomainTransferLock
 
         :param account:
             The account id
